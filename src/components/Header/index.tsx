@@ -1,19 +1,38 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { AppBar, Box, styled, Typography, useTheme } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  styled,
+  // Typography,
+  // useTheme,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Drawer
+} from '@mui/material'
 import { HideOnMobile } from 'theme/index'
 import Image from 'components/Image'
-import BrandLogo from '../../assets/svg/matching_protocol.svg'
+import BrandLogo from 'assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 import Button from 'components/Button/Button'
 import { ChainList } from 'constants/chain'
 import ChainSelect from 'components/Select/ChainSelect'
+import Web3Status from './Web3Status'
+import MarketIcon from 'assets/images/market.png'
+import AccountIcon from 'assets/images/account.png'
+import StatIcon from 'assets/images/statistics.png'
+import HelpIcon from 'assets/images/help.png'
+import { ExternalLink } from 'theme/components'
 
 interface TabContent {
   title: string
   route?: string
   link?: string
   titleContent?: JSX.Element
+  icon?: JSX.Element
 }
 
 interface Tab extends TabContent {
@@ -21,22 +40,10 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Test1', route: routes.test1 },
-  { title: 'Test2', route: routes.test2 },
-  { title: 'Test3', route: routes.test3 },
-  { title: 'Test4', link: 'https://www.google.com/' },
-  {
-    title: 'About',
-    subTab: [
-      { title: 'About1', link: 'https://www.google.com/' },
-      { title: 'About2', link: 'https://www.google.com/' },
-      {
-        title: 'faq',
-        titleContent: <FAQButton />,
-        route: 'faq'
-      }
-    ]
-  }
+  { title: 'Market', route: routes.test1, icon: <Image src={MarketIcon} /> },
+  { title: 'Account', route: routes.test2, icon: <Image src={AccountIcon} /> },
+  { title: 'Statistics', route: routes.test3, icon: <Image src={StatIcon} /> },
+  { title: 'Help', route: routes.test3, icon: <Image src={HelpIcon} /> }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -87,11 +94,80 @@ const MainLogo = styled(NavLink)({
 // })
 
 export default function Header() {
-  // const { chainId } = useActiveWeb3React()
+  const drawer = useMemo(
+    () => (
+      <Box
+        sx={{
+          padding: '50px 40px',
+          minHeight: '100%'
+        }}
+        gridTemplateRows="auto auto auto 1fr"
+        display="grid"
+        justifyContent="space-between"
+        gap="52px"
+      >
+        <List>
+          {Tabs.map(({ title, route, icon, link }, idx) => (
+            <ListItem key={title} sx={{ padding: '10px 0' }}>
+              {link ? (
+                <ExternalLink href={link}>
+                  <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
+                  <ListItemText
+                    primary={title}
+                    primaryTypographyProps={{
+                      sx: { fontSize: '16px' }
+                    }}
+                  />
+                </ExternalLink>
+              ) : (
+                <NavLink
+                  key={title + idx}
+                  id={`${route}-nav-link`}
+                  to={route ?? ''}
+                  onClick={() => {}}
+                  className="link"
+                >
+                  <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
+                  <ListItemText
+                    primary={title}
+                    primaryTypographyProps={{
+                      sx: { fontSize: '16px' }
+                    }}
+                  />
+                </NavLink>
+              )}
+            </ListItem>
+          ))}
+        </List>
+        <Box sx={{ mt: 'auto', alignSelf: 'flex-end', height: '100%', display: 'flex', alignItems: 'flex-end' }}>
+          <Web3Status />
+        </Box>
+        <Box sx={{ opacity: 0 }}>1</Box>
+      </Box>
+    ),
+    []
+  )
 
   return (
     <>
       <MobileHeader />
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          boxShadow: 'none',
+          '& .MuiPaper-root': {
+            borderColor: 'transparent'
+          },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: 272
+          }
+        }}
+        open
+      >
+        {drawer}
+      </Drawer>
       <StyledAppBar>
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
@@ -143,26 +219,26 @@ export default function Header() {
   )
 }
 
-function FAQButton() {
-  const theme = useTheme()
-  return (
-    <Box display="flex" alignItems="center" justifyContent="center">
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '50%',
-          border: `1px solid ${theme.palette.success.main}`,
-          width: '18px',
-          height: '18px',
-          marginRight: '12px',
-          color: theme.palette.success.main
-        }}
-      >
-        <Typography variant="body1">?</Typography>
-      </span>
-      FAQ
-    </Box>
-  )
-}
+// function FAQButton() {
+//   const theme = useTheme()
+//   return (
+//     <Box display="flex" alignItems="center" justifyContent="center">
+//       <span
+//         style={{
+//           display: 'flex',
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//           borderRadius: '50%',
+//           border: `1px solid ${theme.palette.success.main}`,
+//           width: '18px',
+//           height: '18px',
+//           marginRight: '12px',
+//           color: theme.palette.success.main
+//         }}
+//       >
+//         <Typography variant="body1">?</Typography>
+//       </span>
+//       FAQ
+//     </Box>
+//   )
+// }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { ButtonBase, useTheme } from '@mui/material'
+import { SxProps } from '@mui/system'
 
 interface Props {
   onClick?: (() => void) | null
@@ -11,7 +12,7 @@ interface Props {
   disabled?: boolean
   color?: string
   borderRadius?: string
-  style?: React.CSSProperties
+  style?: React.CSSProperties & SxProps
 }
 
 export default function OutlineButton(props: Props) {
@@ -30,7 +31,7 @@ export default function OutlineButton(props: Props) {
         fontWeight: primary ? '500' : '400',
         height: height || 60,
         color: primary ? theme.palette.primary.main : theme.palette.text.primary,
-        borderRadius: borderRadius ?? 1,
+        borderRadius: borderRadius ?? 1.6,
         '&:hover': {
           color: primary ? theme.palette.primary.dark : theme.palette.text.primary,
           borderColor: primary ? theme.palette.primary.dark : theme.palette.primary.main

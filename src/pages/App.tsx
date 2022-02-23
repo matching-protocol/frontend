@@ -8,7 +8,7 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
 // import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
-import Footer from 'components/Footer'
+// import Footer from 'components/Footer'
 import Market from './Market'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -32,7 +32,8 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.footer})`,
+  // minHeight: `calc(100vh - ${theme.height.header})`,
+  minHeight: '100vh',
   padding: '50px 0 80px',
   justifyContent: 'center',
   alignItems: 'center',
@@ -43,7 +44,8 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
     paddingTop: 20
-  }
+  },
+  background: theme.palette.background.paper
 }))
 
 export default function App() {
@@ -63,7 +65,7 @@ export default function App() {
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>
-            <Footer />
+            {/* <Footer /> */}
           </ContentWrapper>
         </AppWrapper>
       </ModalProvider>

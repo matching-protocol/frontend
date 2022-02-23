@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, styled } from '@mui/material'
-import { ExternalLink } from 'theme/components'
-import Web3Status from './Web3Status'
+import { AppBar, Box, styled, Typography, useTheme } from '@mui/material'
+// import { ExternalLink } from 'theme/components'
+// import Web3Status from './Web3Status'
 import { HideOnMobile } from 'theme/index'
-import PlainSelect from 'components/Select/PlainSelect'
+// import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
-import ChainSwap from '../../assets/svg/chain_swap.svg'
+import BrandLogo from '../../assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 
@@ -82,9 +82,9 @@ const MainLogo = styled(NavLink)({
   }
 })
 
-const LinksWrapper = muiStyled('div')({
-  marginLeft: 60.2
-})
+// const LinksWrapper = muiStyled('div')({
+//   marginLeft: 60.2
+// })
 
 export default function Header() {
   return (
@@ -94,9 +94,9 @@ export default function Header() {
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
             <MainLogo id={'chainswap'} to={'/'}>
-              <Image src={ChainSwap} alt={'chainswap'} />
+              <Image src={BrandLogo} alt={'brand-logo'} />
             </MainLogo>
-            <LinksWrapper>
+            {/* <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
                   <PlainSelect placeholder={title} key={title + idx}>
@@ -126,10 +126,10 @@ export default function Header() {
                   </NavLink>
                 )
               )}
-            </LinksWrapper>
+            </LinksWrapper> */}
           </Box>
         </HideOnMobile>
-        <Web3Status />
+        {/* <Web3Status /> */}
       </StyledAppBar>
     </>
   )

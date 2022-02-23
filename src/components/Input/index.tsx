@@ -12,6 +12,7 @@ export interface InputProps {
   focused?: boolean
   outlined?: boolean
   type?: string
+  startAdornment?: React.ReactNode
   endAdornment?: React.ReactNode
   maxWidth?: string | number
   height?: string | number
@@ -28,7 +29,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     fontWeight: 400,
     backgroundColor: theme.palette.background.default,
     paddingLeft: 20,
-    borderRadius: 14
+    borderRadius: 16
   },
   [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
   [`& .${inputBaseClasses.input}`]: {
@@ -57,6 +58,7 @@ export default function Input({
   disabled,
   type,
   outlined,
+  startAdornment,
   endAdornment,
   maxWidth,
   label,
@@ -73,8 +75,7 @@ export default function Input({
         sx={{
           height: height || 60,
           [`&.${inputBaseClasses.root}`]: {
-            border: theme =>
-              `1px solid ${outlined ? 'rgba(255,255,255,.4)' : error ? theme.palette.error.main : 'transparent'}`
+            border: theme => `1px solid ${outlined ? '#D9D9DA' : error ? theme.palette.error.main : 'transparent'}`
           },
           [`&.${inputBaseClasses.focused}`]: {
             borderColor: theme =>
@@ -98,6 +99,11 @@ export default function Input({
         disabled={disabled}
         type={type}
         endAdornment={endAdornment && <span style={{ paddingRight: 20 }}>{endAdornment}</span>}
+        startAdornment={
+          startAdornment && (
+            <span style={{ paddingRight: 12, display: 'flex', alignItems: 'center' }}>{startAdornment}</span>
+          )
+        }
         {...rest}
       />
       {subStr && (

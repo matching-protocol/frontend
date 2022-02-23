@@ -3,6 +3,8 @@ import { Box } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
+import Card from 'components/Card'
+import InputSearch from 'components/Input/InputSearch'
 
 enum Mode {
   TABLE,
@@ -39,36 +41,46 @@ function StyledOutlineButton({
 
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
+  const [search, setSearch] = useState('')
 
   return (
-    <Box width="100%" padding="0 94px 0 366px">
-      <Box width="100%" display="flex" justifyContent="space-between">
-        <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
-        <Box display="flex" gap={24}>
-          <StyledOutlineButton width={152} height={60} onClick={() => {}}>
-            <LogoText logo={<FilterIcon />} text="Filter" />
-          </StyledOutlineButton>
-          <Box display="flex" gap={8}>
-            <StyledOutlineButton
-              width={60}
-              height={60}
-              selected={mode === Mode.CARD}
-              onClick={() => setMode(Mode.CARD)}
-            >
-              <CardModeIcon />
+    <>
+      <Box width="100%" padding="0 94px 0 366px">
+        <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
+          <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
+          <Box display="flex" gap={24}>
+            <StyledOutlineButton width={152} height={60} onClick={() => {}}>
+              <LogoText logo={<FilterIcon />} text="Filter" />
             </StyledOutlineButton>
-            <StyledOutlineButton
-              width={60}
-              height={60}
-              selected={mode === Mode.TABLE}
-              onClick={() => setMode(Mode.TABLE)}
-            >
-              <TableModeIcon />
-            </StyledOutlineButton>
+            <Box display="flex" gap={8}>
+              <StyledOutlineButton
+                width={60}
+                height={60}
+                selected={mode === Mode.CARD}
+                onClick={() => setMode(Mode.CARD)}
+              >
+                <CardModeIcon />
+              </StyledOutlineButton>
+              <StyledOutlineButton
+                width={60}
+                height={60}
+                selected={mode === Mode.TABLE}
+                onClick={() => setMode(Mode.TABLE)}
+              >
+                <TableModeIcon />
+              </StyledOutlineButton>
+            </Box>
           </Box>
         </Box>
+        <Card width="100%">
+          <Box width="100%" padding="30px 28px 40px">
+            <Box display="flex" justifyContent="space-between">
+              <InputSearch value={search} width={244} onChange={e => setSearch(e.target.value)} />
+            </Box>
+          </Box>
+        </Card>
       </Box>
-    </Box>
+    </>
   )
 }
 

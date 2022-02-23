@@ -40,10 +40,10 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Market', route: routes.test1, icon: <Image src={MarketIcon} /> },
-  { title: 'Account', route: routes.test2, icon: <Image src={AccountIcon} /> },
-  { title: 'Statistics', route: routes.test3, icon: <Image src={StatIcon} /> },
-  { title: 'Help', route: routes.test3, icon: <Image src={HelpIcon} /> }
+  { title: 'Market', route: routes.market, icon: <Image src={MarketIcon} /> },
+  { title: 'Account', route: undefined, icon: <Image src={AccountIcon} /> },
+  { title: 'Statistics', route: undefined, icon: <Image src={StatIcon} /> },
+  { title: 'Help', route: undefined, icon: <Image src={HelpIcon} /> }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({

@@ -90,6 +90,48 @@ const MainLogo = styled(NavLink)({
   }
 })
 
+const StyledNavLink = styled(NavLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.text.primary,
+  opacity: 0.6,
+  display: 'flex',
+  alignItems: 'center',
+  '&.active': {
+    opacity: 1,
+    '& svg': {
+      stroke: theme.palette.primary.main
+    },
+    '& .filledSvg': {
+      fill: theme.palette.primary.main,
+      stroke: 'none'
+    }
+  },
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}))
+
+const StyledExternalLink = styled(ExternalLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.text.primary,
+  opacity: 0.6,
+  display: 'flex',
+  alignItems: 'center',
+  '&.active': {
+    opacity: 1,
+    '& svg': {
+      stroke: theme.palette.primary.main
+    },
+    '& .filledSvg': {
+      fill: theme.palette.primary.main,
+      stroke: 'none'
+    }
+  },
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}))
+
 // const LinksWrapper = muiStyled('div')({
 //   marginLeft: 60.2
 // })
@@ -99,19 +141,19 @@ export default function Header() {
     () => (
       <Box
         sx={{
-          padding: '50px 40px',
+          padding: '136px 44px',
           minHeight: '100%'
         }}
         gridTemplateRows="auto auto auto 1fr"
         display="grid"
         justifyContent="space-between"
-        gap="52px"
+        gap="80px"
       >
         <List>
           {Tabs.map(({ title, route, icon, link }, idx) => (
             <ListItem key={title} sx={{ padding: '10px 0' }}>
               {link ? (
-                <ExternalLink href={link}>
+                <StyledExternalLink href={link}>
                   <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
                   <ListItemText
                     primary={title}
@@ -119,9 +161,9 @@ export default function Header() {
                       sx: { fontSize: '16px' }
                     }}
                   />
-                </ExternalLink>
+                </StyledExternalLink>
               ) : (
-                <NavLink
+                <StyledNavLink
                   key={title + idx}
                   id={`${route}-nav-link`}
                   to={route ?? ''}
@@ -132,10 +174,10 @@ export default function Header() {
                   <ListItemText
                     primary={title}
                     primaryTypographyProps={{
-                      sx: { fontSize: '16px' }
+                      sx: { fontSize: '16px', fontWeight: 500 }
                     }}
                   />
-                </NavLink>
+                </StyledNavLink>
               )}
             </ListItem>
           ))}
@@ -209,7 +251,8 @@ export default function Header() {
           },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
-            width: 272
+            width: 272,
+            background: '#FFFFFF'
           }
         }}
         open

@@ -47,7 +47,7 @@ export const Tabs: Tab[] = [
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  position: 'relative',
+  position: 'fixed',
   height: theme.height.header,
   borderBottom: '1px solid #00000020',
   backgroundColor: theme.palette.background.default,
@@ -56,6 +56,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   justifyContent: 'space-between',
   boxShadow: 'none',
   padding: '0 60px 00 40px',
+  zIndex: theme.zIndex.drawer + 1,
   [theme.breakpoints.down('md')]: {
     position: 'fixed',
     bottom: 0,
@@ -151,23 +152,6 @@ export default function Header() {
   return (
     <>
       <MobileHeader />
-      <Drawer
-        variant="permanent"
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          boxShadow: 'none',
-          '& .MuiPaper-root': {
-            borderColor: 'transparent'
-          },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: 272
-          }
-        }}
-        open
-      >
-        {drawer}
-      </Drawer>
       <StyledAppBar>
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
@@ -215,6 +199,23 @@ export default function Header() {
           <ChainSelect chainList={ChainList} selectedChain={ChainList[0]} />
         </Box>
       </StyledAppBar>
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          boxShadow: 'none',
+          '& .MuiPaper-root': {
+            borderColor: 'transparent'
+          },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: 272
+          }
+        }}
+        open
+      >
+        {drawer}
+      </Drawer>
     </>
   )
 }

@@ -1,47 +1,47 @@
-import { useState } from 'react'
-import { Box } from '@mui/material'
+import { useMemo, useState } from 'react'
+import { Box, Typography, MenuItem } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
 import Card from 'components/Card'
 import InputSearch from 'components/Input/InputSearch'
+import Select from 'components/Select/Select'
+import Table from 'components/Table'
+import Button from 'components/Button/Button'
 
 enum Mode {
   TABLE,
   CARD
 }
 
-function StyledOutlineButton({
-  children,
-  width,
-  height,
-  selected,
-  onClick
-}: {
-  children: React.ReactNode
-  width: number
-  height: number
-  selected?: boolean
-  onClick?: (() => void) | null
-}) {
-  return (
-    <OutlineButton
-      width={width}
-      height={height}
-      style={{
-        '& > *': { opacity: selected ? 1 : 0.5 },
-        '&:hover > *': { opacity: 1 }
-      }}
-      onClick={onClick}
-    >
-      {children}
-    </OutlineButton>
-  )
-}
+export const TableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive']
 
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
+
+  const tableRows = useMemo(() => {
+    return [
+      [
+        '#000001',
+        <>Ether to BSC</>,
+        <>BTC to ETH</>,
+        <>BTC</>,
+        <Button key={1} width="94px" height="32px" fontSize={13}>
+          Take Offer
+        </Button>
+      ],
+      [
+        '#000002',
+        <>Ether to BSC</>,
+        <>BTC to ETH</>,
+        <>BTC</>,
+        <Button key={1} width="94px" height="32px" fontSize={13}>
+          Take Offer
+        </Button>
+      ]
+    ]
+  }, [])
 
   return (
     <>
@@ -74,9 +74,20 @@ export default function Market() {
         </Box>
         <Card width="100%">
           <Box width="100%" padding="30px 28px 40px">
-            <Box display="flex" justifyContent="space-between">
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={40}>
               <InputSearch value={search} width={244} onChange={e => setSearch(e.target.value)} />
+              <Box display="flex" gap={20} alignItems="center">
+                <Typography fontSize={16} fontWeight={700}>
+                  Sort by
+                </Typography>
+                <Select value="MAX Amount" height={60}>
+                  <MenuItem value={'MAX Amount'} key={'MAX Amount'} selected>
+                    MAX Amount
+                  </MenuItem>
+                </Select>
+              </Box>
             </Box>
+            <Table fontSize="12px" header={TableHeader} rows={tableRows} />
           </Box>
         </Card>
       </Box>
@@ -151,5 +162,33 @@ function CardModeIcon() {
         strokeLinejoin="round"
       />
     </svg>
+  )
+}
+
+function StyledOutlineButton({
+  children,
+  width,
+  height,
+  selected,
+  onClick
+}: {
+  children: React.ReactNode
+  width: number
+  height: number
+  selected?: boolean
+  onClick?: (() => void) | null
+}) {
+  return (
+    <OutlineButton
+      width={width}
+      height={height}
+      style={{
+        '& > *': { opacity: selected ? 1 : 0.5 },
+        '&:hover > *': { opacity: 1 }
+      }}
+      onClick={onClick}
+    >
+      {children}
+    </OutlineButton>
   )
 }

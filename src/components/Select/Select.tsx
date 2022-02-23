@@ -26,8 +26,7 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   cursor: 'pointer',
-  borderRadius: '60px',
-  border: `1px solid ${theme.palette.primary.dark}`,
+  borderRadius: '16px',
   position: 'relative',
   padding: '10px',
   '& .MuiSelect-icon': {
@@ -60,7 +59,7 @@ export default function Select(props: Props) {
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
-          backgroundColor: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
+          backgroundColor: primary ? theme.palette.primary.main : '#F7F7F8',
           width: width || '100%',
           height: height || '44px',
           '&:before': {

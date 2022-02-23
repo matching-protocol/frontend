@@ -26,12 +26,12 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   cursor: 'pointer',
-  borderRadius: '10px',
-  border: '1px solid transparent',
+  borderRadius: '60px',
+  border: `1px solid ${theme.palette.primary.dark}`,
   position: 'relative',
   padding: '10px',
   '& .MuiSelect-icon': {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.dark,
     right: '10px'
   },
   '&.Mui-focused': {
@@ -60,9 +60,9 @@ export default function Select(props: Props) {
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
-          backgroundColor: primary ? theme.palette.primary.main : theme.palette.grey.A400,
+          backgroundColor: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
           width: width || '100%',
-          height: height || '48px',
+          height: height || '44px',
           '&:before': {
             content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
@@ -72,9 +72,9 @@ export default function Select(props: Props) {
             fontSize: 16,
             fontWeight: 400
           },
-          '&:hover': {
-            backgroundColor: disabled ? theme.palette.grey.A400 : theme.palette.primary.main
-          },
+          // '&:hover': {
+          //   backgroundColor: disabled ? theme.palette.grey.A400 : theme.palette.primary.main
+          // },
           '& .MuiSelect-icon': {
             display: disabled ? 'none' : 'block'
           }

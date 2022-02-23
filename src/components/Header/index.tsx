@@ -1,14 +1,13 @@
 import { NavLink } from 'react-router-dom'
 import { AppBar, Box, styled, Typography, useTheme } from '@mui/material'
-// import { ExternalLink } from 'theme/components'
-// import Web3Status from './Web3Status'
 import { HideOnMobile } from 'theme/index'
-// import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
 import BrandLogo from '../../assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 import Button from 'components/Button/Button'
+import { ChainList } from 'constants/chain'
+import ChainSelect from 'components/Select/ChainSelect'
 
 interface TabContent {
   title: string
@@ -88,6 +87,8 @@ const MainLogo = styled(NavLink)({
 // })
 
 export default function Header() {
+  // const { chainId } = useActiveWeb3React()
+
   return (
     <>
       <MobileHeader />
@@ -131,9 +132,12 @@ export default function Header() {
           </Box>
         </HideOnMobile>
         {/* <Web3Status /> */}
-        <Button width="144px" height="44px">
-          Make an Offer
-        </Button>
+        <Box display="flex" gap={16}>
+          <Button width="144px" height="44px">
+            Make an Offer
+          </Button>
+          <ChainSelect chainList={ChainList} selectedChain={ChainList[0]} />
+        </Box>
       </StyledAppBar>
     </>
   )

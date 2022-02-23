@@ -28,7 +28,7 @@ export default function Button(props: Props) {
         fontSize: fontSize || 16,
         fontWeight: 500,
         transition: '.3s',
-        borderRadius: 1,
+        borderRadius: 6,
         backgroundColor: backgroundColor || theme.palette.primary.main,
         color: color || theme.palette.primary.contrastText,
         '&:hover': {

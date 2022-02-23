@@ -8,6 +8,7 @@ import Image from 'components/Image'
 import BrandLogo from '../../assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
+import Button from 'components/Button/Button'
 
 interface TabContent {
   title: string
@@ -130,6 +131,9 @@ export default function Header() {
           </Box>
         </HideOnMobile>
         {/* <Web3Status /> */}
+        <Button width="144px" height="44px">
+          Make an Offer
+        </Button>
       </StyledAppBar>
     </>
   )

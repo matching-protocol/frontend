@@ -8,6 +8,7 @@ import InputSearch from 'components/Input/InputSearch'
 import Select from 'components/Select/Select'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
+import Pagination from 'components/Pagination'
 
 enum Mode {
   TABLE,
@@ -19,6 +20,7 @@ export const TableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive']
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
 
   const tableRows = useMemo(() => {
     return [
@@ -88,6 +90,7 @@ export default function Market() {
               </Box>
             </Box>
             <Table fontSize="12px" header={TableHeader} rows={tableRows} />
+            <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
           </Box>
         </Card>
       </Box>

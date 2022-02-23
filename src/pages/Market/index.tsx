@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Box, Typography, MenuItem } from '@mui/material'
+import { Box, Typography, MenuItem, Grid } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
@@ -9,6 +9,7 @@ import Select from 'components/Select/Select'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
 import Pagination from 'components/Pagination'
+import MarketCard from './MarketCard'
 
 enum Mode {
   TABLE,
@@ -22,7 +23,7 @@ export default function Market() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
 
-  const tableRows = useMemo(() => {
+  const dataRows = useMemo(() => {
     return [
       [
         '#000001',
@@ -47,7 +48,7 @@ export default function Market() {
 
   return (
     <>
-      <Box width="100%" padding="0 94px 0 366px">
+      <Box width="100%" padding={{ xs: 0, md: '0 94px 0 366px' }}>
         <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
           <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
           <Box display="flex" gap={24}>
@@ -76,7 +77,7 @@ export default function Market() {
         </Box>
         <Card width="100%">
           <Box width="100%" padding="30px 28px 40px">
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={40}>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
               <InputSearch value={search} width={244} onChange={e => setSearch(e.target.value)} />
               <Box display="flex" gap={20} alignItems="center">
                 <Typography fontSize={16} fontWeight={700}>
@@ -89,10 +90,26 @@ export default function Market() {
                 </Select>
               </Box>
             </Box>
-            <Table fontSize="12px" header={TableHeader} rows={tableRows} />
-            <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+            {mode === Mode.TABLE && (
+              <Box mt={40}>
+                <Table fontSize="12px" header={TableHeader} rows={dataRows} />
+                <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+              </Box>
+            )}
           </Box>
         </Card>
+        {mode === Mode.CARD && (
+          <>
+            <Grid container spacing={20} mt={24}>
+              {dataRows.map((row, index) => (
+                <Grid item xs={12} md={4} key={index}>
+                  <MarketCard row={row} header={TableHeader} />
+                </Grid>
+              ))}
+            </Grid>
+            <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+          </>
+        )}
       </Box>
     </>
   )

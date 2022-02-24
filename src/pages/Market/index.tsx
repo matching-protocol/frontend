@@ -115,7 +115,7 @@ export default function Market() {
               </Box>
             </Box>
             {mode === Mode.TABLE && (
-              <Box mt={40}>
+              <Box mt={40} display="grid" gap={24}>
                 <Table fontSize="12px" header={TableHeader} rows={dataRows} variant="outlined" />
                 <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
               </Box>

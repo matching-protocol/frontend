@@ -76,7 +76,7 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     borderBottom: 'none',
     '& .MuiTableSortLabel-root': {
       fontWeight: 400,
-      fontSize: '12px!important',
+      // fontSize: '12px!important',
       color: theme.palette.text.secondary
     },
     '&:first-of-type': {
@@ -104,16 +104,16 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
   },
   '& .MuiTableCell-root': {
-    fontSize: (fontSize ?? '16px') + '!important',
+    // fontSize: fontSize ?? '16px',
     justifyContent: 'flex-start',
     paddingLeft: 0,
     border: '1px solid',
     borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
     borderRight: 'none',
     borderLeft: 'none',
-    '& .MuiTypography-root': {
-      fontSize: (fontSize ?? '16px') + '!important'
-    },
+    // '& .MuiTypography-root': {
+    //   fontSize: fontSize ?? '16px'
+    // },
     '&:first-of-type': {
       borderLeft: '1px solid',
       borderColor: variant === 'outlined' ? '#00000010' : 'transparent',

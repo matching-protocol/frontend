@@ -20,7 +20,15 @@ enum Mode {
   CARD
 }
 
-export const TableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive']
+export enum MarketTableHeaderIndex {
+  orderId,
+  route,
+  currency,
+  offerIncentive,
+  action
+}
+
+export const MarketTableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', '']
 
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
@@ -34,41 +42,52 @@ export default function Market() {
           #000001
         </Typography>,
         <Box key={1} display="flex" alignItems="center" gap={12}>
-          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+          <LogoText
+            logo={<CurrencyLogo currency={ETHER} />}
+            text="Ether"
+            size={mode === Mode.TABLE ? '32px' : '24px'}
+          />
           <ArrowForwardIcon />
-          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+          <LogoText
+            logo={<CurrencyLogo currency={ETHER} />}
+            text="Ether"
+            size={mode === Mode.TABLE ? '32px' : '24px'}
+          />
         </Box>,
         <Box key={1} display="flex" alignItems="center" gap={12}>
-          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+          <CurrencyValue
+            currency={ETHER}
+            currencySize={mode === Mode.TABLE ? '32px' : '24px'}
+            value={'123'}
+            equivalent={'$123'}
+            valueSize={mode === Mode.TABLE ? 16 : 13}
+            equivalentSize={mode === Mode.TABLE ? 13 : 11}
+          />
           <ArrowForwardIcon />
-          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+          <CurrencyValue
+            currency={ETHER}
+            currencySize={mode === Mode.TABLE ? '32px' : '24px'}
+            value={'123'}
+            equivalent={'$123'}
+            valueSize={mode === Mode.TABLE ? 16 : 13}
+            equivalentSize={mode === Mode.TABLE ? 13 : 11}
+          />
         </Box>,
-        <CurrencyValue key={1} currency={ETHER} value={'123'} equivalent={'$123'} />,
-        <Button key={1} width="94px" height="32px" fontSize={13}>
-          Take Offer
-        </Button>
-      ],
-      [
-        <Typography key={1} fontSize={16} fontWeight={500}>
-          #000002
-        </Typography>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
-          <ArrowForwardIcon />
-          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
-        </Box>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
-          <ArrowForwardIcon />
-          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
-        </Box>,
-        <CurrencyValue key={1} currency={ETHER} value={'123'} equivalent={'$123'} />,
-        <Button key={1} width="94px" height="32px" fontSize={13}>
+        <CurrencyValue
+          key={1}
+          currency={ETHER}
+          currencySize={mode === Mode.TABLE ? '32px' : '24px'}
+          value={'123'}
+          equivalent={'$123'}
+          valueSize={mode === Mode.TABLE ? 16 : 13}
+          equivalentSize={mode === Mode.TABLE ? 13 : 11}
+        />,
+        <Button key={1} width={mode === Mode.TABLE ? '94px' : '120px'} height="32px" fontSize={13}>
           Take Offer
         </Button>
       ]
     ]
-  }, [])
+  }, [mode])
 
   return (
     <>
@@ -116,7 +135,7 @@ export default function Market() {
             </Box>
             {mode === Mode.TABLE && (
               <Box mt={40} display="grid" gap={24}>
-                <Table fontSize="12px" header={TableHeader} rows={dataRows} variant="outlined" />
+                <Table fontSize="12px" header={MarketTableHeader} rows={dataRows} variant="outlined" />
                 <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
               </Box>
             )}
@@ -124,10 +143,10 @@ export default function Market() {
         </Card>
         {mode === Mode.CARD && (
           <>
-            <Grid container spacing={20} mt={24}>
+            <Grid container spacing={20} mt={24} mb={24}>
               {dataRows.map((row, index) => (
                 <Grid item xs={12} md={4} key={index}>
-                  <MarketCard row={row} header={TableHeader} />
+                  <MarketCard row={row} header={MarketTableHeader} />
                 </Grid>
               ))}
             </Grid>

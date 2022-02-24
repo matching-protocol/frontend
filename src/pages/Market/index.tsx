@@ -10,6 +10,10 @@ import Table from 'components/Table'
 import Button from 'components/Button/Button'
 import Pagination from 'components/Pagination'
 import MarketCard from './MarketCard'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import CurrencyValue from 'components/CurrencyValue'
+import { ETHER } from 'constants/token'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 enum Mode {
   TABLE,
@@ -26,19 +30,20 @@ export default function Market() {
   const dataRows = useMemo(() => {
     return [
       [
-        '#000001',
-        <>Ether to BSC</>,
-        <>BTC to ETH</>,
-        <>BTC</>,
-        <Button key={1} width="94px" height="32px" fontSize={13}>
-          Take Offer
-        </Button>
-      ],
-      [
-        '#000002',
-        <>Ether to BSC</>,
-        <>BTC to ETH</>,
-        <>BTC</>,
+        <Typography key={1} fontSize={16} fontWeight={500}>
+          #000001
+        </Typography>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+          <ArrowForwardIcon />
+          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+        </Box>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+          <ArrowForwardIcon />
+          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+        </Box>,
+        <CurrencyValue key={1} currency={ETHER} value={'123'} equivalent={'$123'} />,
         <Button key={1} width="94px" height="32px" fontSize={13}>
           Take Offer
         </Button>

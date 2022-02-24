@@ -47,6 +47,25 @@ export default function Market() {
         <Button key={1} width="94px" height="32px" fontSize={13}>
           Take Offer
         </Button>
+      ],
+      [
+        <Typography key={1} fontSize={16} fontWeight={500}>
+          #000002
+        </Typography>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+          <ArrowForwardIcon />
+          <LogoText logo={<CurrencyLogo currency={ETHER} size="32px" />} text="Ether" />
+        </Box>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+          <ArrowForwardIcon />
+          <CurrencyValue currency={ETHER} value={'123'} equivalent={'$123'} />
+        </Box>,
+        <CurrencyValue key={1} currency={ETHER} value={'123'} equivalent={'$123'} />,
+        <Button key={1} width="94px" height="32px" fontSize={13}>
+          Take Offer
+        </Button>
       ]
     ]
   }, [])
@@ -97,7 +116,7 @@ export default function Market() {
             </Box>
             {mode === Mode.TABLE && (
               <Box mt={40}>
-                <Table fontSize="12px" header={TableHeader} rows={dataRows} />
+                <Table fontSize="12px" header={TableHeader} rows={dataRows} variant="outlined" />
                 <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
               </Box>
             )}

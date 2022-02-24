@@ -91,7 +91,7 @@ export default function Market() {
 
   return (
     <>
-      <Box width="100%" padding={{ xs: 0, md: '0 94px 0 366px' }}>
+      <Box width="100%" padding={{ xs: 0, md: '60px 94px 0 366px' }}>
         <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
           <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
           <Box display="flex" gap={24}>

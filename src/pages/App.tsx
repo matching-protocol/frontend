@@ -10,6 +10,7 @@ import WarningModal from '../components/Modal/WarningModal'
 import { ModalProvider } from 'context/ModalContext'
 // import Footer from 'components/Footer'
 import Market from './Market'
+import Offer from './Offer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -24,8 +25,8 @@ const AppWrapper = styled('div')(({ theme }) => ({
 const ContentWrapper = styled('div')({
   width: '100%',
   maxHeight: '100vh',
-  overflow: 'auto',
-  alignItems: 'center'
+  overflow: 'auto'
+  // alignItems: 'center'
 })
 
 const BodyWrapper = styled('div')(({ theme }) => ({
@@ -34,18 +35,20 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   width: '100%',
   // minHeight: `calc(100vh - ${theme.height.header})`,
   minHeight: '100vh',
-  padding: '50px 0 80px',
+  // padding: '50px 0 80px',
   // justifyContent: 'center',
-  // alignItems: 'center',
-  flex: 1,
+  alignItems: 'center',
+  // flex: 1,
   overflowY: 'auto',
   overflowX: 'hidden',
-  position: 'relative',
-  [theme.breakpoints.down('md')]: {
-    minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
-    paddingTop: 20
-  },
-  background: theme.palette.background.paper
+  // position: 'relative',
+  // [theme.breakpoints.down('md')]: {
+  //   minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
+  //   paddingTop: 20
+  // },
+  background: theme.palette.background.paper,
+  paddingLeft: theme.width.drawer,
+  paddingTop: theme.height.header
 }))
 
 export default function App() {
@@ -62,6 +65,7 @@ export default function App() {
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/market" component={Market} />
+                  <Route exact strict path="/offer" component={Offer} />
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>

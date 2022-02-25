@@ -10,6 +10,10 @@ interface Height {
   footer: string
 }
 
+interface Width {
+  drawer: string
+}
+
 interface TextColor {
   text1: string
   text2: string
@@ -32,12 +36,14 @@ declare module '@mui/material/styles' {
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
   interface DeprecatedThemeOptions {
     textColor: TextColor
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
 }
 
@@ -47,18 +53,21 @@ declare module '@mui/material/styles/createTheme' {
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
   interface ThemeOptions {
     textColor: TextColor
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
   interface Theme {
     textColor: TextColor
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
 }
 
@@ -128,6 +137,9 @@ export const theme = {
     header: '80px',
     mobileHeader: '77px',
     footer: '60px'
+  },
+  width: {
+    drawer: '272px'
   },
   shape: {
     border: '1px solid',

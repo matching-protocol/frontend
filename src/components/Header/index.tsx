@@ -238,7 +238,7 @@ export default function Header() {
           <Button width="144px" height="44px">
             Make an Offer
           </Button>
-          <ChainSelect chainList={ChainList} selectedChain={ChainList[0]} />
+          <ChainSelect list={ChainList} selected={ChainList[0]} />
         </Box>
       </StyledAppBar>
       <Drawer

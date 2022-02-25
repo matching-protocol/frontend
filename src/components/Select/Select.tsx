@@ -66,7 +66,7 @@ export default function Select(props: Props) {
             content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
             left: 24,
-            top: 10,
+            top: 20,
             zIndex: 999,
             fontSize: 16,
             fontWeight: 400

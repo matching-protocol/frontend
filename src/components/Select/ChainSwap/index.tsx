@@ -4,11 +4,12 @@ import ChainSelect from '../ChainSelect'
 import { Chain } from 'models/chain'
 import SwitchButton from './SwitcherButton'
 import { useMemo } from 'react'
+import { Currency } from 'constants/token/currency'
 
 export default function ChainSwap({
-  fromChain,
-  toChain,
-  chainList,
+  from,
+  to,
+  list,
   onSelectTo,
   onSelectFrom,
   disabledFrom,
@@ -16,11 +17,11 @@ export default function ChainSwap({
   activeFrom,
   activeTo
 }: {
-  fromChain: Chain | null
-  toChain: Chain | null
-  chainList: Chain[]
-  onSelectFrom?: (chain: Chain | null) => void
-  onSelectTo?: (chain: Chain | null) => void
+  from: Chain | Currency | null
+  to: Chain | Currency | null
+  list: (Chain | Currency)[]
+  onSelectFrom?: (el: Chain | Currency | null) => void
+  onSelectTo?: (el: Chain | Currency | null) => void
   disabledFrom?: boolean
   disabledTo?: boolean
   activeFrom?: boolean
@@ -28,22 +29,21 @@ export default function ChainSwap({
 }) {
   const handleSwitch = () => {
     if (!onSelectTo || !onSelectFrom) return
-    const from = fromChain
-    const to = toChain
+
     onSelectFrom(to)
     onSelectTo(from)
   }
 
-  const toChainList = useMemo(() => {
-    return chainList.filter(chain => !(chain.id === fromChain?.id))
-  }, [chainList, fromChain?.id])
+  const toList = useMemo(() => {
+    return list.filter(chain => !(chain.symbol === from?.symbol))
+  }, [list, from?.symbol])
 
   return (
     <Box display="flex" justifyContent="space-between" alignItems={'flex-end'} position={'relative'} width="100%">
       <ChainSelect
         label={'From'}
-        selectedChain={fromChain}
-        chainList={chainList}
+        selected={from}
+        list={list}
         onChange={onSelectFrom}
         width={'49%'}
         disabled={disabledFrom}
@@ -56,8 +56,8 @@ export default function ChainSwap({
       </Box>
       <ChainSelect
         label={'To'}
-        selectedChain={toChain}
-        chainList={toChainList}
+        selected={to}
+        list={toList}
         onChange={onSelectTo}
         width={'49%'}
         disabled={disabledTo}

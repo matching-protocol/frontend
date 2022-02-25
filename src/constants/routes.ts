@@ -1,3 +1,4 @@
 export const routes = {
-  market: '/market'
+  market: '/market',
+  offer: '/offer'
 }

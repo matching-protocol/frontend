@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   AppBar,
@@ -12,7 +12,7 @@ import {
   ListItemText,
   Drawer
 } from '@mui/material'
-import { HideOnMobile } from 'theme/index'
+import theme, { HideOnMobile } from 'theme/index'
 import Image from 'components/Image'
 import BrandLogo from 'assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
@@ -26,6 +26,7 @@ import AccountIcon from 'assets/images/account.png'
 import StatIcon from 'assets/images/statistics.png'
 import HelpIcon from 'assets/images/help.png'
 import { ExternalLink } from 'theme/components'
+import { useHistory } from 'react-router-dom'
 
 interface TabContent {
   title: string
@@ -137,6 +138,12 @@ const StyledExternalLink = styled(ExternalLink)(({ theme }) => ({
 // })
 
 export default function Header() {
+  const history = useHistory()
+
+  const onOffer = useCallback(() => {
+    history.push(routes.offer)
+  }, [])
+
   const drawer = useMemo(
     () => (
       <Box
@@ -235,7 +242,7 @@ export default function Header() {
         </HideOnMobile>
         {/* <Web3Status /> */}
         <Box display="flex" gap={16}>
-          <Button width="144px" height="44px">
+          <Button width="144px" height="44px" onClick={onOffer}>
             Make an Offer
           </Button>
           <ChainSelect list={ChainList} selected={ChainList[0]} />
@@ -251,7 +258,7 @@ export default function Header() {
           },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
-            width: 272,
+            width: theme.width.drawer,
             background: '#FFFFFF'
           }
         }}

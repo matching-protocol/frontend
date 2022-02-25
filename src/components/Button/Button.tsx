@@ -11,12 +11,13 @@ interface Props {
   color?: string
   children?: React.ReactNode
   fontSize?: string | number
+  borderRadius?: string | number
   classname?: string
   style?: React.CSSProperties & SxProps<Theme>
 }
 
 export default function Button(props: Props) {
-  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color, children } = props
+  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color, borderRadius, children } = props
   const theme = useTheme()
   return (
     <ButtonBase
@@ -28,7 +29,7 @@ export default function Button(props: Props) {
         fontSize: fontSize || 16,
         fontWeight: 500,
         transition: '.3s',
-        borderRadius: 6,
+        borderRadius: borderRadius || 6,
         backgroundColor: backgroundColor || theme.palette.primary.main,
         color: color || theme.palette.primary.contrastText,
         '&:hover': {

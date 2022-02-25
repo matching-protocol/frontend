@@ -14,6 +14,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import CurrencyValue from 'components/CurrencyValue'
 import { ETHER } from 'constants/token'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+import { ChainList } from 'constants/chain'
+import UniSwap from 'components/Select/UniSwap'
 
 enum Mode {
   TABLE,
@@ -34,6 +36,7 @@ export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [filterToggle, setFilterToggle] = useState(false)
 
   const dataRows = useMemo(() => {
     return [
@@ -95,7 +98,7 @@ export default function Market() {
         <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
           <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
           <Box display="flex" gap={24}>
-            <StyledOutlineButton width={152} height={60} onClick={() => {}}>
+            <StyledOutlineButton width={152} height={60} onClick={() => setFilterToggle(!filterToggle)}>
               <LogoText logo={<FilterIcon />} text="Filter" />
             </StyledOutlineButton>
             <Box display="flex" gap={8}>
@@ -118,6 +121,36 @@ export default function Market() {
             </Box>
           </Box>
         </Box>
+        {filterToggle && (
+          <Card width="100%" style={{ marginBottom: 36 }}>
+            <Box width="100%" padding="28px 28px 36px" display="flex" gap={56}>
+              <Box display="grid" gap={20}>
+                <Typography fontSize={16} fontWeight={700}>
+                  Route:
+                </Typography>
+                <UniSwap
+                  from={ChainList[0]}
+                  to={ChainList[1]}
+                  list={ChainList}
+                  onSelectFrom={() => {}}
+                  onSelectTo={() => {}}
+                />
+              </Box>
+              <Box display="grid" gap={20}>
+                <Typography fontSize={16} fontWeight={700}>
+                  Currency:
+                </Typography>
+                <UniSwap
+                  from={ChainList[0]}
+                  to={ChainList[1]}
+                  list={ChainList}
+                  onSelectFrom={() => {}}
+                  onSelectTo={() => {}}
+                />
+              </Box>
+            </Box>
+          </Card>
+        )}
         <Card width="100%">
           <Box width="100%" padding="30px 28px 40px">
             <Box display="flex" justifyContent="space-between" alignItems="center">

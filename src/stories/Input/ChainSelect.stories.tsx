@@ -3,6 +3,7 @@ import ChainSelect from 'components/Select/ChainSelect'
 import { Chain } from 'models/chain'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import { useState } from 'react'
+import { Currency } from 'constants/token/currency'
 
 export default {
   title: 'Input/ChainSelect',
@@ -27,8 +28,8 @@ const ChainList = [
 ]
 
 const DefaultTemplate: ComponentStory<typeof ChainSelect> = () => {
-  const [selectedChain, setSelectedChain] = useState<Chain | null>(null)
+  const [selected, setSelected] = useState<Chain | Currency | null>(null)
 
-  return <ChainSelect chainList={ChainList} selectedChain={selectedChain} onChange={chain => setSelectedChain(chain)} />
+  return <ChainSelect list={ChainList} selected={selected} onChange={chain => setSelected(chain)} />
 }
 export const Default = DefaultTemplate.bind({})

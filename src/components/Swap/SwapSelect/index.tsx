@@ -1,30 +1,9 @@
-import { MenuItem, Box, styled, Typography } from '@mui/material'
+import { MenuItem, Box, Typography } from '@mui/material'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import { useCallback } from 'react'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
-
-function SvgCircle() {
-  return (
-    <svg height="24" width="24">
-      <circle cx="12" cy="12" r="12" fill="#FFFFFF" />
-    </svg>
-  )
-}
-
-// const StyledImgBox = styled(Box)({
-//   '& img': {
-//     width: '28px',
-//     height: '28px'
-//   },
-//   '& span': {
-//     width: '28px',
-//     height: '28px',
-//     borderRadius: '50%',
-//     background: '#FFFFFF'
-//   }
-// })
 
 export default function SwapSelect({
   label,
@@ -133,5 +112,13 @@ export default function SwapSelect({
         </MenuItem>
       ))}
     </Select>
+  )
+}
+
+function SvgCircle() {
+  return (
+    <svg height="24" width="24">
+      <circle cx="12" cy="12" r="12" fill="#FFFFFF" />
+    </svg>
   )
 }

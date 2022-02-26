@@ -1,4 +1,4 @@
-// import { useMemo } from 'react'
+import { ChangeEvent } from 'react'
 import { Box, Typography } from '@mui/material'
 import { Chain } from 'models/chain'
 import { Currency } from 'constants/token/currency'
@@ -21,7 +21,9 @@ export default function BiSwap({
   onSelectFromChain,
   onSelectToChain,
   onSelectFromCurrency,
-  onSelectToCurrency
+  onSelectToCurrency,
+  onChangeFromValue,
+  onChangeToValue
 }: {
   fromLabel: string
   toLabel: string
@@ -35,8 +37,10 @@ export default function BiSwap({
   currencyList: Currency[]
   onSelectFromChain: (e: any) => void
   onSelectToChain: (e: any) => void
-  onSelectFromCurrency: (e: any) => void
-  onSelectToCurrency: (e: any) => void
+  onSelectFromCurrency: () => void
+  onSelectToCurrency: () => void
+  onChangeFromValue: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeToValue: (e: ChangeEvent<HTMLInputElement>) => void
 }) {
   const handleSwitch = () => {
     // if (!onSelectTo || !onSelectFrom) return
@@ -67,14 +71,21 @@ export default function BiSwap({
           value={fromValue}
           options={currencyList}
           selected={fromCurrency}
-          onChange={onSelectFromCurrency}
+          onClick={onSelectFromCurrency}
+          onChange={onChangeFromValue}
         />
         <Box position={'absolute'} left={'calc(50% - 16px)'} zIndex={99} padding="0px" height="32px" bottom="8px">
           <TextButton onClick={handleSwitch}>
             <SwitchButton />
           </TextButton>
         </Box>
-        <SwapSelectInput value={toValue} options={currencyList} selected={toCurrency} onChange={onSelectToCurrency} />
+        <SwapSelectInput
+          value={toValue}
+          options={currencyList}
+          selected={toCurrency}
+          onClick={onSelectToCurrency}
+          onChange={onChangeToValue}
+        />
       </Box>
     </Box>
   )

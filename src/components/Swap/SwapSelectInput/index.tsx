@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { Box, Typography } from '@mui/material'
 import Input from 'components/Input'
 import { Currency } from 'constants/token/currency'
@@ -6,20 +7,22 @@ import LogoText from 'components/LogoText'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 export default function SwapSelectInput({
-  width,
   value,
   selected,
   selectPlaceholder,
   inputPlaceholder,
-  onClick
+  onClick,
+  onChange,
+  width
 }: {
   value: string
   options: Currency[]
   selected: Currency | null
   selectPlaceholder?: string
   inputPlaceholder?: string
+  onClick: () => void
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
   width?: number | string
-  onClick?: () => void
 }) {
   return (
     <Box width={width || '100%'}>
@@ -32,7 +35,7 @@ export default function SwapSelectInput({
           </Typography>
         )}
       </SelectButton>
-      <Input value={value} placeholder={inputPlaceholder} />
+      <Input value={value} placeholder={inputPlaceholder} onChange={onChange} />
     </Box>
   )
 }

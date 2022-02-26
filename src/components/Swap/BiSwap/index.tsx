@@ -23,7 +23,9 @@ export default function BiSwap({
   onSelectFromCurrency,
   onSelectToCurrency,
   onChangeFromValue,
-  onChangeToValue
+  onChangeToValue,
+  fromSubStr,
+  toSubStr
 }: {
   fromLabel: string
   toLabel: string
@@ -41,6 +43,8 @@ export default function BiSwap({
   onSelectToCurrency: () => void
   onChangeFromValue: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeToValue: (e: ChangeEvent<HTMLInputElement>) => void
+  fromSubStr?: string
+  toSubStr?: string
 }) {
   const handleSwitch = () => {
     // if (!onSelectTo || !onSelectFrom) return
@@ -100,6 +104,17 @@ export default function BiSwap({
           inputPlaceholder={'0.00'}
         />
       </Box>
+
+      {(fromSubStr || toSubStr) && (
+        <Box display="flex" alignItems="center" gap={20}>
+          <Typography width={344} fontSize={11} sx={{ opacity: 0.5 }}>
+            {fromSubStr || ''}
+          </Typography>
+          <Typography width={344} fontSize={11} sx={{ opacity: 0.5 }}>
+            {toSubStr || ''}
+          </Typography>
+        </Box>
+      )}
     </Box>
   )
 }

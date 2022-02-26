@@ -2,33 +2,30 @@ import Card from 'components/Card'
 import { Typography, Box, styled } from '@mui/material'
 
 const StyledOrderList = styled('ol')(({ theme }) => ({
-  display: 'block',
+  display: 'grid',
   listStyle: 'none',
   counterReset: 'counterReset',
   position: 'relative',
-  marginBlockEnd: '0px',
-  paddingLeft: 36,
+  gap: 24,
+  paddingInlineStart: 32,
   '& li': {
-    paddingBottom: '24px',
-    paddingLeft: '12px',
-    marginLeft: '12px'
+    // paddingBottom: '24px',
+    fontSize: 14,
+    fontWeight: 400
   },
   '& li:before': {
     counterIncrement: 'counterReset',
     content: 'counter(counterReset)',
     color: theme.palette.primary.main,
-    width: '24px',
-    height: '24px',
+    width: '20px',
+    height: '20px',
     borderRadius: '50%',
-    border: '1px solid #31B047',
+    border: '1px solid #161616',
     float: 'left',
     textAlign: 'center',
-    marginLeft: '24px',
     position: 'absolute',
-    left: '-1px'
-  },
-  [theme.breakpoints.down('md')]: {
-    padding: '0px 0px 0px 36px'
+    left: 0,
+    fontSize: 13
   }
 }))
 

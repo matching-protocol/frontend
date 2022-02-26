@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function SelectButton(props: Props) {
-  const { onClick, disabled, style, width, height, primary, children } = props
+  const { onClick, disabled, style, width, height, children } = props
   const theme = useTheme()
 
   return (

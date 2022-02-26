@@ -44,7 +44,7 @@ export default function SwapSelectInput({
           </Typography>
         )}
       </SelectButton>
-      <Input width={160} value={value} placeholder={inputPlaceholder} onChange={onChange} />
+      <Input width={160} value={value} placeholder={inputPlaceholder} onChange={onChange} backgroundColor="#FFFFFF" />
     </Box>
   )
 }

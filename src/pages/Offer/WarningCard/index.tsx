@@ -9,7 +9,6 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
   gap: 24,
   paddingInlineStart: 32,
   '& li': {
-    // paddingBottom: '24px',
     fontSize: 14,
     fontWeight: 400
   },

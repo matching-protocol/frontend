@@ -57,6 +57,8 @@ export default function Offer() {
             onSelectToCurrency={onSelectToCurrency}
             onChangeFromValue={e => setFromValue(e.target.value)}
             onChangeToValue={e => setToValue(e.target.value)}
+            fromSubStr={'0.001BTC = $286.01'}
+            toSubStr={'0.001BTC = $286.01'}
           />
         </Box>
 

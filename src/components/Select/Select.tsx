@@ -16,6 +16,7 @@ interface Props {
   primary?: boolean
   label?: string
   renderValue?: any
+  fontSize?: string | number
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -50,7 +51,8 @@ export default function Select(props: Props) {
     value,
     defaultValue,
     placeholder,
-    renderValue
+    renderValue,
+    fontSize
   } = props
   const theme = useTheme()
 
@@ -68,7 +70,7 @@ export default function Select(props: Props) {
             left: 24,
             top: 20,
             zIndex: 999,
-            fontSize: 16,
+            fontSize: fontSize || 16,
             fontWeight: 400
           },
           // '&:hover': {
@@ -89,7 +91,7 @@ export default function Select(props: Props) {
               mt: '12px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '& li': {
-                fontSize: 16,
+                fontSize: fontSize || 16,
                 fontWeight: 500,
                 color: '#FFFFFF',
                 borderBottom: '1px solid rgba(255,255,255,0.1)',

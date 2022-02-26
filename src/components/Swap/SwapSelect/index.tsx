@@ -14,7 +14,8 @@ export default function SwapSelect({
   width,
   height,
   active,
-  placeholder
+  placeholder,
+  fontSize
 }: {
   label?: string
   disabled?: boolean
@@ -25,6 +26,7 @@ export default function SwapSelect({
   height?: string
   active?: boolean
   placeholder?: string
+  fontSize?: string | number
 }) {
   const handleChange = useCallback(
     e => {
@@ -45,6 +47,7 @@ export default function SwapSelect({
       placeholder={placeholder ?? ''}
       height={height}
       primary={active}
+      fontSize={fontSize}
     >
       {list.map(option => (
         <MenuItem
@@ -68,7 +71,11 @@ export default function SwapSelect({
           key={option.symbol}
           selected={selected?.symbol === option.symbol}
         >
-          <LogoText logo={option?.logo || <CurrencyLogo currency={option} />} text={option.symbol} />
+          <LogoText
+            logo={option?.logo || <CurrencyLogo currency={option} />}
+            text={option.symbol}
+            fontSize={fontSize}
+          />
         </MenuItem>
       ))}
     </Select>

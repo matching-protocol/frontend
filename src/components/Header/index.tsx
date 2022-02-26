@@ -242,10 +242,10 @@ export default function Header() {
         </HideOnMobile>
         {/* <Web3Status /> */}
         <Box display="flex" gap={16}>
-          <Button width="144px" height="44px" onClick={onOffer}>
+          <Button width="144px" height="44px" onClick={onOffer} fontSize={13}>
             Make an Offer
           </Button>
-          <SwapSelect list={ChainList} selected={ChainList[0]} />
+          <SwapSelect list={ChainList} selected={ChainList[0]} width="120px" fontSize={13} />
         </Box>
       </StyledAppBar>
       <Drawer

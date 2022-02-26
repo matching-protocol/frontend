@@ -53,38 +53,51 @@ export default function BiSwap({
   // }, [list, from?.symbol])
 
   return (
-    <Box display="flex" justifyContent="space-between">
-      <Box width={344}>
-        <Typography fontSize={16} fontWeight={700}>
-          {fromLabel}
-        </Typography>
-        <SwapSelect list={chainList} selected={fromChain} width="192px" height="60px" onChange={onSelectFromChain} />
+    <Box display="grid" gap={8}>
+      <Box display="flex" gap={20}>
+        <Box width={344}>
+          <Typography fontSize={16} fontWeight={700} mb={16}>
+            {fromLabel}
+          </Typography>
+          <SwapSelect list={chainList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
+        </Box>
+        <Box width={344}>
+          <Typography fontSize={16} fontWeight={700} mb={16}>
+            {toLabel}
+          </Typography>
+          <SwapSelect list={chainList} selected={toChain} height="60px" onChange={onSelectToChain} />
+        </Box>
       </Box>
-      <Box width={344}>
-        <Typography fontSize={16} fontWeight={700}>
-          {toLabel}
-        </Typography>
-        <SwapSelect list={chainList} selected={toChain} width="192px" height="60px" onChange={onSelectToChain} />
-      </Box>
-      <Box display="flex" alignItems="center">
+
+      <Box display="flex" alignItems="center" position="relative" gap={20}>
         <SwapSelectInput
           value={fromValue}
           options={currencyList}
           selected={fromCurrency}
           onClick={onSelectFromCurrency}
           onChange={onChangeFromValue}
+          inputPlaceholder={'0.00'}
         />
-        <Box position={'absolute'} left={'calc(50% - 16px)'} zIndex={99} padding="0px" height="32px" bottom="8px">
-          <TextButton onClick={handleSwitch}>
-            <SwitchButton />
-          </TextButton>
-        </Box>
+        <TextButton
+          onClick={handleSwitch}
+          style={{
+            position: 'absolute',
+            left: 'calc(50% - 16px)',
+            zIndex: 1,
+            padding: 0,
+            height: 32,
+            bottom: 38
+          }}
+        >
+          <SwitchButton />
+        </TextButton>
         <SwapSelectInput
           value={toValue}
           options={currencyList}
           selected={toCurrency}
           onClick={onSelectToCurrency}
           onChange={onChangeToValue}
+          inputPlaceholder={'0.00'}
         />
       </Box>
     </Box>

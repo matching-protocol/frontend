@@ -25,8 +25,17 @@ export default function SwapSelectInput({
   width?: number | string
 }) {
   return (
-    <Box width={width || '100%'}>
-      <SelectButton onClick={onClick}>
+    <Box
+      width={width || '100%'}
+      height={108}
+      display="flex"
+      gap={50}
+      bgcolor="#F7F7F8"
+      borderRadius="16px"
+      alignItems="center"
+      padding={24}
+    >
+      <SelectButton onClick={onClick} width="120px">
         {selected ? (
           <LogoText logo={<CurrencyLogo currency={selected} />} text={selected?.symbol ?? ''} />
         ) : (
@@ -35,7 +44,7 @@ export default function SwapSelectInput({
           </Typography>
         )}
       </SelectButton>
-      <Input value={value} placeholder={inputPlaceholder} onChange={onChange} />
+      <Input width={160} value={value} placeholder={inputPlaceholder} onChange={onChange} />
     </Box>
   )
 }

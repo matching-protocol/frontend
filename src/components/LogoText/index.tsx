@@ -14,7 +14,7 @@ export default function LogoText({
   logo: string | JSX.Element
   text?: string | React.ReactNode
   fontWeight?: number
-  fontSize?: number
+  fontSize?: number | string
   gapSize?: 'small' | 'large'
   size?: string
 }) {

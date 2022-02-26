@@ -1,9 +1,30 @@
-import { MenuItem } from '@mui/material'
+import { MenuItem, Box, styled, Typography } from '@mui/material'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import { useCallback } from 'react'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+
+function SvgCircle() {
+  return (
+    <svg height="24" width="24">
+      <circle cx="12" cy="12" r="12" fill="#FFFFFF" />
+    </svg>
+  )
+}
+
+// const StyledImgBox = styled(Box)({
+//   '& img': {
+//     width: '28px',
+//     height: '28px'
+//   },
+//   '& span': {
+//     width: '28px',
+//     height: '28px',
+//     borderRadius: '50%',
+//     background: '#FFFFFF'
+//   }
+// })
 
 export default function SwapSelect({
   label,
@@ -48,6 +69,39 @@ export default function SwapSelect({
       height={height}
       primary={active}
       fontSize={fontSize}
+      renderValue={() => (
+        <MenuItem
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            '&.Mui-selected': {
+              background: 'transparent'
+            },
+            '&.Mui-selected:hover': {
+              background: 'transparent'
+            }
+          }}
+          value={selected?.name ?? ''}
+          key={selected?.name ?? ''}
+          selected={!!selected}
+        >
+          {selected ? (
+            <LogoText
+              logo={selected?.logo || <CurrencyLogo currency={selected} />}
+              text={selected?.symbol || 'Select Chain'}
+              fontSize={fontSize}
+            />
+          ) : (
+            <Box display="flex" gap={12} alignItems="center">
+              <SvgCircle />
+              <Typography fontSize={16} fontWeight={500} sx={{ opacity: 0.5 }}>
+                Select Chain
+              </Typography>
+            </Box>
+          )}
+        </MenuItem>
+      )}
     >
       {list.map(option => (
         <MenuItem

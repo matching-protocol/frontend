@@ -2,6 +2,7 @@ import React, { ChangeEvent, InputHTMLAttributes } from 'react'
 import { InputBase, styled, Typography } from '@mui/material'
 import { inputBaseClasses } from '@mui/material/InputBase'
 import InputLabel from './InputLabel'
+import theme from 'theme'
 
 export interface InputProps {
   placeholder?: string
@@ -19,6 +20,7 @@ export interface InputProps {
   error?: boolean
   smallPlaceholder?: boolean
   subStr?: string
+  backgroundColor?: string
 }
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -27,7 +29,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontFamily: 'SF Pro',
     fontWeight: 400,
-    backgroundColor: theme.palette.background.default,
+    // backgroundColor: theme.palette.background.paper,
     paddingLeft: 20,
     borderRadius: 16
   },
@@ -66,6 +68,7 @@ export default function Input({
   error,
   smallPlaceholder,
   subStr,
+  backgroundColor,
   ...rest
 }: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>) {
   return (
@@ -74,6 +77,7 @@ export default function Input({
       <StyledInputBase
         sx={{
           height: height || 60,
+          backgroundColor: backgroundColor || theme.palette.background.paper,
           [`&.${inputBaseClasses.root}`]: {
             border: theme => `1px solid ${outlined ? '#D9D9DA' : error ? theme.palette.error.main : 'transparent'}`
           },

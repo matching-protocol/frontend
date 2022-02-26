@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import Card from 'components/Card'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
 import OfferIcon from 'assets/images/offer.png'
 import { ChainList } from 'constants/chain'
@@ -10,8 +10,10 @@ import Divider from 'components/Divider'
 import WarningCard from './WarningCard'
 import BiSwap from 'components/Swap/BiSwap'
 import { Currency } from 'constants/token/currency'
+import { Chain } from 'models/chain'
 import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
 import useModal from 'hooks/useModal'
+import ComposedText from 'components/ComposedText'
 
 export default function Offer() {
   const [fromChain, setFromChain] = useState<Chain | null>(null)
@@ -58,9 +60,8 @@ export default function Offer() {
           />
         </Box>
 
-        <Divider style={{ marginTop: 48, marginBottom: 24 }} />
-        {/* <InputLabel style={{ marginTop: 24 }}>Incentive</InputLabel> */}
-        <Box display="flex" gap={29} alignItems="center" mb={32}>
+        <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
+        <Box display="flex" gap={24} mb={32}>
           <Input
             label="Incentive"
             value={''}
@@ -68,7 +69,45 @@ export default function Offer() {
             maxWidth="339px"
             subStr="You need to decide how much you want to incentivize market maker to fill the offer"
           />
+          <Box>
+            <Box display="flex" gap={16} alignItems="start">
+              <Box display="grid" gap={8}>
+                <Typography fontSize={14} fontWeight={500} sx={{ opacity: 0.5 }}>
+                  Recommend
+                </Typography>
+                <Box
+                  border="1px solid #D9D9DA"
+                  borderRadius="16px"
+                  display="flex"
+                  alignItems="center"
+                  pl={20}
+                  width={164}
+                  height={60}
+                >
+                  <ComposedText text={'> 0.00 '} subText={'/ $0.00'} />
+                </Box>
+              </Box>
+              <Box display="grid" gap={8}>
+                <ComposedText text={'Min'} subText={' (slightly higher than gas fee)'} textSize={14} subTextSize={10} />
+                <Box
+                  border="1px solid #D9D9DA"
+                  borderRadius="16px"
+                  display="flex"
+                  alignItems="center"
+                  pl={20}
+                  width={164}
+                  height={60}
+                >
+                  <ComposedText text={'> 0.00'} subText={' / $0.00'} />
+                </Box>
+              </Box>
+            </Box>
+            <Typography fontSize={12} fontWeight={400} sx={{ opacity: 0.5 }} mt={12}>
+              Configuring the right Offer Incentive can make your deal faster
+            </Typography>
+          </Box>
         </Box>
+
         <ActionButton error="Select a Chain" actionText="Make an Offer" onAction={() => {}} />
       </Card>
       <WarningCard />

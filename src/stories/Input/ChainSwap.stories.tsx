@@ -68,8 +68,8 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
       <Box display="flex" justifyContent="space-between" alignItems={'flex-end'} position={'relative'} width="100%">
         <SwapSelect
           label={'From'}
-          selectedChain={fromChain}
-          chainList={ChainList}
+          selected={fromChain}
+          list={ChainList}
           onChange={chain => setFromChain(chain)}
           width={'49%'}
           disabled={disabledFrom}
@@ -82,8 +82,8 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
         </Box>
         <SwapSelect
           label={'To'}
-          selectedChain={toChain}
-          chainList={ChainList}
+          selected={toChain}
+          list={ChainList}
           onChange={chain => setToChain(chain)}
           width={'49%'}
           disabled={disabledTo}

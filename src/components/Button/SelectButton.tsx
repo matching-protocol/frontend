@@ -21,10 +21,9 @@ export default function SelectButton(props: Props) {
       onClick={onClick}
       disabled={disabled}
       sx={{
-        ...style,
         width: width || '100%',
         height: height || 60,
-        backgroundColor: primary ? theme.palette.primary.main : theme.palette.text.secondary,
+        backgroundColor: '#F7F7F8',
         color: theme.palette.text.primary,
         borderRadius: 1,
         fontSize: 16,
@@ -32,12 +31,13 @@ export default function SelectButton(props: Props) {
         transition: '.3s',
         padding: '0 15.67px 0 20px',
         border: '1px solid transparent',
-        '&:hover': {
-          background: theme.palette.primary.main,
-          border: `1px solid ${theme.palette.primary.main}`
-        },
+        // '&:hover': {
+        //   background: theme.palette.primary.main,
+        //   border: `1px solid ${theme.palette.primary.main}`
+        // },
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        ...style
       }}
     >
       {children}

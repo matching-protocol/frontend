@@ -1,26 +1,24 @@
 import { Box } from '@mui/material'
-import ChainSelect from '../ChainSelect'
-import { Chain } from 'models/chain'
+import SwapSelect from '../SwapSelect'
 import { useMemo } from 'react'
-import { Currency } from 'constants/token/currency'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-export default function ChainSwap({
+export default function UniSwap({
   from,
   to,
   list,
-  onSelectTo,
   onSelectFrom,
+  onSelectTo,
   disabledFrom,
   disabledTo,
   activeFrom,
   activeTo
 }: {
-  from: Chain | Currency | null
-  to: Chain | Currency | null
-  list: (Chain | Currency)[]
-  onSelectFrom?: (el: Chain | Currency | null) => void
-  onSelectTo?: (el: Chain | Currency | null) => void
+  from: any
+  to: any
+  list: any[]
+  onSelectFrom?: (e: any) => void
+  onSelectTo?: (e: any) => void
   disabledFrom?: boolean
   disabledTo?: boolean
   activeFrom?: boolean
@@ -32,9 +30,27 @@ export default function ChainSwap({
 
   return (
     <Box display="flex" gap={16} alignItems="center" justifyContent="space-between" position="relative" width={434}>
-      <ChainSelect label="From" list={list} selected={null} width="192px" height="60px" />
+      <SwapSelect
+        label="From"
+        list={list}
+        selected={from}
+        width="192px"
+        height="60px"
+        onChange={onSelectFrom}
+        disabled={disabledFrom}
+        active={activeFrom}
+      />
       <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)' }} />
-      <ChainSelect label="To" list={toList} selected={null} width="192px" height="60px" />
+      <SwapSelect
+        label="To"
+        list={toList}
+        selected={to}
+        width="192px"
+        height="60px"
+        onChange={onSelectTo}
+        disabled={disabledTo}
+        active={activeTo}
+      />
     </Box>
   )
 }

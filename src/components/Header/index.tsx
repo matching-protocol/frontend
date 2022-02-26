@@ -19,7 +19,7 @@ import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 import Button from 'components/Button/Button'
 import { ChainList } from 'constants/chain'
-import ChainSelect from 'components/Select/ChainSelect'
+import SwapSelect from 'components/Swap/SwapSelect'
 import Web3Status from './Web3Status'
 import MarketIcon from 'assets/images/market.png'
 import AccountIcon from 'assets/images/account.png'
@@ -245,7 +245,7 @@ export default function Header() {
           <Button width="144px" height="44px" onClick={onOffer}>
             Make an Offer
           </Button>
-          <ChainSelect list={ChainList} selected={ChainList[0]} />
+          <SwapSelect list={ChainList} selected={ChainList[0]} />
         </Box>
       </StyledAppBar>
       <Drawer

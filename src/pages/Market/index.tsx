@@ -14,7 +14,7 @@ import CurrencyValue from 'components/CurrencyValue'
 import { ETHER } from 'constants/token'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ChainList } from 'constants/chain'
-import UniSwap from 'components/Select/UniSwap'
+import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
 
 enum Mode {
@@ -124,13 +124,7 @@ export default function Market() {
                 <Typography fontSize={16} fontWeight={700}>
                   Currency:
                 </Typography>
-                <UniSwap
-                  from={ChainList[0]}
-                  to={ChainList[1]}
-                  list={ChainList}
-                  onSelectFrom={() => {}}
-                  onSelectTo={() => {}}
-                />
+                <UniSwap from={null} to={null} list={[]} onSelectFrom={() => {}} onSelectTo={() => {}} />
               </Box>
             </Box>
           </Card>

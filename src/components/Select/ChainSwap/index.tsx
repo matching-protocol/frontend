@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import TextButton from 'components/Button/TextButton'
-import ChainSelect from '../ChainSelect'
+import SwapSelect from '../../Swap/SwapSelect'
 import { Chain } from 'models/chain'
 import SwitchButton from './SwitcherButton'
 import { useMemo } from 'react'
@@ -40,7 +40,7 @@ export default function ChainSwap({
 
   return (
     <Box display="flex" justifyContent="space-between" alignItems={'flex-end'} position={'relative'} width="100%">
-      <ChainSelect
+      <SwapSelect
         label={'From'}
         selected={from}
         list={list}
@@ -54,7 +54,7 @@ export default function ChainSwap({
           <SwitchButton />
         </TextButton>
       </Box>
-      <ChainSelect
+      <SwapSelect
         label={'To'}
         selected={to}
         list={toList}

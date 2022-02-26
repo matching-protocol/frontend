@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 import Card from 'components/Card'
 import { Box, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
@@ -15,6 +15,12 @@ import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurre
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
 
+enum ERROR {
+  SELECT_CHAIN = 'Select Chain',
+  SELECT_ASSET = 'Select Asset',
+  ENTER_AMOUNT = 'Enter Amount'
+}
+
 export default function Offer() {
   const [fromChain, setFromChain] = useState<Chain | null>(null)
   const [toChain, setToChain] = useState<Chain | null>(null)
@@ -22,6 +28,7 @@ export default function Offer() {
   const [toCurrency, setToCurrency] = useState<Currency | null>(null)
   const [fromValue, setFromValue] = useState('')
   const [toValue, setToValue] = useState('')
+  const [incentive, setIncentive] = useState('')
   const { showModal } = useModal()
 
   const chainList = ChainList
@@ -34,6 +41,22 @@ export default function Offer() {
   const onSelectToCurrency = useCallback(() => {
     showModal(<SelectCurrencyModal onSelectCurrency={currency => setToCurrency(currency as Currency)} />)
   }, [])
+
+  const getError = useMemo(() => {
+    if (!fromChain || !toChain) {
+      return ERROR.SELECT_CHAIN
+    }
+
+    if (!fromCurrency || !toCurrency) {
+      return ERROR.SELECT_ASSET
+    }
+
+    if (!fromValue || !toValue || !incentive) {
+      return ERROR.ENTER_AMOUNT
+    }
+
+    return undefined
+  }, [fromChain, toChain, fromCurrency, toCurrency, fromValue, toValue, incentive])
 
   return (
     <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
@@ -66,10 +89,11 @@ export default function Offer() {
         <Box display="flex" gap={24} mb={32}>
           <Input
             label="Incentive"
-            value={''}
+            value={incentive}
             placeholder={'Input Amount'}
             maxWidth="339px"
             subStr="You need to decide how much you want to incentivize market maker to fill the offer"
+            onChange={e => setIncentive(e.target.value)}
           />
           <Box>
             <Box display="flex" gap={16} alignItems="start">
@@ -110,7 +134,7 @@ export default function Offer() {
           </Box>
         </Box>
 
-        <ActionButton error="Select a Chain" actionText="Make an Offer" onAction={() => {}} />
+        <ActionButton error={getError} actionText="Make an Offer" onAction={() => {}} />
       </Card>
       <WarningCard />
     </Box>

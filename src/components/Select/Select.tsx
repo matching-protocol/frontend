@@ -17,6 +17,7 @@ interface Props {
   label?: string
   renderValue?: any
   fontSize?: string | number
+  menuWidth?: string | number
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -52,7 +53,8 @@ export default function Select(props: Props) {
     defaultValue,
     placeholder,
     renderValue,
-    fontSize
+    fontSize,
+    menuWidth
   } = props
   const theme = useTheme()
 
@@ -87,20 +89,21 @@ export default function Select(props: Props) {
           sx: {
             '& .MuiPaper-root': {
               width: '100%',
+              maxWidth: menuWidth || '300px',
               borderRadius: '10px',
               mt: '12px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '& li': {
                 fontSize: fontSize || 16,
                 fontWeight: 500,
-                color: '#FFFFFF',
+                color: theme.palette.primary.main,
                 borderBottom: '1px solid rgba(255,255,255,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 padding: '12px 0'
               },
               '& li:hover': {
-                backgroundColor: 'rgba(255,255,255,0.05)'
+                backgroundColor: 'rgba(0,0,0,0.1)'
               },
               '& li:last-child': {
                 borderBottom: 'none'

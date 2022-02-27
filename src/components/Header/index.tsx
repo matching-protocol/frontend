@@ -245,7 +245,7 @@ export default function Header() {
           <Button width="144px" height="44px" onClick={onOffer} fontSize={13}>
             Make an Offer
           </Button>
-          <SwapSelect list={ChainList} selected={ChainList[0]} width="120px" fontSize={13} />
+          <SwapSelect list={ChainList} selected={ChainList[0]} width="fit-content" fontSize={13} />
         </Box>
       </StyledAppBar>
       <Drawer

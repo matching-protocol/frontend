@@ -14,6 +14,7 @@ import { Chain } from 'models/chain'
 import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
+import { ETHER } from 'constants/token/currency'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -32,14 +33,24 @@ export default function Offer() {
   const { showModal } = useModal()
 
   const chainList = ChainList
-  const currencyList: Currency[] = []
+  const currencyList: Currency[] = [ETHER]
 
   const onSelectFromCurrency = useCallback(() => {
-    showModal(<SelectCurrencyModal onSelectCurrency={currency => setFromCurrency(currency as Currency)} />)
+    showModal(
+      <SelectCurrencyModal
+        onSelectCurrency={currency => setFromCurrency(currency as Currency)}
+        tokenList={currencyList}
+      />
+    )
   }, [])
 
   const onSelectToCurrency = useCallback(() => {
-    showModal(<SelectCurrencyModal onSelectCurrency={currency => setToCurrency(currency as Currency)} />)
+    showModal(
+      <SelectCurrencyModal
+        onSelectCurrency={currency => setToCurrency(currency as Currency)}
+        tokenList={currencyList}
+      />
+    )
   }, [])
 
   const getError = useMemo(() => {
@@ -57,6 +68,17 @@ export default function Offer() {
 
     return undefined
   }, [fromChain, toChain, fromCurrency, toCurrency, fromValue, toValue, incentive])
+
+  const onSwitch = useCallback(() => {
+    const switchedToChain = fromChain
+    const switchedFromChain = toChain
+    const switchedToCurrency = fromCurrency
+    const switchedFromCurrency = toCurrency
+    setToChain(switchedToChain)
+    setFromChain(switchedFromChain)
+    setToCurrency(switchedToCurrency)
+    setFromCurrency(switchedFromCurrency)
+  }, [fromChain, toChain, fromCurrency, toCurrency])
 
   return (
     <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
@@ -82,6 +104,7 @@ export default function Offer() {
             onChangeToValue={e => setToValue(e.target.value)}
             fromSubStr={'0.001BTC = $286.01'}
             toSubStr={'0.001BTC = $286.01'}
+            onSwitch={onSwitch}
           />
         </Box>
 

@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { Box, Typography, Grid } from '@mui/material'
+import { Typography, Grid } from '@mui/material'
 import { Chain } from 'models/chain'
 import { Currency } from 'constants/token/currency'
 import SwapSelect from 'components/Swap/SwapSelect'
@@ -25,7 +25,8 @@ export default function BiSwap({
   onChangeFromValue,
   onChangeToValue,
   fromSubStr,
-  toSubStr
+  toSubStr,
+  onSwitch
 }: {
   fromLabel: string
   toLabel: string
@@ -45,35 +46,39 @@ export default function BiSwap({
   onChangeToValue: (e: ChangeEvent<HTMLInputElement>) => void
   fromSubStr?: string
   toSubStr?: string
+  onSwitch?: () => void
 }) {
-  const handleSwitch = () => {
-    // if (!onSelectTo || !onSelectFrom) return
-    // onSelectFrom(to)
-    // onSelectTo(from)
-  }
+  // const handleSwitch = () => {
+  //   onSelectFromChain(toChain)
+  //   onSelectToChain(fromChain)
+  //   onSelectFromCurrency(toCurrency)
+  //   onSelectToCurrency(fromCurrency)
+  // }
+
+  // const onSwitch = useCallback(() => {
+  //   onSelectFromChain(toChain)
+  //   onSelectToChain(fromChain)
+  // }, [])
 
   // const toList = useMemo(() => {
   //   return list.filter(chain => !(chain.symbol === from?.symbol))
   // }, [list, from?.symbol])
 
   return (
-    <Box display="grid" gap={8}>
-      <Grid container spacing={20}>
-        <Grid item md={6}>
-          <Typography fontSize={16} fontWeight={700} mb={16}>
-            {fromLabel}
-          </Typography>
-          <SwapSelect list={chainList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
-        </Grid>
-        <Grid item md={6}>
-          <Typography fontSize={16} fontWeight={700} mb={16}>
-            {toLabel}
-          </Typography>
-          <SwapSelect list={chainList} selected={toChain} height="60px" onChange={onSelectToChain} />
-        </Grid>
+    <Grid container columnSpacing={20} rowSpacing={8}>
+      <Grid item md={6}>
+        <Typography fontSize={16} fontWeight={700} mb={16}>
+          {fromLabel}
+        </Typography>
+        <SwapSelect menuWidth={320} list={chainList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
       </Grid>
-
-      <Box display="flex" alignItems="center" position="relative" gap={20}>
+      <Grid item md={6}>
+        <Typography fontSize={16} fontWeight={700} mb={16}>
+          {toLabel}
+        </Typography>
+        <SwapSelect menuWidth={320} list={chainList} selected={toChain} height="60px" onChange={onSelectToChain} />
+      </Grid>
+      <Grid item md={6} position="relative">
         <SwapSelectInput
           value={fromValue}
           options={currencyList}
@@ -83,10 +88,10 @@ export default function BiSwap({
           inputPlaceholder={'0.00'}
         />
         <TextButton
-          onClick={handleSwitch}
+          onClick={onSwitch}
           style={{
             position: 'absolute',
-            left: 'calc(50% - 16px)',
+            right: -26,
             zIndex: 1,
             padding: 0,
             height: 32,
@@ -95,6 +100,8 @@ export default function BiSwap({
         >
           <SwitchButton />
         </TextButton>
+      </Grid>
+      <Grid item md={6}>
         <SwapSelectInput
           value={toValue}
           options={currencyList}
@@ -103,18 +110,17 @@ export default function BiSwap({
           onChange={onChangeToValue}
           inputPlaceholder={'0.00'}
         />
-      </Box>
-
-      {(fromSubStr || toSubStr) && (
-        <Box display="flex" alignItems="center" gap={20}>
-          <Typography width={344} fontSize={11} sx={{ opacity: 0.5 }}>
-            {fromSubStr || ''}
-          </Typography>
-          <Typography width={344} fontSize={11} sx={{ opacity: 0.5 }}>
-            {toSubStr || ''}
-          </Typography>
-        </Box>
-      )}
-    </Box>
+      </Grid>
+      <Grid item md={6}>
+        <Typography fontSize={11} sx={{ opacity: 0.5 }}>
+          {fromSubStr || ''}
+        </Typography>
+      </Grid>
+      <Grid item md={6}>
+        <Typography fontSize={11} sx={{ opacity: 0.5 }}>
+          {toSubStr || ''}
+        </Typography>
+      </Grid>
+    </Grid>
   )
 }

@@ -30,7 +30,7 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   cursor: 'pointer',
   borderRadius: '16px',
   position: 'relative',
-  padding: '10px',
+  padding: '20px 24px',
   '& .MuiSelect-icon': {
     color: theme.palette.primary.dark,
     right: '10px'

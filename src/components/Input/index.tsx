@@ -1,5 +1,5 @@
 import React, { ChangeEvent, InputHTMLAttributes } from 'react'
-import { InputBase, styled, Typography } from '@mui/material'
+import { InputBase, Typography } from '@mui/material'
 import { inputBaseClasses } from '@mui/material/InputBase'
 import InputLabel from './InputLabel'
 import theme from 'theme'
@@ -18,39 +18,40 @@ export interface InputProps {
   maxWidth?: string | number
   height?: string | number
   error?: boolean
-  smallPlaceholder?: boolean
+  // smallPlaceholder?: boolean
   subStr?: string
   backgroundColor?: string
+  fontSize?: string | number
 }
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  [`&.${inputBaseClasses.root}`]: {
-    fontSize: 16,
-    color: theme.palette.text.primary,
-    fontFamily: 'SF Pro',
-    fontWeight: 400,
-    // backgroundColor: theme.palette.background.paper,
-    paddingLeft: 20,
-    borderRadius: 16
-  },
-  [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
-  [`& .${inputBaseClasses.input}`]: {
-    maxWidth: '100%',
-    '&::-webkit-outer-spin-button': {
-      WebkitAppearance: 'none'
-    },
-    '&::-webkit-inner-spin-button': {
-      WebkitAppearance: 'none'
-    },
-    '&.Mui-disabled': {
-      WebkitTextFillColor: theme.palette.text.secondary,
-      color: theme.palette.text.secondary
-    }
-  },
-  [`&.${inputBaseClasses.disabled}`]: {
-    cursor: 'not-allowed'
-  }
-}))
+// const StyledInputBase = styled(InputBase)(({ theme }) => ({
+//   [`&.${inputBaseClasses.root}`]: {
+//     fontSize: 16,
+//     color: theme.palette.text.primary,
+//     fontFamily: 'SF Pro',
+//     fontWeight: 400,
+//     // backgroundColor: theme.palette.background.paper,
+//     paddingLeft: 20,
+//     borderRadius: 16
+//   },
+//   [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
+//   [`& .${inputBaseClasses.input}`]: {
+//     maxWidth: '100%',
+//     '&::-webkit-outer-spin-button': {
+//       WebkitAppearance: 'none'
+//     },
+//     '&::-webkit-inner-spin-button': {
+//       WebkitAppearance: 'none'
+//     },
+//     '&.Mui-disabled': {
+//       WebkitTextFillColor: theme.palette.text.secondary,
+//       color: theme.palette.text.secondary
+//     }
+//   },
+//   [`&.${inputBaseClasses.disabled}`]: {
+//     cursor: 'not-allowed'
+//   }
+// }))
 
 export default function Input({
   focused,
@@ -66,18 +67,22 @@ export default function Input({
   label,
   height,
   error,
-  smallPlaceholder,
+  // smallPlaceholder,
   subStr,
   backgroundColor,
+  fontSize,
   ...rest
 }: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>) {
   return (
     <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
       {label && <InputLabel>{label}</InputLabel>}
-      <StyledInputBase
+      <InputBase
         sx={{
           height: height || 60,
           backgroundColor: backgroundColor || theme.palette.background.paper,
+          paddingLeft: 20,
+          borderRadius: '16px',
+          fontSize: fontSize || 16,
           [`&.${inputBaseClasses.root}`]: {
             border: theme => `1px solid ${outlined ? '#D9D9DA' : error ? theme.palette.error.main : 'transparent'}`
           },
@@ -87,7 +92,7 @@ export default function Input({
           },
           [`& .${inputBaseClasses.input}`]: {
             '&::placeholder': {
-              fontSize: smallPlaceholder ? 13 : 16,
+              fontSize: fontSize || 16,
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden'

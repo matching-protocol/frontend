@@ -15,18 +15,20 @@ export default function SwapSelect({
   height,
   active,
   placeholder,
-  fontSize
+  fontSize,
+  menuWidth
 }: {
   label?: string
   disabled?: boolean
   list: any[]
   selected: any
   onChange?: (e: any) => void
-  width?: string
-  height?: string
+  width?: string | number
+  height?: string | number
   active?: boolean
   placeholder?: string
   fontSize?: string | number
+  menuWidth?: string | number
 }) {
   const handleChange = useCallback(
     e => {
@@ -39,6 +41,7 @@ export default function SwapSelect({
   return (
     <Select
       width={width || '100%'}
+      menuWidth={menuWidth}
       label={label}
       defaultValue={selected?.symbol}
       value={selected?.symbol ?? ''}

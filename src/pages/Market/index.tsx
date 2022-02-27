@@ -132,14 +132,22 @@ export default function Market() {
         <Card width="100%">
           <Box width="100%" padding="30px 28px 40px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <InputSearch value={search} width={244} onChange={e => setSearch(e.target.value)} />
+              <InputSearch
+                value={search}
+                width={244}
+                onChange={e => setSearch(e.target.value)}
+                backgroundColor={'#FFFFFF'}
+              />
               <Box display="flex" gap={20} alignItems="center">
                 <Typography fontSize={16} fontWeight={700}>
                   Sort by
                 </Typography>
-                <Select value="MAX Amount" height={60}>
-                  <MenuItem value={'MAX Amount'} key={'MAX Amount'} selected>
+                <Select value="MAX Amount" height={60} width="fit-content">
+                  <MenuItem value={'MAX Amount'} key={'MAX Amount'}>
                     MAX Amount
+                  </MenuItem>
+                  <MenuItem value={'Another'} key={'Another'}>
+                    Another
                   </MenuItem>
                 </Select>
               </Box>

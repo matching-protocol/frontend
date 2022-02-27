@@ -6,11 +6,13 @@ import Image from 'components/Image'
 export default function InputSearch({
   value,
   width,
-  onChange
+  onChange,
+  backgroundColor
 }: {
   value: string
   width: string | number
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  backgroundColor?: string
 }) {
   return (
     <Input
@@ -20,6 +22,7 @@ export default function InputSearch({
       startAdornment={<Image src={SearchIcon} />}
       outlined
       onChange={onChange}
+      backgroundColor={backgroundColor}
     />
   )
 }

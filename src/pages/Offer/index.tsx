@@ -15,6 +15,7 @@ import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurre
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
 import { ETHER } from 'constants/token/currency'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -157,7 +158,11 @@ export default function Offer() {
           </Box>
         </Box>
 
-        <ActionButton error={getError} actionText="Make an Offer" onAction={() => {}} />
+        <ActionButton
+          error={getError}
+          actionText="Make an Offer"
+          onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+        />
       </Card>
       <WarningCard />
     </Box>

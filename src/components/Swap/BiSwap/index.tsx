@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Grid } from '@mui/material'
 import { Chain } from 'models/chain'
 import { Currency } from 'constants/token/currency'
 import SwapSelect from 'components/Swap/SwapSelect'
@@ -58,20 +58,20 @@ export default function BiSwap({
 
   return (
     <Box display="grid" gap={8}>
-      <Box display="flex" gap={20}>
-        <Box width={344}>
+      <Grid container spacing={20}>
+        <Grid item md={6}>
           <Typography fontSize={16} fontWeight={700} mb={16}>
             {fromLabel}
           </Typography>
           <SwapSelect list={chainList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
-        </Box>
-        <Box width={344}>
+        </Grid>
+        <Grid item md={6}>
           <Typography fontSize={16} fontWeight={700} mb={16}>
             {toLabel}
           </Typography>
           <SwapSelect list={chainList} selected={toChain} height="60px" onChange={onSelectToChain} />
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
 
       <Box display="flex" alignItems="center" position="relative" gap={20}>
         <SwapSelectInput

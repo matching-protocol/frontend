@@ -39,12 +39,19 @@ export default function SwapSelectInput({
         {selected ? (
           <LogoText logo={<CurrencyLogo currency={selected} />} text={selected?.symbol ?? ''} />
         ) : (
-          <Typography fontSize="16px" color={'rgba(22, 22, 22, 0.5)'}>
+          <Typography fontSize="24px" fontWeight={500} color={'rgba(22, 22, 22, 0.5)'}>
             {selectPlaceholder || 'Asset'}
           </Typography>
         )}
       </SelectButton>
-      <Input width={160} value={value} placeholder={inputPlaceholder} onChange={onChange} backgroundColor="#FFFFFF" />
+      <Input
+        width={160}
+        value={value}
+        placeholder={inputPlaceholder}
+        onChange={onChange}
+        backgroundColor="#FFFFFF"
+        fontSize={24}
+      />
     </Box>
   )
 }

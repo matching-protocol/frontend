@@ -106,7 +106,7 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
   },
   '& .MuiTableCell-root': {
-    // fontSize: fontSize ?? '16px',
+    fontSize: fontSize ?? 'inherit',
     justifyContent: 'flex-start',
     paddingLeft: 0,
     border: '1px solid',

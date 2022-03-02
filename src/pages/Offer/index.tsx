@@ -14,7 +14,6 @@ import { Chain } from 'models/chain'
 import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
-import { ETHER } from 'constants/token/currency'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 
 enum ERROR {
@@ -34,7 +33,7 @@ export default function Offer() {
   const { showModal } = useModal()
 
   const chainList = ChainList
-  const currencyList: Currency[] = [ETHER]
+  const currencyList: Currency[] = useMemo(() => [], [])
 
   const onSelectFromCurrency = useCallback(() => {
     showModal(
@@ -43,7 +42,7 @@ export default function Offer() {
         tokenList={currencyList}
       />
     )
-  }, [])
+  }, [currencyList, showModal])
 
   const onSelectToCurrency = useCallback(() => {
     showModal(
@@ -52,7 +51,7 @@ export default function Offer() {
         tokenList={currencyList}
       />
     )
-  }, [])
+  }, [currencyList, showModal])
 
   const getError = useMemo(() => {
     if (!fromChain || !toChain) {

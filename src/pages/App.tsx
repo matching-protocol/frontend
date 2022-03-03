@@ -9,8 +9,10 @@ import WarningModal from '../components/Modal/WarningModal'
 // import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 // import Footer from 'components/Footer'
+import { routes } from 'constants/routes'
 import Market from './Market'
 import Offer from './Offer'
+import Account from './Account'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -64,8 +66,9 @@ export default function App() {
               <WarningModal />
               <Web3ReactManager>
                 <Switch>
-                  <Route exact strict path="/market" component={Market} />
-                  <Route exact strict path="/offer" component={Offer} />
+                  <Route exact strict path={routes.market} component={Market} />
+                  <Route exact strict path={routes.offer} component={Offer} />
+                  <Route exact strict path={routes.account} component={Account} />
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>

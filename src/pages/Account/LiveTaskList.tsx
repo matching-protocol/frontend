@@ -54,7 +54,7 @@ export default function LiveTaskList() {
           textSize={16}
           subTextSize={13}
         />,
-        <OutlineButton key={1} width="124px" height="44px" fontSize={13} borderRadius={57} primary>
+        <OutlineButton key={1} width="124px" height="44px" fontSize={13} borderRadius="57px" primary>
           <Box>
             <Typography fontSize={13}>Execute Fund</Typography>
             <Typography fontSize={11} sx={{ opacity: 0.5 }}>

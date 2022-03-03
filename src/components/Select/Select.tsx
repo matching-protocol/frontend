@@ -16,6 +16,8 @@ interface Props {
   primary?: boolean
   label?: string
   renderValue?: any
+  fontSize?: string | number
+  menuWidth?: string | number
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -26,12 +28,11 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   cursor: 'pointer',
-  borderRadius: '10px',
-  border: '1px solid transparent',
+  borderRadius: '16px',
   position: 'relative',
-  padding: '10px',
+  padding: '20px 24px',
   '& .MuiSelect-icon': {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.dark,
     right: '10px'
   },
   '&.Mui-focused': {
@@ -51,7 +52,9 @@ export default function Select(props: Props) {
     value,
     defaultValue,
     placeholder,
-    renderValue
+    renderValue,
+    fontSize,
+    menuWidth
   } = props
   const theme = useTheme()
 
@@ -60,21 +63,21 @@ export default function Select(props: Props) {
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
-          backgroundColor: primary ? theme.palette.primary.main : theme.palette.grey.A400,
+          backgroundColor: primary ? theme.palette.primary.main : '#F7F7F8',
           width: width || '100%',
-          height: height || '48px',
+          height: height || '44px',
           '&:before': {
             content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
             left: 24,
-            top: 10,
+            top: 20,
             zIndex: 999,
-            fontSize: 16,
+            fontSize: fontSize || 16,
             fontWeight: 400
           },
-          '&:hover': {
-            backgroundColor: disabled ? theme.palette.grey.A400 : theme.palette.primary.main
-          },
+          // '&:hover': {
+          //   backgroundColor: disabled ? theme.palette.grey.A400 : theme.palette.primary.main
+          // },
           '& .MuiSelect-icon': {
             display: disabled ? 'none' : 'block'
           }
@@ -86,20 +89,21 @@ export default function Select(props: Props) {
           sx: {
             '& .MuiPaper-root': {
               width: '100%',
+              maxWidth: menuWidth || '300px',
               borderRadius: '10px',
               mt: '12px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '& li': {
-                fontSize: 16,
+                fontSize: fontSize || 16,
                 fontWeight: 500,
-                color: '#FFFFFF',
+                color: theme.palette.primary.main,
                 borderBottom: '1px solid rgba(255,255,255,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 padding: '12px 0'
               },
               '& li:hover': {
-                backgroundColor: 'rgba(255,255,255,0.05)'
+                backgroundColor: 'rgba(0,0,0,0.1)'
               },
               '& li:last-child': {
                 borderBottom: 'none'

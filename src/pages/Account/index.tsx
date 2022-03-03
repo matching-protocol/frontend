@@ -22,7 +22,7 @@ export default function Account() {
 
   return (
     <>
-      <Box maxWidth="980px" width="100%" pt={60}>
+      <Box maxWidth="980px" width="100%" pt={60} pb={94}>
         <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
           <LogoText logo={AccountIcon} text="Account" size="32px" fontSize={36} fontWeight={700} />
           <PlainTabs titles={Tabs} current={tab} onChange={setTab} />

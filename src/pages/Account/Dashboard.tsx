@@ -11,12 +11,14 @@ import { ETHER } from 'constants/token'
 import Button from 'components/Button/Button'
 import StatusTag from 'components/StatusTag'
 import OutlineButton from 'components/Button/OutlineButton'
+import Pagination from 'components/Pagination'
 
 const WalletInfoTableHeader = ['Asset', 'Amount']
 const WithdrawlHistoryTableHeader = ['Date', 'Amount', 'Payment Address', 'Status']
 
 export default function Dashboard() {
   const [walletInfoTab, setWalletInfoTab] = useState(0)
+  const [page, setPage] = useState(1)
 
   const walletInfoTabs = useMemo(() => {
     return [
@@ -98,13 +100,16 @@ export default function Dashboard() {
         <Typography fontSize={16} fontWeight={500} mb={28}>
           Withdrawl History
         </Typography>
-        <RoundTabs titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
-        <Table
-          fontSize="12px"
-          header={WithdrawlHistoryTableHeader}
-          rows={withdrawlHistoryDataRows}
-          variant="outlined"
-        />
+        <Box display="grid" gap={40}>
+          <RoundTabs titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
+          <Table
+            fontSize="12px"
+            header={WithdrawlHistoryTableHeader}
+            rows={withdrawlHistoryDataRows}
+            variant="outlined"
+          />
+          <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+        </Box>
       </Card>
     </Box>
   )

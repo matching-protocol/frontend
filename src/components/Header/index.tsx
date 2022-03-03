@@ -141,7 +141,7 @@ export default function Header() {
   const history = useHistory()
 
   const onOffer = useCallback(() => {
-    history.push(routes.offer)
+    history.push(routes.makeOffer)
   }, [])
 
   const drawer = useMemo(

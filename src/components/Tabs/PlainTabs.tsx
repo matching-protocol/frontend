@@ -12,7 +12,7 @@ export default function Tabs({
   // onChange?: ((event: SyntheticEvent<Element, Event>, value: any) => void
 }) {
   const handleOnChange = useCallback(
-    (e: React.ChangeEvent<any>, value: any) => {
+    (e: ChangeEvent<any>, value: any) => {
       onChange(value)
     },
     [onChange]

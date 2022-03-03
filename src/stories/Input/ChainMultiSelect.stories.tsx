@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { Chain } from 'models/chain'
-import ChainMultiSelect from 'components/Select/ChainSelect/ChainMultiSelect'
+import ChainMultiSelect from 'components/Swap/SwapSelect/ChainMultiSelect'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import { useState } from 'react'
 

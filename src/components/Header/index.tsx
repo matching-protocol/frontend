@@ -1,19 +1,39 @@
+import { useMemo, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, styled } from '@mui/material'
-import { ExternalLink } from 'theme/components'
-import Web3Status from './Web3Status'
-import { HideOnMobile } from 'theme/index'
-import PlainSelect from 'components/Select/PlainSelect'
+import {
+  AppBar,
+  Box,
+  styled,
+  // Typography,
+  // useTheme,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Drawer
+} from '@mui/material'
+import theme, { HideOnMobile } from 'theme/index'
 import Image from 'components/Image'
-import ChainSwap from '../../assets/svg/chain_swap.svg'
+import BrandLogo from 'assets/svg/matching_protocol.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
+import Button from 'components/Button/Button'
+import { ChainList } from 'constants/chain'
+import SwapSelect from 'components/Swap/SwapSelect'
+import Web3Status from './Web3Status'
+import MarketIcon from 'assets/images/market.png'
+import AccountIcon from 'assets/images/account.png'
+import StatIcon from 'assets/images/statistics.png'
+import HelpIcon from 'assets/images/help.png'
+import { ExternalLink } from 'theme/components'
+import { useHistory } from 'react-router-dom'
 
 interface TabContent {
   title: string
   route?: string
   link?: string
   titleContent?: JSX.Element
+  icon?: JSX.Element
 }
 
 interface Tab extends TabContent {
@@ -21,26 +41,14 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Test1', route: routes.test1 },
-  { title: 'Test2', route: routes.test2 },
-  { title: 'Test3', route: routes.test3 },
-  { title: 'Test4', link: 'https://www.google.com/' },
-  {
-    title: 'About',
-    subTab: [
-      { title: 'About1', link: 'https://www.google.com/' },
-      { title: 'About2', link: 'https://www.google.com/' },
-      {
-        title: 'faq',
-        titleContent: <FAQButton />,
-        route: 'faq'
-      }
-    ]
-  }
+  { title: 'Market', route: routes.market, icon: <Image src={MarketIcon} /> },
+  { title: 'Account', route: undefined, icon: <Image src={AccountIcon} /> },
+  { title: 'Statistics', route: undefined, icon: <Image src={StatIcon} /> },
+  { title: 'Help', route: undefined, icon: <Image src={HelpIcon} /> }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  position: 'relative',
+  position: 'fixed',
   height: theme.height.header,
   borderBottom: '1px solid #00000020',
   backgroundColor: theme.palette.background.default,
@@ -49,6 +57,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   justifyContent: 'space-between',
   boxShadow: 'none',
   padding: '0 60px 00 40px',
+  zIndex: theme.zIndex.drawer + 1,
   [theme.breakpoints.down('md')]: {
     position: 'fixed',
     bottom: 0,
@@ -82,11 +91,113 @@ const MainLogo = styled(NavLink)({
   }
 })
 
-const LinksWrapper = muiStyled('div')({
-  marginLeft: 60.2
-})
+const StyledNavLink = styled(NavLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.text.primary,
+  opacity: 0.6,
+  display: 'flex',
+  alignItems: 'center',
+  '&.active': {
+    opacity: 1,
+    '& svg': {
+      stroke: theme.palette.primary.main
+    },
+    '& .filledSvg': {
+      fill: theme.palette.primary.main,
+      stroke: 'none'
+    }
+  },
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}))
+
+const StyledExternalLink = styled(ExternalLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.text.primary,
+  opacity: 0.6,
+  display: 'flex',
+  alignItems: 'center',
+  '&.active': {
+    opacity: 1,
+    '& svg': {
+      stroke: theme.palette.primary.main
+    },
+    '& .filledSvg': {
+      fill: theme.palette.primary.main,
+      stroke: 'none'
+    }
+  },
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}))
+
+// const LinksWrapper = muiStyled('div')({
+//   marginLeft: 60.2
+// })
 
 export default function Header() {
+  const history = useHistory()
+
+  const onOffer = useCallback(() => {
+    history.push(routes.offer)
+  }, [])
+
+  const drawer = useMemo(
+    () => (
+      <Box
+        sx={{
+          padding: '136px 44px',
+          minHeight: '100%'
+        }}
+        gridTemplateRows="auto auto auto 1fr"
+        display="grid"
+        justifyContent="space-between"
+        gap="80px"
+      >
+        <List>
+          {Tabs.map(({ title, route, icon, link }, idx) => (
+            <ListItem key={title} sx={{ padding: '10px 0' }}>
+              {link ? (
+                <StyledExternalLink href={link}>
+                  <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
+                  <ListItemText
+                    primary={title}
+                    primaryTypographyProps={{
+                      sx: { fontSize: '16px' }
+                    }}
+                  />
+                </StyledExternalLink>
+              ) : (
+                <StyledNavLink
+                  key={title + idx}
+                  id={`${route}-nav-link`}
+                  to={route ?? ''}
+                  onClick={() => {}}
+                  className="link"
+                >
+                  <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
+                  <ListItemText
+                    primary={title}
+                    primaryTypographyProps={{
+                      sx: { fontSize: '16px', fontWeight: 500 }
+                    }}
+                  />
+                </StyledNavLink>
+              )}
+            </ListItem>
+          ))}
+        </List>
+        <Box sx={{ mt: 'auto', alignSelf: 'flex-end', height: '100%', display: 'flex', alignItems: 'flex-end' }}>
+          <Web3Status />
+        </Box>
+        <Box sx={{ opacity: 0 }}>1</Box>
+      </Box>
+    ),
+    []
+  )
+
   return (
     <>
       <MobileHeader />
@@ -94,9 +205,9 @@ export default function Header() {
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
             <MainLogo id={'chainswap'} to={'/'}>
-              <Image src={ChainSwap} alt={'chainswap'} />
+              <Image src={BrandLogo} alt={'brand-logo'} />
             </MainLogo>
-            <LinksWrapper>
+            {/* <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
                   <PlainSelect placeholder={title} key={title + idx}>
@@ -126,35 +237,59 @@ export default function Header() {
                   </NavLink>
                 )
               )}
-            </LinksWrapper>
+            </LinksWrapper> */}
           </Box>
         </HideOnMobile>
-        <Web3Status />
+        {/* <Web3Status /> */}
+        <Box display="flex" gap={16}>
+          <Button width="144px" height="44px" onClick={onOffer} fontSize={13}>
+            Make an Offer
+          </Button>
+          <SwapSelect list={ChainList} selected={ChainList[0]} width="fit-content" fontSize={13} />
+        </Box>
       </StyledAppBar>
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          boxShadow: 'none',
+          '& .MuiPaper-root': {
+            borderColor: 'transparent'
+          },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: theme.width.drawer,
+            background: '#FFFFFF'
+          }
+        }}
+        open
+      >
+        {drawer}
+      </Drawer>
     </>
   )
 }
 
-function FAQButton() {
-  const theme = useTheme()
-  return (
-    <Box display="flex" alignItems="center" justifyContent="center">
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '50%',
-          border: `1px solid ${theme.palette.success.main}`,
-          width: '18px',
-          height: '18px',
-          marginRight: '12px',
-          color: theme.palette.success.main
-        }}
-      >
-        <Typography variant="body1">?</Typography>
-      </span>
-      FAQ
-    </Box>
-  )
-}
+// function FAQButton() {
+//   const theme = useTheme()
+//   return (
+//     <Box display="flex" alignItems="center" justifyContent="center">
+//       <span
+//         style={{
+//           display: 'flex',
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//           borderRadius: '50%',
+//           border: `1px solid ${theme.palette.success.main}`,
+//           width: '18px',
+//           height: '18px',
+//           marginRight: '12px',
+//           color: theme.palette.success.main
+//         }}
+//       >
+//         <Typography variant="body1">?</Typography>
+//       </span>
+//       FAQ
+//     </Box>
+//   )
+// }

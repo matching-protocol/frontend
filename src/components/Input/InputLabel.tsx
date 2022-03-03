@@ -14,23 +14,17 @@ export default function InputLabel({
   return (
     <MuiInputLabel
       sx={{
-        color: theme => theme.palette.text.secondary,
+        color: theme => theme.palette.primary.main,
         marginBottom: '8px',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        opacity: 0.5,
+        fontSize: 14,
+        fontWeight: 500,
+        ...style
       }}
     >
-      <div
-        style={{
-          opacity: 0.6,
-          fontSize: 12,
-          fontWeight: 500,
-          lineHeight: '148.69%',
-          ...style
-        }}
-      >
-        {children}
-      </div>
+      {children}
       {infoIcon && (
         <InfoIcon
           style={{

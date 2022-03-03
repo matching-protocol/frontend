@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { useState } from 'react'
 import ChainSwap from 'components/Select/ChainSwap'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import ChainSelect from 'components/Select/ChainSelect'
+import SwapSelect from 'components/Swap/SwapSelect'
 import { Chain } from 'models/chain'
 import { Box } from '@mui/material'
 import TextButton from 'components/Button/TextButton'
@@ -66,10 +66,10 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
     <>
       <p>use components/Select/ChainSwap instead code here only for demo</p>
       <Box display="flex" justifyContent="space-between" alignItems={'flex-end'} position={'relative'} width="100%">
-        <ChainSelect
+        <SwapSelect
           label={'From'}
-          selectedChain={fromChain}
-          chainList={ChainList}
+          selected={fromChain}
+          list={ChainList}
           onChange={chain => setFromChain(chain)}
           width={'49%'}
           disabled={disabledFrom}
@@ -80,10 +80,10 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
             <SwitchButton />
           </TextButton>
         </Box>
-        <ChainSelect
+        <SwapSelect
           label={'To'}
-          selectedChain={toChain}
-          chainList={ChainList}
+          selected={toChain}
+          list={ChainList}
           onChange={chain => setToChain(chain)}
           width={'49%'}
           disabled={disabledTo}

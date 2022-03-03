@@ -72,12 +72,14 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     lineHeight: '12px',
     background: 'rgba(255, 255, 255, 0.08)',
     padding: '12px 20px 12px 0',
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary.main,
+    opacity: 0.5,
     borderBottom: 'none',
     '& .MuiTableSortLabel-root': {
       fontWeight: 400,
-      fontSize: '12px!important',
-      color: theme.palette.text.secondary
+      // fontSize: '12px!important',
+      color: theme.palette.primary.main,
+      opacity: 0.5
     },
     '&:first-of-type': {
       paddingLeft: 20,
@@ -104,16 +106,16 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
   },
   '& .MuiTableCell-root': {
-    fontSize: (fontSize ?? '16px') + '!important',
+    // fontSize: fontSize ?? '16px',
     justifyContent: 'flex-start',
     paddingLeft: 0,
     border: '1px solid',
     borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
     borderRight: 'none',
     borderLeft: 'none',
-    '& .MuiTypography-root': {
-      fontSize: (fontSize ?? '16px') + '!important'
-    },
+    // '& .MuiTypography-root': {
+    //   fontSize: fontSize ?? '16px'
+    // },
     '&:first-of-type': {
       borderLeft: '1px solid',
       borderColor: variant === 'outlined' ? '#00000010' : 'transparent',

@@ -39,7 +39,8 @@ export default function Tabs({
           sx={{
             textTransform: 'none',
             padding: '0 20px',
-            fontSize: 20,
+            fontSize: 13,
+            fontWeight: 500,
             color: '#000000',
             border: '1px solid rgba(22, 22, 22, 0.1)',
             borderRadius: 60,

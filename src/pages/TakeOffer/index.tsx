@@ -216,16 +216,18 @@ export default function TakeOffer() {
               borderRadius="16px"
             />
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
-            <Typography>
-              <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
-            </Typography>
-            <Box display="flex" alignItems="center" gap={20} mt={32}>
-              <OutlineButton onClick={() => {}} primary>
-                Cancel
-              </OutlineButton>
-              <Button borderRadius={16} onClick={() => {}}>
-                Go to My Account
-              </Button>
+            <Box sx={{ opacity: 0.5, zIndex: 999 }}>
+              <Typography>
+                <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
+              </Typography>
+              <Box display="flex" alignItems="center" gap={20} mt={32}>
+                <OutlineButton onClick={() => {}} primary>
+                  Cancel
+                </OutlineButton>
+                <Button onClick={() => {}} borderRadius="16px">
+                  Go to My Account
+                </Button>
+              </Box>
             </Box>
           </>
         )}

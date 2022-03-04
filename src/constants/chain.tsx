@@ -7,7 +7,8 @@ export enum ChainId {
   ROPSTEN = 3,
   RINKEBY = 4,
   GÖRLI = 5,
-  KOVAN = 42
+  KOVAN = 42,
+  BSCTEST = 97
   // BSC = 56
 }
 
@@ -35,6 +36,14 @@ export const ChainList = [
     name: 'Kovan Testnet',
     id: ChainId.KOVAN,
     hex: '0x2a'
+  },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'BSCTEST',
+    name: 'Binance TEST Chain',
+    id: ChainId.BSCTEST,
+    hex: '0x61'
   }
   // {
   //   icon: <BSCInvert height={20} width={20} />,
@@ -109,6 +118,17 @@ export const SUPPORTED_NETWORKS: {
     },
     rpcUrls: ['https://kovan.infura.io/v3/'],
     blockExplorerUrls: ['https://kovan.etherscan.io/']
+  },
+  [ChainId.BSCTEST]: {
+    chainId: '0x61',
+    chainName: 'Binance TEST Chain',
+    nativeCurrency: {
+      name: 'Binance Coin',
+      symbol: 'BNB',
+      decimals: 18
+    },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/']
   }
   // [ChainId.BSC]: {
   //   chainId: '0x38',

@@ -10,15 +10,17 @@ export const Axios = {
   get<T = any>(url: string, params: { [key: string]: any } = {}): AxiosPromise<ResponseType<T>> {
     return axiosInstance.get(url, { params })
   },
-  post<T = any>(url: string, data: { [key: string]: any }, params = {}): AxiosPromise<ResponseType<T>> {
+  post<T = any>(url: string, data: { [key: string]: any } | undefined, params = {}): AxiosPromise<ResponseType<T>> {
     return axiosInstance.post(url, data, { params })
   }
 }
 
-export type AxiosResponseType<T = any, D = any> = AxiosResponse<T, D>
+export type AxiosResponseType<T = any> = AxiosResponse<T>
 
 export interface ResponseType<T = any> {
   msg: string
   code: number
   data: T
 }
+
+export type apiResponseType<T = any> = AxiosResponseType<ResponseType<T>>

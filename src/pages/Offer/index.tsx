@@ -15,6 +15,19 @@ import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurre
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import { useCurrencyListByChain } from 'hooks/useCurrencyList'
+import { useCreateOrderCallback } from 'hooks/useCreateOrderCallback'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { tryParseAmount } from 'utils/parseAmount'
+import { useActiveWeb3React } from 'hooks'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { MATCHING_ADDRESS } from '../../constants'
+import { Token } from 'constants/token'
+import { useCurrencyBalance } from 'state/wallet/hooks'
+import JSBI from 'jsbi'
+import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -23,51 +36,48 @@ enum ERROR {
 }
 
 export default function Offer() {
+  const { account, chainId, library } = useActiveWeb3React()
   const [fromChain, setFromChain] = useState<Chain | null>(null)
   const [toChain, setToChain] = useState<Chain | null>(null)
   const [fromCurrency, setFromCurrency] = useState<Currency | null>(null)
   const [toCurrency, setToCurrency] = useState<Currency | null>(null)
   const [fromValue, setFromValue] = useState('')
-  const [toValue, setToValue] = useState('')
+  const [toValue, setToValue] = useState('-')
   const [incentive, setIncentive] = useState('')
-  const { showModal } = useModal()
+  const { showModal, hideModal } = useModal()
+  const toggleWalletModal = useWalletModalToggle()
 
-  const chainList = ChainList
-  const currencyList: Currency[] = useMemo(() => [], [])
+  const chainList = ChainList.filter(i => [42, 97].indexOf(i.id) !== -1)
+  const fromCurrencyList: Currency[] = useCurrencyListByChain(fromChain?.id)
+  const toCurrencyList: Currency[] = useCurrencyListByChain(toChain?.id)
 
   const onSelectFromCurrency = useCallback(() => {
     showModal(
       <SelectCurrencyModal
-        onSelectCurrency={currency => setFromCurrency(currency as Currency)}
-        tokenList={currencyList}
+        onSelectCurrency={currency => {
+          setFromCurrency(currency)
+        }}
+        tokenList={fromCurrencyList}
       />
     )
-  }, [currencyList, showModal])
+  }, [fromCurrencyList, showModal])
 
   const onSelectToCurrency = useCallback(() => {
     showModal(
       <SelectCurrencyModal
-        onSelectCurrency={currency => setToCurrency(currency as Currency)}
-        tokenList={currencyList}
+        onSelectCurrency={currency => {
+          setToCurrency(currency)
+        }}
+        tokenList={toCurrencyList}
       />
     )
-  }, [currencyList, showModal])
+  }, [toCurrencyList, showModal])
 
-  const getError = useMemo(() => {
-    if (!fromChain || !toChain) {
-      return ERROR.SELECT_CHAIN
-    }
-
-    if (!fromCurrency || !toCurrency) {
-      return ERROR.SELECT_ASSET
-    }
-
-    if (!fromValue || !toValue || !incentive) {
-      return ERROR.ENTER_AMOUNT
-    }
-
-    return undefined
-  }, [fromChain, toChain, fromCurrency, toCurrency, fromValue, toValue, incentive])
+  const exchangeTokenAmount = useMemo(() => tryParseAmount(fromValue, fromCurrency || undefined), [
+    fromCurrency,
+    fromValue
+  ])
+  const fromBalance = useCurrencyBalance(account || undefined, fromCurrency || undefined)
 
   const onSwitch = useCallback(() => {
     const switchedToChain = fromChain
@@ -79,6 +89,124 @@ export default function Offer() {
     setToCurrency(switchedToCurrency)
     setFromCurrency(switchedFromCurrency)
   }, [fromChain, toChain, fromCurrency, toCurrency])
+
+  const createOrderCallback = useCreateOrderCallback()
+  const onCreateOrderCallback = useCallback(() => {
+    if (!fromCurrency || !toChain || !toChain.id || !account) return
+    if (!(fromCurrency instanceof Token)) {
+      return
+    }
+    const _amount = tryParseAmount(fromValue, fromCurrency)
+    if (!_amount) return
+    showModal(<TransactionPendingModal />)
+    createOrderCallback(
+      fromCurrency.address,
+      account,
+      _amount.raw.toString(),
+      JSBI.divide(JSBI.BigInt(_amount.raw.toString()), JSBI.BigInt(50)).toString(),
+      toChain.id
+    )
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [fromCurrency, toChain, account, fromValue, showModal, createOrderCallback, hideModal])
+
+  const [approvalState, approvalCallback] = useApproveCallback(
+    exchangeTokenAmount,
+    chainId ? MATCHING_ADDRESS[chainId] : undefined
+  )
+
+  const getAction: {
+    error?: string
+    msg: string
+    event?: () => void
+  } = useMemo(() => {
+    if (!fromChain?.id || !toChain?.id) {
+      return {
+        error: ERROR.SELECT_CHAIN,
+        msg: ''
+      }
+    }
+
+    if (!fromCurrency || !toCurrency) {
+      return {
+        error: ERROR.SELECT_ASSET,
+        msg: ''
+      }
+    }
+
+    if (!fromValue) {
+      return { error: ERROR.ENTER_AMOUNT, msg: '' }
+    }
+
+    if (!account || !library) {
+      return {
+        msg: 'Connect wallet',
+        event: toggleWalletModal
+      }
+    }
+
+    if (chainId !== fromChain.id) {
+      return {
+        msg: 'Switch',
+        event: () => fromChain.id && triggerSwitchChain(library, fromChain.id, account)
+      }
+    }
+
+    if (!fromBalance || !exchangeTokenAmount || fromBalance.lessThan(exchangeTokenAmount)) {
+      return {
+        error: 'Balance Insufficient',
+        msg: ''
+      }
+    }
+
+    if (approvalState !== ApprovalState.APPROVED) {
+      if (approvalState === ApprovalState.PENDING) {
+        return {
+          msg: 'Approving...',
+          event: toggleWalletModal
+        }
+      } else if (approvalState === ApprovalState.NOT_APPROVED) {
+        return {
+          msg: 'Approval',
+          event: approvalCallback
+        }
+      } else {
+        return {
+          error: 'Loading',
+          msg: ''
+        }
+      }
+    }
+
+    return {
+      msg: 'Make an Offer',
+      event: onCreateOrderCallback
+    }
+  }, [
+    fromChain,
+    toChain,
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    account,
+    library,
+    chainId,
+    fromBalance,
+    exchangeTokenAmount,
+    approvalState,
+    onCreateOrderCallback,
+    toggleWalletModal,
+    approvalCallback
+  ])
 
   return (
     <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
@@ -95,7 +223,6 @@ export default function Offer() {
             toCurrency={toCurrency}
             toValue={toValue}
             chainList={chainList}
-            currencyList={currencyList}
             onSelectFromChain={setFromChain}
             onSelectToChain={setToChain}
             onSelectFromCurrency={onSelectFromCurrency}
@@ -157,11 +284,7 @@ export default function Offer() {
           </Box>
         </Box>
 
-        <ActionButton
-          error={getError}
-          actionText="Make an Offer"
-          onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
-        />
+        <ActionButton error={getAction.error} actionText={getAction.msg} onAction={getAction.event} />
       </Card>
       <WarningCard />
     </Box>

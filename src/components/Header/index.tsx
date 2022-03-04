@@ -42,7 +42,7 @@ interface Tab extends TabContent {
 
 export const Tabs: Tab[] = [
   { title: 'Market', route: routes.market, icon: <Image src={MarketIcon} /> },
-  { title: 'Account', route: undefined, icon: <Image src={AccountIcon} /> },
+  { title: 'Account', route: routes.account, icon: <Image src={AccountIcon} /> },
   { title: 'Statistics', route: undefined, icon: <Image src={StatIcon} /> },
   { title: 'Help', route: undefined, icon: <Image src={HelpIcon} /> }
 ]

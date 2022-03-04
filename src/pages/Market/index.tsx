@@ -10,7 +10,7 @@ import Button from 'components/Button/Button'
 import Pagination from 'components/Pagination'
 import MarketCard from './MarketCard'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import CurrencyValue from 'components/CurrencyValue'
+import CurrencyText from 'components/CurrencyText'
 import { ETHER } from 'constants/token'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ChainList } from 'constants/chain'
@@ -65,39 +65,39 @@ export default function Market() {
         <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={mode === Mode.TABLE ? '32px' : '24px'} />
       </Box>,
       <Box key={1} display="flex" alignItems="center" gap={12}>
-        <CurrencyValue
+        <CurrencyText
           currency={ETHER}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-          value={'123'}
-          equivalent={'$123'}
-          valueSize={mode === Mode.TABLE ? 16 : 13}
-          equivalentSize={mode === Mode.TABLE ? 13 : 11}
+          text={'123'}
+          subText={'$123'}
+          textSize={mode === Mode.TABLE ? 16 : 13}
+          subTextSize={mode === Mode.TABLE ? 13 : 11}
         />
         <ArrowForwardIcon />
-        <CurrencyValue
+        <CurrencyText
           currency={ETHER}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-          value={'123'}
-          equivalent={'$123'}
-          valueSize={mode === Mode.TABLE ? 16 : 13}
-          equivalentSize={mode === Mode.TABLE ? 13 : 11}
+          text={'123'}
+          subText={'$123'}
+          textSize={mode === Mode.TABLE ? 16 : 13}
+          subTextSize={mode === Mode.TABLE ? 13 : 11}
         />
       </Box>,
-      <CurrencyValue
+      <CurrencyText
         key={1}
         currency={ETHER}
         currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-        value={'123'}
-        equivalent={'$123'}
-        valueSize={mode === Mode.TABLE ? 16 : 13}
-        equivalentSize={mode === Mode.TABLE ? 13 : 11}
+        text={'123'}
+        subText={'$123'}
+        textSize={mode === Mode.TABLE ? 16 : 13}
+        subTextSize={mode === Mode.TABLE ? 13 : 11}
       />,
       <Button
         key={1}
         width={mode === Mode.TABLE ? '94px' : '120px'}
-        onClick={() => take(item.global_order_id)}
         height="32px"
         fontSize={13}
+        onClick={() => take(item.global_order_id)}
       >
         Take Offer
       </Button>

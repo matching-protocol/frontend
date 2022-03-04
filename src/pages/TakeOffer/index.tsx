@@ -1,24 +1,31 @@
+import { useState } from 'react'
 import Card from 'components/Card'
 import { Box, Typography, Grid } from '@mui/material'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import WarningCard, { Subject } from '../WarningCard'
-import useModal from 'hooks/useModal'
-import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+// import useModal from 'hooks/useModal'
+// import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import LogoText from 'components/LogoText'
 import { CSSProperties } from 'react'
 import DummyLogo from 'assets/svg/eth_logo.svg'
 import TextButton from 'components/Button/TextButton'
+import Stepper from './Stepper'
 
 export default function TakeOffer() {
-  const { showModal } = useModal()
+  // const { showModal } = useModal()
+  const [step, setStep] = useState(0)
 
   return (
     <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
       <Card width="100%" padding="24px 60px 44px">
-        <Typography fontSize={28} fontWeight={700}>
-          Take an Offer
-        </Typography>
+        <Box display="flex" justifyContent="space-between" mb={32}>
+          <Typography fontSize={28} fontWeight={700}>
+            Take an Offer
+          </Typography>
+          <Stepper current={step} steps={2} />
+        </Box>
+
         <Grid container columnSpacing={20} rowSpacing={8}>
           <Grid item md={6}>
             <Typography fontSize={16} fontWeight={700} mb={16}>
@@ -153,7 +160,8 @@ export default function TakeOffer() {
         <ActionButton
           // error={getError}
           actionText="Make an Offer"
-          onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+          // onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+          onAction={() => setStep(1)}
         />
       </Card>
       <WarningCard subject={Subject.TakeOffer} />

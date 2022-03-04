@@ -1,0 +1,16 @@
+[
+  {
+    "symbol": "TEST",
+    "address": "0x919BE0D40f5fc42E3CBf7A7F6454D9D33C82091d",
+    "chainId": 42,
+    "name": "TEST",
+    "decimals": 18
+  },
+  {
+    "symbol": "TEST",
+    "address": "0xfE1e3D33305a88bEaE7EEE1590Ef025b8117E5D7",
+    "chainId": 97,
+    "name": "TEST",
+    "decimals": 18
+  }
+]

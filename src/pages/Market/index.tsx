@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Box, Typography, MenuItem, Grid } from '@mui/material'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
@@ -16,6 +16,8 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
+import { OrderStatus, useOrderList } from 'hooks/useFetch'
+import { useTakeOrderCallback } from 'hooks/useTakeOrder'
 
 enum Mode {
   TABLE,
@@ -37,60 +39,70 @@ export default function Market() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [filterToggle, setFilterToggle] = useState(false)
+  const { list: orderList } = useOrderList(OrderStatus.Order_Open)
+
+  const { getTakeSign, takeCallback } = useTakeOrderCallback()
+
+  const take = useCallback(
+    async (orderId: string | number) => {
+      const data = await getTakeSign(orderId)
+      if (!data) {
+        return
+      }
+      takeCallback(data)
+    },
+    [getTakeSign, takeCallback]
+  )
 
   const dataRows = useMemo(() => {
-    return [
-      [
-        <Typography key={1} fontSize={16} fontWeight={500}>
-          #000001
-        </Typography>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <LogoText
-            logo={<CurrencyLogo currency={ETHER} />}
-            text="Ether"
-            size={mode === Mode.TABLE ? '32px' : '24px'}
-          />
-          <ArrowForwardIcon />
-          <LogoText
-            logo={<CurrencyLogo currency={ETHER} />}
-            text="Ether"
-            size={mode === Mode.TABLE ? '32px' : '24px'}
-          />
-        </Box>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <CurrencyValue
-            currency={ETHER}
-            currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-            value={'123'}
-            equivalent={'$123'}
-            valueSize={mode === Mode.TABLE ? 16 : 13}
-            equivalentSize={mode === Mode.TABLE ? 13 : 11}
-          />
-          <ArrowForwardIcon />
-          <CurrencyValue
-            currency={ETHER}
-            currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-            value={'123'}
-            equivalent={'$123'}
-            valueSize={mode === Mode.TABLE ? 16 : 13}
-            equivalentSize={mode === Mode.TABLE ? 13 : 11}
-          />
-        </Box>,
+    return orderList.map(item => [
+      <Typography key={1} fontSize={16} fontWeight={500}>
+        #{item.global_order_id}
+      </Typography>,
+      <Box key={1} display="flex" alignItems="center" gap={12}>
+        <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={mode === Mode.TABLE ? '32px' : '24px'} />
+        <ArrowForwardIcon />
+        <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={mode === Mode.TABLE ? '32px' : '24px'} />
+      </Box>,
+      <Box key={1} display="flex" alignItems="center" gap={12}>
         <CurrencyValue
-          key={1}
           currency={ETHER}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
           value={'123'}
           equivalent={'$123'}
           valueSize={mode === Mode.TABLE ? 16 : 13}
           equivalentSize={mode === Mode.TABLE ? 13 : 11}
-        />,
-        <Button key={1} width={mode === Mode.TABLE ? '94px' : '120px'} height="32px" fontSize={13}>
-          Take Offer
-        </Button>
-      ]
-    ]
-  }, [mode])
+        />
+        <ArrowForwardIcon />
+        <CurrencyValue
+          currency={ETHER}
+          currencySize={mode === Mode.TABLE ? '32px' : '24px'}
+          value={'123'}
+          equivalent={'$123'}
+          valueSize={mode === Mode.TABLE ? 16 : 13}
+          equivalentSize={mode === Mode.TABLE ? 13 : 11}
+        />
+      </Box>,
+      <CurrencyValue
+        key={1}
+        currency={ETHER}
+        currencySize={mode === Mode.TABLE ? '32px' : '24px'}
+        value={'123'}
+        equivalent={'$123'}
+        valueSize={mode === Mode.TABLE ? 16 : 13}
+        equivalentSize={mode === Mode.TABLE ? 13 : 11}
+      />,
+      <Button
+        key={1}
+        width={mode === Mode.TABLE ? '94px' : '120px'}
+        onClick={() => take(item.global_order_id)}
+        height="32px"
+        fontSize={13}
+      >
+        Take Offer
+      </Button>
+    ])
+  }, [mode, orderList, take])
 
   return (
     <>
@@ -139,7 +151,7 @@ export default function Market() {
                 backgroundColor={'#FFFFFF'}
               />
               <Box display="flex" gap={20} alignItems="center">
-                <Typography fontSize={16} fontWeight={700}>
+                <Typography fontSize={16} fontWeight={700} onClick={() => take(1)}>
                   Sort by
                 </Typography>
                 <Select value="MAX Amount" height={60} width="fit-content">

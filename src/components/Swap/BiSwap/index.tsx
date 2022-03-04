@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useMemo } from 'react'
 import { Typography, Grid } from '@mui/material'
 import { Chain } from 'models/chain'
 import { Currency } from 'constants/token/currency'
@@ -17,7 +17,6 @@ export default function BiSwap({
   fromValue,
   toValue,
   chainList,
-  currencyList,
   onSelectFromChain,
   onSelectToChain,
   onSelectFromCurrency,
@@ -37,7 +36,7 @@ export default function BiSwap({
   fromValue: string
   toValue: string
   chainList: Chain[]
-  currencyList: Currency[]
+  // currencyList: Currency[]
   onSelectFromChain: (e: any) => void
   onSelectToChain: (e: any) => void
   onSelectFromCurrency: () => void
@@ -60,9 +59,13 @@ export default function BiSwap({
   //   onSelectToChain(fromChain)
   // }, [])
 
-  // const toList = useMemo(() => {
-  //   return list.filter(chain => !(chain.symbol === from?.symbol))
-  // }, [list, from?.symbol])
+  const fromList = useMemo(() => {
+    return chainList.filter(chain => chain.id !== toChain?.id)
+  }, [chainList, toChain?.id])
+
+  const toList = useMemo(() => {
+    return chainList.filter(chain => chain.id !== fromChain?.id)
+  }, [chainList, fromChain?.id])
 
   return (
     <Grid container columnSpacing={20} rowSpacing={8}>
@@ -70,18 +73,17 @@ export default function BiSwap({
         <Typography fontSize={16} fontWeight={700} mb={16}>
           {fromLabel}
         </Typography>
-        <SwapSelect menuWidth={320} list={chainList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
+        <SwapSelect menuWidth={320} list={fromList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
       </Grid>
       <Grid item md={6}>
         <Typography fontSize={16} fontWeight={700} mb={16}>
           {toLabel}
         </Typography>
-        <SwapSelect menuWidth={320} list={chainList} selected={toChain} height="60px" onChange={onSelectToChain} />
+        <SwapSelect menuWidth={320} list={toList} selected={toChain} height="60px" onChange={onSelectToChain} />
       </Grid>
       <Grid item md={6} position="relative">
         <SwapSelectInput
           value={fromValue}
-          options={currencyList}
           selected={fromCurrency}
           onClick={onSelectFromCurrency}
           onChange={onChangeFromValue}
@@ -104,11 +106,11 @@ export default function BiSwap({
       <Grid item md={6}>
         <SwapSelectInput
           value={toValue}
-          options={currencyList}
           selected={toCurrency}
           onClick={onSelectToCurrency}
           onChange={onChangeToValue}
-          inputPlaceholder={'0.00'}
+          inputDisabled={true}
+          inputPlaceholder={'-'}
         />
       </Grid>
       <Grid item md={6}>

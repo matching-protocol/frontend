@@ -13,16 +13,17 @@ export default function SwapSelectInput({
   inputPlaceholder,
   onClick,
   onChange,
+  inputDisabled,
   width
 }: {
   value: string
-  options: Currency[]
   selected: Currency | null
   selectPlaceholder?: string
   inputPlaceholder?: string
   onClick: () => void
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   width?: number | string
+  inputDisabled?: boolean
 }) {
   return (
     <Box
@@ -47,6 +48,7 @@ export default function SwapSelectInput({
       <Input
         width={160}
         value={value}
+        disabled={inputDisabled}
         placeholder={inputPlaceholder}
         onChange={onChange}
         backgroundColor="#FFFFFF"

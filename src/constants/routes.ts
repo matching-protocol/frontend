@@ -1,5 +1,6 @@
 export const routes = {
   market: '/market',
-  offer: '/offer',
-  account: '/account'
+  makeOffer: '/makeOffer',
+  account: '/account',
+  takeOffer: '/takeOffer'
 }

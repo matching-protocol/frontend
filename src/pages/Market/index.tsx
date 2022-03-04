@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useMemo, useState, useCallback } from 'react'
 import { Box, Typography, MenuItem, Grid } from '@mui/material'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
@@ -16,6 +17,7 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
+import { routes } from 'constants/routes'
 
 enum Mode {
   TABLE,
@@ -37,6 +39,12 @@ export default function Market() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [filterToggle, setFilterToggle] = useState(false)
+
+  const history = useHistory()
+
+  const onTakeOffer = useCallback(() => {
+    history.push(routes.takeOffer)
+  }, [])
 
   const dataRows = useMemo(() => {
     return [
@@ -85,7 +93,13 @@ export default function Market() {
           textSize={mode === Mode.TABLE ? 16 : 13}
           subTextSize={mode === Mode.TABLE ? 13 : 11}
         />,
-        <Button key={1} width={mode === Mode.TABLE ? '94px' : '120px'} height="32px" fontSize={13}>
+        <Button
+          key={1}
+          width={mode === Mode.TABLE ? '94px' : '120px'}
+          height="32px"
+          fontSize={13}
+          onClick={onTakeOffer}
+        >
           Take Offer
         </Button>
       ]

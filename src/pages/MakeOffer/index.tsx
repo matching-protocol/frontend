@@ -7,7 +7,7 @@ import { ChainList } from 'constants/chain'
 import Input from 'components/Input'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
-import WarningCard from './WarningCard'
+import WarningCard, { Subject } from '../WarningCard'
 import BiSwap from 'components/Swap/BiSwap'
 import { Currency } from 'constants/token/currency'
 import { Chain } from 'models/chain'
@@ -23,7 +23,7 @@ enum ERROR {
   ENTER_AMOUNT = 'Enter Amount'
 }
 
-export default function Offer() {
+export default function MakeOffer() {
   const [fromChain, setFromChain] = useState<Chain | null>(null)
   const [toChain, setToChain] = useState<Chain | null>(null)
   const [fromCurrency, setFromCurrency] = useState<Currency | null>(null)
@@ -164,7 +164,7 @@ export default function Offer() {
           onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
         />
       </Card>
-      <WarningCard />
+      <WarningCard subject={Subject.MakeOffer} />
     </Box>
   )
 }

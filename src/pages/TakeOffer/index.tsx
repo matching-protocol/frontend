@@ -4,167 +4,233 @@ import { Box, Typography, Grid } from '@mui/material'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import WarningCard, { Subject } from '../WarningCard'
-// import useModal from 'hooks/useModal'
-// import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import useModal from 'hooks/useModal'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import LogoText from 'components/LogoText'
 import { CSSProperties } from 'react'
 import DummyLogo from 'assets/svg/eth_logo.svg'
 import TextButton from 'components/Button/TextButton'
 import Stepper from './Stepper'
+import OutlineButton from 'components/Button/OutlineButton'
+import Button from 'components/Button/Button'
+
+export enum Step {
+  Confirm,
+  Exeute
+}
 
 export default function TakeOffer() {
-  // const { showModal } = useModal()
-  const [step, setStep] = useState(0)
+  const { showModal } = useModal()
+  const [step, setStep] = useState(Step.Confirm)
 
   return (
-    <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
+    <Box pt={68} pb={90} display="grid" gap={20} maxWidth={828} width="100%">
       <Card width="100%" padding="24px 60px 44px">
         <Box display="flex" justifyContent="space-between" mb={32}>
           <Typography fontSize={28} fontWeight={700}>
-            Take an Offer
+            {step === Step.Confirm ? 'Take an Offer' : 'Exeute Fund'}
           </Typography>
           <Stepper current={step} steps={2} />
         </Box>
 
-        <Grid container columnSpacing={20} rowSpacing={8}>
-          <Grid item md={6}>
-            <Typography fontSize={16} fontWeight={700} mb={16}>
-              You receive
-            </Typography>
-            <Box
-              width="100%"
-              bgcolor="#F7F7F8"
+        {step === Step.Confirm && (
+          <>
+            <Grid container columnSpacing={20} rowSpacing={8}>
+              <Grid item md={6}>
+                <Typography fontSize={16} fontWeight={700} mb={16}>
+                  You receive
+                </Typography>
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={60}
+                  display="flex"
+                  alignItems="center"
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'BSC'} fontSize={16} size="24px" />
+                </Box>
+              </Grid>
+              <Grid item md={6}>
+                <Typography fontSize={16} fontWeight={700} mb={16}>
+                  You Pay
+                </Typography>
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={60}
+                  display="flex"
+                  alignItems="center"
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'Ethereum'} fontSize={16} size="24px" />
+                </Box>
+              </Grid>
+              <Grid item md={6} position="relative">
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={108}
+                  display="flex"
+                  alignItems="center"
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
+                </Box>
+                <SwitchIcon
+                  style={{
+                    position: 'absolute',
+                    right: -26,
+                    zIndex: 1,
+                    padding: 0,
+                    height: 32,
+                    bottom: 38
+                  }}
+                />
+              </Grid>
+              <Grid item md={6} position="relative">
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={108}
+                  display="flex"
+                  alignItems="center"
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
+                </Box>
+              </Grid>
+              <Grid item md={6}>
+                <Typography fontSize={11} sx={{ opacity: 0.5 }}>
+                  21BTC (You recive) + 0.56BTC (Offer Incentive)
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
+
+            <Grid container columnSpacing={24} rowSpacing={16} mb={32}>
+              <Grid item md={6}>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography fontSize={16} fontWeight={700}>
+                    Token Information
+                  </Typography>
+                  <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
+                    View on Ethereum
+                  </TextButton>
+                </Box>
+              </Grid>
+              <Grid item md={6}>
+                <Box display="flex" justifyContent="flex-end">
+                  <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
+                    View on Ethereum
+                  </TextButton>
+                </Box>
+              </Grid>
+              <Grid item md={6} position="relative">
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={88}
+                  display="grid"
+                  gap={13}
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
+                  <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                    0x35500253DEB46fa8c2b271628c65DcF159206882
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item md={6} position="relative">
+                <Box
+                  width="100%"
+                  bgcolor="#F7F7F8"
+                  borderRadius="16px"
+                  height={88}
+                  display="grid"
+                  gap={13}
+                  padding="18px 24px"
+                >
+                  <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
+                  <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                    0x35500253DEB46fa8c2b271628c65DcF159206882
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+
+            <ActionButton
+              // error={getError}
+              actionText="Make an Offer"
+              onAction={() => setStep(Step.Exeute)}
               borderRadius="16px"
-              height={60}
-              display="flex"
-              alignItems="center"
-              padding="18px 24px"
-            >
-              <LogoText logo={DummyLogo} text={'BSC'} fontSize={16} size="24px" />
-            </Box>
-          </Grid>
-          <Grid item md={6}>
-            <Typography fontSize={16} fontWeight={700} mb={16}>
-              You Pay
-            </Typography>
-            <Box
-              width="100%"
-              bgcolor="#F7F7F8"
-              borderRadius="16px"
-              height={60}
-              display="flex"
-              alignItems="center"
-              padding="18px 24px"
-            >
-              <LogoText logo={DummyLogo} text={'Ethereum'} fontSize={16} size="24px" />
-            </Box>
-          </Grid>
-          <Grid item md={6} position="relative">
-            <Box
-              width="100%"
-              bgcolor="#F7F7F8"
-              borderRadius="16px"
-              height={108}
-              display="flex"
-              alignItems="center"
-              padding="18px 24px"
-            >
-              <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
-            </Box>
-            <SwitchIcon
-              style={{
-                position: 'absolute',
-                right: -26,
-                zIndex: 1,
-                padding: 0,
-                height: 32,
-                bottom: 38
-              }}
             />
-          </Grid>
-          <Grid item md={6} position="relative">
+          </>
+        )}
+        {step === Step.Exeute && (
+          <>
+            <Typography mb={16}>
+              <b>1. Send.</b> You need to send 20.56 BTC to the requester on Binance Smart Chain
+            </Typography>
             <Box
-              width="100%"
-              bgcolor="#F7F7F8"
+              border="1px solid rgba(66, 63, 71, 0.2)"
               borderRadius="16px"
-              height={108}
+              width="100%"
+              height={60}
+              pl="24px"
               display="flex"
               alignItems="center"
-              padding="18px 24px"
+              mb={24}
             >
-              <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
+              <Typography fontSize={16} fontWeight={500}>
+                Please complete the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the
+                order will be invalid
+              </Typography>
             </Box>
-          </Grid>
-          <Grid item md={6}>
-            <Typography fontSize={11} sx={{ opacity: 0.5 }}>
-              21BTC (You recive) + 0.56BTC (Offer Incentive)
+            <Box
+              width="100%"
+              height={108}
+              bgcolor="#F7F7F8"
+              pl={24}
+              display="flex"
+              alignItems="center"
+              mb={32}
+              borderRadius="16px"
+            >
+              <Box display="flex" alignItems="flex-end">
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" />/
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" />
+              </Box>
+            </Box>
+            <ActionButton
+              // error={getError}
+              actionText="Exeute"
+              onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+              borderRadius="16px"
+            />
+            <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
+            <Typography>
+              <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
             </Typography>
-          </Grid>
-        </Grid>
-
-        <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
-
-        <Grid container columnSpacing={24} rowSpacing={16} mb={32}>
-          <Grid item md={6}>
-            <Box display="flex" justifyContent="space-between">
-              <Typography fontSize={16} fontWeight={700}>
-                Token Information
-              </Typography>
-              <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
-                View on Ethereum
-              </TextButton>
+            <Box display="flex" alignItems="center" gap={20} mt={32}>
+              <OutlineButton onClick={() => {}} primary>
+                Cancel
+              </OutlineButton>
+              <Button borderRadius={16} onClick={() => {}}>
+                Go to My Account
+              </Button>
             </Box>
-          </Grid>
-          <Grid item md={6}>
-            <Box display="flex" justifyContent="flex-end">
-              <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
-                View on Ethereum
-              </TextButton>
-            </Box>
-          </Grid>
-          <Grid item md={6} position="relative">
-            <Box
-              width="100%"
-              bgcolor="#F7F7F8"
-              borderRadius="16px"
-              height={88}
-              display="grid"
-              gap={13}
-              padding="18px 24px"
-            >
-              <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
-              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                0x35500253DEB46fa8c2b271628c65DcF159206882
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid item md={6} position="relative">
-            <Box
-              width="100%"
-              bgcolor="#F7F7F8"
-              borderRadius="16px"
-              height={88}
-              display="grid"
-              gap={13}
-              padding="18px 24px"
-            >
-              <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
-              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                0x35500253DEB46fa8c2b271628c65DcF159206882
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-
-        <ActionButton
-          // error={getError}
-          actionText="Make an Offer"
-          // onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
-          onAction={() => setStep(1)}
-        />
+          </>
+        )}
       </Card>
-      <WarningCard subject={Subject.TakeOffer} />
+      {step === Step.Confirm && <WarningCard subject={Subject.TakeOffer} />}
     </Box>
   )
 }

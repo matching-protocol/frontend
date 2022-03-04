@@ -13,7 +13,8 @@ export default function ActionButton({
   height,
   width,
   disableAction,
-  successText
+  successText,
+  borderRadius
 }: {
   error?: string | undefined
   pending?: boolean
@@ -25,11 +26,12 @@ export default function ActionButton({
   height?: string
   width?: string
   disableAction?: boolean
+  borderRadius?: string
 }) {
   return (
     <>
       {error || pending ? (
-        <OutlineButton primary disabled height={height} width={width}>
+        <OutlineButton primary disabled height={height} width={width} borderRadius={borderRadius}>
           {pending ? (
             <>
               <Spinner marginRight={16} />
@@ -40,11 +42,11 @@ export default function ActionButton({
           )}
         </OutlineButton>
       ) : success ? (
-        <Button disabled height={height} width={width}>
+        <Button disabled height={height} width={width} borderRadius={borderRadius}>
           <Typography variant="inherit">{successText ?? actionText}</Typography>
         </Button>
       ) : (
-        <Button height={height} width={width} onClick={onAction} disabled={disableAction}>
+        <Button height={height} width={width} onClick={onAction} disabled={disableAction} borderRadius={borderRadius}>
           {actionText}
         </Button>
       )}

@@ -22,10 +22,12 @@ export enum Step {
 export default function TakeOffer() {
   const { showModal } = useModal()
   const [step, setStep] = useState(Step.Confirm)
+  const [completed, setCompleted] = useState(false)
 
   const getExecuteAction = useCallback(() => {
     showModal(<TransactionSubmittedModal hash="123" />)
-  }, [])
+    setCompleted(true)
+  }, [completed])
 
   const getErrorSubText = useMemo(() => {
     return 'The operation has timed out, please retake offer'
@@ -198,8 +200,8 @@ export default function TakeOffer() {
               mb={24}
             >
               <Typography fontSize={16} fontWeight={500}>
-                Please complete the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the
-                order will be invalid
+                Please the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the order
+                will be invalid
               </Typography>
             </Box>
             <Box
@@ -228,7 +230,17 @@ export default function TakeOffer() {
               onErrorAction={getExecuteAction}
             />
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
-            <Box sx={{ opacity: 0.5, zIndex: 999 }}>
+            <Box sx={{ position: 'relative', opacity: completed ? 1 : 0.5 }}>
+              {!completed && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    height: '100%',
+                    width: '100%'
+                  }}
+                />
+              )}
               <Typography>
                 <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
               </Typography>

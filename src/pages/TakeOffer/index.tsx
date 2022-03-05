@@ -215,8 +215,8 @@ export default function TakeOffer() {
               borderRadius="16px"
             >
               <Box display="flex" alignItems="flex-end">
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" />/
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" />
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" gapSize={12} />/
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" gapSize={4} />
               </Box>
             </Box>
             <ActionButton

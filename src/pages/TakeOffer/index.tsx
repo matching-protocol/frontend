@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import Card from 'components/Card'
 import { Box, Typography, Grid } from '@mui/material'
 import ActionButton from 'components/Button/ActionButton'
@@ -22,6 +22,14 @@ export enum Step {
 export default function TakeOffer() {
   const { showModal } = useModal()
   const [step, setStep] = useState(Step.Confirm)
+
+  const getExecuteAction = useCallback(() => {
+    showModal(<TransactionSubmittedModal hash="123" />)
+  }, [])
+
+  const getErrorSubText = useMemo(() => {
+    return 'The operation has timed out, please retake offer'
+  }, [])
 
   return (
     <Box pt={68} pb={90} display="grid" gap={20} maxWidth={828} width="100%">
@@ -210,10 +218,14 @@ export default function TakeOffer() {
               </Box>
             </Box>
             <ActionButton
-              // error={getError}
               actionText="Exeute"
-              onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+              onAction={getExecuteAction}
               borderRadius="16px"
+              pending={false}
+              pendingText={'Pending'}
+              error={'Try Again'}
+              errorSubText={getErrorSubText}
+              onErrorAction={getExecuteAction}
             />
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
             <Box sx={{ opacity: 0.5, zIndex: 999 }}>

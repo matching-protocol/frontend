@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import Card from 'components/Card'
 import { Box, Typography, Grid } from '@mui/material'
 import ActionButton from 'components/Button/ActionButton'
@@ -22,6 +22,16 @@ export enum Step {
 export default function TakeOffer() {
   const { showModal } = useModal()
   const [step, setStep] = useState(Step.Confirm)
+  const [completed, setCompleted] = useState(false)
+
+  const getExecuteAction = useCallback(() => {
+    showModal(<TransactionSubmittedModal hash="123" />)
+    setCompleted(true)
+  }, [completed])
+
+  const getErrorSubText = useMemo(() => {
+    return 'The operation has timed out, please retake offer'
+  }, [])
 
   return (
     <Box pt={68} pb={90} display="grid" gap={20} maxWidth={828} width="100%">
@@ -190,8 +200,8 @@ export default function TakeOffer() {
               mb={24}
             >
               <Typography fontSize={16} fontWeight={500}>
-                Please complete the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the
-                order will be invalid
+                Please the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the order
+                will be invalid
               </Typography>
             </Box>
             <Box
@@ -205,18 +215,32 @@ export default function TakeOffer() {
               borderRadius="16px"
             >
               <Box display="flex" alignItems="flex-end">
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" />/
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" />
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" gapSize={12} />/
+                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" gapSize={4} />
               </Box>
             </Box>
             <ActionButton
-              // error={getError}
               actionText="Exeute"
-              onAction={() => showModal(<TransactionSubmittedModal hash="123" />)}
+              onAction={getExecuteAction}
               borderRadius="16px"
+              pending={false}
+              pendingText={'Pending'}
+              error={'Try Again'}
+              errorSubText={getErrorSubText}
+              onErrorAction={getExecuteAction}
             />
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
-            <Box sx={{ opacity: 0.5, zIndex: 999 }}>
+            <Box sx={{ position: 'relative', opacity: completed ? 1 : 0.5 }}>
+              {!completed && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    height: '100%',
+                    width: '100%'
+                  }}
+                />
+              )}
               <Typography>
                 <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
               </Typography>

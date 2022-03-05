@@ -1,5 +1,5 @@
 import Button from './Button'
-import OutlineButton from './OutlineButton'
+// import OutlineButton from './OutlineButton'
 import Spinner from 'components/Spinner'
 import { Typography } from '@mui/material'
 
@@ -14,7 +14,9 @@ export default function ActionButton({
   width,
   disableAction,
   successText,
-  borderRadius
+  borderRadius,
+  errorSubText,
+  onErrorAction
 }: {
   error?: string | undefined
   pending?: boolean
@@ -27,20 +29,27 @@ export default function ActionButton({
   width?: string
   disableAction?: boolean
   borderRadius?: string
+  errorSubText?: string
+  onErrorAction?: (() => void) | undefined
 }) {
   return (
     <>
-      {error || pending ? (
-        <OutlineButton primary disabled height={height} width={width} borderRadius={borderRadius}>
-          {pending ? (
-            <>
-              <Spinner marginRight={16} />
-              {pendingText || 'Waiting Confirmation'}
-            </>
-          ) : (
-            error
+      {pending ? (
+        <Button disabled height={height} width={width} borderRadius={borderRadius}>
+          <Spinner marginRight={16} />
+          {pendingText || 'Waiting Confirmation'}
+        </Button>
+      ) : error ? (
+        <>
+          <Button height={height} width={width} borderRadius={borderRadius} onClick={onErrorAction}>
+            {error}
+          </Button>
+          {errorSubText && (
+            <Typography fontSize={11} color="#FF0000" mt={12}>
+              {errorSubText}
+            </Typography>
           )}
-        </OutlineButton>
+        </>
       ) : success ? (
         <Button disabled height={height} width={width} borderRadius={borderRadius}>
           <Typography variant="inherit">{successText ?? actionText}</Typography>

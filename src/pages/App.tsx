@@ -69,7 +69,7 @@ export default function App() {
                 <Switch>
                   <Route exact strict path={routes.market} component={Market} />
                   <Route exact strict path={routes.makeOffer} component={MakeOffer} />
-                  <Route exact strict path={routes.takeOffer} component={TakeOffer} />
+                  <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
                   <Route exact strict path={routes.account} component={Account} />
                 </Switch>
               </Web3ReactManager>

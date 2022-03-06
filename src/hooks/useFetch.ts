@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getOrders } from 'utils/fetch/order'
+import { getOrderById, getOrders } from 'utils/fetch/order'
 
 export enum OrderStatus {
   Order_Unstarted,
@@ -7,7 +7,8 @@ export enum OrderStatus {
   Order_Taken,
   Order_Finished,
   Order_Withdrawed,
-  Order_Outdated
+  Order_Outdated,
+  Order_ALL
 }
 
 export interface OrderInfo {
@@ -70,5 +71,32 @@ export function useOrderList(orderStatus: OrderStatus) {
     },
     loading: isLoading,
     list
+  }
+}
+
+export function useOrderById(orderId: string | number) {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [result, setResult] = useState<OrderInfo>()
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        setIsLoading(true)
+        const res: any = await getOrderById(orderId)
+        const data = res.data
+        setResult(data.order)
+      } catch (error) {
+        setResult(undefined)
+        console.error('fetch useOrderById', error)
+      }
+      setIsLoading(false)
+      setTimeout(() => setIndex(index + 1), 10000)
+    })()
+  }, [orderId, index])
+
+  return {
+    loading: isLoading,
+    result
   }
 }

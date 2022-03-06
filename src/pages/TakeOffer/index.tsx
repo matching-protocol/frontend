@@ -13,6 +13,13 @@ import TextButton from 'components/Button/TextButton'
 import Stepper from './Stepper'
 import OutlineButton from 'components/Button/OutlineButton'
 import Button from 'components/Button/Button'
+import { useParams } from 'react-router-dom'
+import { useOrderById } from 'hooks/useFetch'
+import ChainLogo from 'components/ChainLogo'
+import CurrencyInfo from './CurrencyInfo'
+import { useLocalCurrency } from 'hooks/useCurrencyList'
+import { getEtherscanLink } from 'utils'
+import OrderDetailOperate from './OrderDetailOperate'
 
 export enum Step {
   Confirm,
@@ -22,7 +29,14 @@ export enum Step {
 export default function TakeOffer() {
   const { showModal } = useModal()
   const [step, setStep] = useState(Step.Confirm)
+  console.log('🚀 ~ file: index.tsx ~ line 32 ~ TakeOffer ~ setStep', setStep)
   const [completed, setCompleted] = useState(false)
+  const { orderId } = useParams<{ orderId: string }>()
+
+  const { result: orderInfo } = useOrderById(orderId)
+
+  const receiveToken = useLocalCurrency(orderInfo?.chain_id, orderInfo?.token_address)
+  const payToken = useLocalCurrency(orderInfo?.to_chain_id, orderInfo?.receive_token_address)
 
   const getExecuteAction = useCallback(() => {
     showModal(<TransactionSubmittedModal hash="123" />)
@@ -33,12 +47,14 @@ export default function TakeOffer() {
     return 'The operation has timed out, please retake offer'
   }, [])
 
+  if (!orderInfo) return null
+
   return (
     <Box pt={68} pb={90} display="grid" gap={20} maxWidth={828} width="100%">
       <Card width="100%" padding="24px 60px 44px">
         <Box display="flex" justifyContent="space-between" mb={32}>
           <Typography fontSize={28} fontWeight={700}>
-            {step === Step.Confirm ? 'Take an Offer' : 'Exeute Fund'}
+            {step === Step.Confirm ? 'Take an Offer' : 'Execute Fund'}
           </Typography>
           <Stepper current={step} steps={2} />
         </Box>
@@ -59,7 +75,7 @@ export default function TakeOffer() {
                   alignItems="center"
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'BSC'} fontSize={16} size="24px" />
+                  <ChainLogo chainId={orderInfo.chain_id} size="24px" fontSize="16px" />
                 </Box>
               </Grid>
               <Grid item md={6}>
@@ -75,7 +91,7 @@ export default function TakeOffer() {
                   alignItems="center"
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'Ethereum'} fontSize={16} size="24px" />
+                  <ChainLogo chainId={orderInfo.to_chain_id} size="24px" fontSize="16px" />
                 </Box>
               </Grid>
               <Grid item md={6} position="relative">
@@ -88,7 +104,12 @@ export default function TakeOffer() {
                   alignItems="center"
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
+                  <CurrencyInfo
+                    chainId={orderInfo.chain_id}
+                    address={orderInfo.token_address}
+                    amount={orderInfo.amount}
+                    textSize={24}
+                  />
                 </Box>
                 <SwitchIcon
                   style={{
@@ -111,7 +132,12 @@ export default function TakeOffer() {
                   alignItems="center"
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'0.001 Ethereum'} fontSize={24} size="32px" />
+                  <CurrencyInfo
+                    chainId={orderInfo.to_chain_id}
+                    address={orderInfo.receive_token_address}
+                    amount={orderInfo.amount}
+                    textSize={24}
+                  />
                 </Box>
               </Grid>
               <Grid item md={6}>
@@ -129,15 +155,32 @@ export default function TakeOffer() {
                   <Typography fontSize={16} fontWeight={700}>
                     Token Information
                   </Typography>
-                  <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
-                    View on Ethereum
+                  <TextButton
+                    underline
+                    onClick={() => {
+                      receiveToken &&
+                        window.open(getEtherscanLink(receiveToken?.chainId, receiveToken?.address, 'token'))
+                    }}
+                    primary
+                    fontSize={12}
+                    opacity={0.5}
+                  >
+                    View on explorer
                   </TextButton>
                 </Box>
               </Grid>
               <Grid item md={6}>
                 <Box display="flex" justifyContent="flex-end">
-                  <TextButton underline onClick={() => {}} primary fontSize={12} opacity={0.5}>
-                    View on Ethereum
+                  <TextButton
+                    underline
+                    onClick={() => {
+                      payToken && window.open(getEtherscanLink(payToken?.chainId, payToken?.address, 'token'))
+                    }}
+                    primary
+                    fontSize={12}
+                    opacity={0.5}
+                  >
+                    View on explorer
                   </TextButton>
                 </Box>
               </Grid>
@@ -151,9 +194,14 @@ export default function TakeOffer() {
                   gap={13}
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
+                  <LogoText
+                    logo={receiveToken?.logo || ''}
+                    text={`${receiveToken?.name}(${receiveToken?.symbol})`}
+                    fontSize={16}
+                    size="24px"
+                  />
                   <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                    0x35500253DEB46fa8c2b271628c65DcF159206882
+                    {receiveToken?.address}
                   </Typography>
                 </Box>
               </Grid>
@@ -168,20 +216,25 @@ export default function TakeOffer() {
                   gap={13}
                   padding="18px 24px"
                 >
-                  <LogoText logo={DummyLogo} text={'Bitcoin(BTC)'} fontSize={16} size="24px" />
+                  <LogoText
+                    logo={payToken?.logo || ''}
+                    text={`${payToken?.name}(${payToken?.symbol})`}
+                    fontSize={16}
+                    size="24px"
+                  />
                   <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                    0x35500253DEB46fa8c2b271628c65DcF159206882
+                    {payToken?.address}
                   </Typography>
                 </Box>
               </Grid>
             </Grid>
-
-            <ActionButton
+            {/* <ActionButton
               // error={getError}
               actionText="Make an Offer"
               onAction={() => setStep(Step.Exeute)}
               borderRadius="16px"
-            />
+            /> */}
+            <OrderDetailOperate order={orderInfo} />
           </>
         )}
         {step === Step.Exeute && (
@@ -220,7 +273,7 @@ export default function TakeOffer() {
               </Box>
             </Box>
             <ActionButton
-              actionText="Exeute"
+              actionText="Execute"
               onAction={getExecuteAction}
               borderRadius="16px"
               pending={false}

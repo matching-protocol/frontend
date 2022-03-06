@@ -154,7 +154,7 @@ export default function Header() {
   }, [chainId])
 
   const onOffer = useCallback(() => {
-    history.push(routes.offer)
+    history.push(routes.makeOffer)
   }, [history])
 
   const drawer = useMemo(

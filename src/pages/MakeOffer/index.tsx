@@ -7,7 +7,7 @@ import { ChainList } from 'constants/chain'
 import Input from 'components/Input'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
-import WarningCard from './WarningCard'
+import WarningCard, { Subject } from '../WarningCard'
 import BiSwap from 'components/Swap/BiSwap'
 import { Currency } from 'constants/token/currency'
 import { Chain } from 'models/chain'
@@ -35,7 +35,7 @@ enum ERROR {
   ENTER_AMOUNT = 'Enter Amount'
 }
 
-export default function Offer() {
+export default function MakeOffer() {
   const { account, chainId, library } = useActiveWeb3React()
   const [fromChain, setFromChain] = useState<Chain | null>(null)
   const [toChain, setToChain] = useState<Chain | null>(null)
@@ -290,7 +290,7 @@ export default function Offer() {
 
         <ActionButton error={getAction.error} actionText={getAction.msg} onAction={getAction.event} />
       </Card>
-      <WarningCard />
+      <WarningCard subject={Subject.MakeOffer} />
     </Box>
   )
 }

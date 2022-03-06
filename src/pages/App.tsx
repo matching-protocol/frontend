@@ -11,7 +11,8 @@ import { ModalProvider } from 'context/ModalContext'
 // import Footer from 'components/Footer'
 import { routes } from 'constants/routes'
 import Market from './Market'
-import Offer from './Offer'
+import MakeOffer from './MakeOffer'
+import TakeOffer from './TakeOffer'
 import Account from './Account'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -67,7 +68,8 @@ export default function App() {
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path={routes.market} component={Market} />
-                  <Route exact strict path={routes.offer} component={Offer} />
+                  <Route exact strict path={routes.makeOffer} component={MakeOffer} />
+                  <Route exact strict path={routes.takeOffer} component={TakeOffer} />
                   <Route exact strict path={routes.account} component={Account} />
                 </Switch>
               </Web3ReactManager>

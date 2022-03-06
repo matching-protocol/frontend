@@ -1,6 +1,8 @@
 import { Chain } from 'models/chain'
 import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
+import { ReactComponent as BSC } from 'assets/svg/binance.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
+import BSCUrl from 'assets/svg/binance.svg'
 
 export enum ChainId {
   MAINNET = 1,
@@ -38,8 +40,8 @@ export const ChainList = [
     hex: '0x2a'
   },
   {
-    icon: <ETH />,
-    logo: EthUrl,
+    icon: <BSC />,
+    logo: BSCUrl,
     symbol: 'BSCTEST',
     name: 'Binance TEST Chain',
     id: ChainId.BSCTEST,

@@ -57,6 +57,7 @@ export default function Input({
   focused,
   placeholder,
   onChange,
+  onBlur,
   value,
   disabled,
   type,
@@ -104,6 +105,7 @@ export default function Input({
         placeholder={placeholder}
         inputRef={input => input && focused && input.focus()}
         onChange={onChange}
+        onBlur={onBlur}
         value={value}
         disabled={disabled}
         type={type}

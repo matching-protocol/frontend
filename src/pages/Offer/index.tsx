@@ -26,8 +26,8 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { MATCHING_ADDRESS } from '../../constants'
 import { Token } from 'constants/token'
 import { useCurrencyBalance } from 'state/wallet/hooks'
-import JSBI from 'jsbi'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
+import { useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -42,35 +42,44 @@ export default function Offer() {
   const [fromCurrency, setFromCurrency] = useState<Currency | null>(null)
   const [toCurrency, setToCurrency] = useState<Currency | null>(null)
   const [fromValue, setFromValue] = useState('')
-  const [toValue, setToValue] = useState('-')
+  // const [toValue, setToValue] = useState('-')
   const [incentive, setIncentive] = useState('')
   const { showModal, hideModal } = useModal()
   const toggleWalletModal = useWalletModalToggle()
+
+  const updateIncentive = useCallback((val: string) => {
+    setIncentive(val)
+  }, [])
+
+  const minIncentive = useMinIncentive(incentive, updateIncentive, fromCurrency || undefined, fromValue)
+  const receiveValue = useReceiveValue(fromCurrency || undefined, fromValue, incentive)
 
   const chainList = ChainList.filter(i => [42, 97].indexOf(i.id) !== -1)
   const fromCurrencyList: Currency[] = useCurrencyListByChain(fromChain?.id)
   const toCurrencyList: Currency[] = useCurrencyListByChain(toChain?.id)
 
   const onSelectFromCurrency = useCallback(() => {
-    showModal(
-      <SelectCurrencyModal
-        onSelectCurrency={currency => {
-          setFromCurrency(currency)
-        }}
-        tokenList={fromCurrencyList}
-      />
-    )
+    fromCurrencyList.length &&
+      showModal(
+        <SelectCurrencyModal
+          onSelectCurrency={currency => {
+            setFromCurrency(currency)
+          }}
+          tokenList={fromCurrencyList}
+        />
+      )
   }, [fromCurrencyList, showModal])
 
   const onSelectToCurrency = useCallback(() => {
-    showModal(
-      <SelectCurrencyModal
-        onSelectCurrency={currency => {
-          setToCurrency(currency)
-        }}
-        tokenList={toCurrencyList}
-      />
-    )
+    toCurrencyList.length &&
+      showModal(
+        <SelectCurrencyModal
+          onSelectCurrency={currency => {
+            setToCurrency(currency)
+          }}
+          tokenList={toCurrencyList}
+        />
+      )
   }, [toCurrencyList, showModal])
 
   const exchangeTokenAmount = useMemo(() => tryParseAmount(fromValue, fromCurrency || undefined), [
@@ -92,20 +101,14 @@ export default function Offer() {
 
   const createOrderCallback = useCreateOrderCallback()
   const onCreateOrderCallback = useCallback(() => {
-    if (!fromCurrency || !toChain || !toChain.id || !account) return
+    if (!fromCurrency || !toChain || !toChain.id || !account || !minIncentive) return
     if (!(fromCurrency instanceof Token)) {
       return
     }
     const _amount = tryParseAmount(fromValue, fromCurrency)
     if (!_amount) return
     showModal(<TransactionPendingModal />)
-    createOrderCallback(
-      fromCurrency.address,
-      account,
-      _amount.raw.toString(),
-      JSBI.divide(JSBI.BigInt(_amount.raw.toString()), JSBI.BigInt(50)).toString(),
-      toChain.id
-    )
+    createOrderCallback(fromCurrency.address, account, _amount.raw.toString(), minIncentive, toChain.id)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -117,7 +120,7 @@ export default function Offer() {
         )
         console.error(err)
       })
-  }, [fromCurrency, toChain, account, fromValue, showModal, createOrderCallback, hideModal])
+  }, [fromCurrency, toChain, account, fromValue, minIncentive, showModal, createOrderCallback, hideModal])
 
   const [approvalState, approvalCallback] = useApproveCallback(
     exchangeTokenAmount,
@@ -143,7 +146,7 @@ export default function Offer() {
       }
     }
 
-    if (!fromValue) {
+    if (!fromValue || !incentive) {
       return { error: ERROR.ENTER_AMOUNT, msg: '' }
     }
 
@@ -193,6 +196,7 @@ export default function Offer() {
     }
   }, [
     fromChain,
+    incentive,
     toChain,
     fromCurrency,
     toCurrency,
@@ -215,20 +219,20 @@ export default function Offer() {
         <Box mt={32}>
           <BiSwap
             fromLabel={"You'll send"}
-            toLabel={"You'll reveive"}
+            toLabel={"You'll receive"}
             fromChain={fromChain}
             fromCurrency={fromCurrency}
             fromValue={fromValue}
             toChain={toChain}
             toCurrency={toCurrency}
-            toValue={toValue}
+            toValue={receiveValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}
             chainList={chainList}
             onSelectFromChain={setFromChain}
             onSelectToChain={setToChain}
             onSelectFromCurrency={onSelectFromCurrency}
             onSelectToCurrency={onSelectToCurrency}
             onChangeFromValue={e => setFromValue(e.target.value)}
-            onChangeToValue={e => setToValue(e.target.value)}
+            onChangeToValue={() => {}}
             fromSubStr={'0.001BTC = $286.01'}
             toSubStr={'0.001BTC = $286.01'}
             onSwitch={onSwitch}

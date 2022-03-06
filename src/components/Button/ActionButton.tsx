@@ -1,5 +1,5 @@
 import Button from './Button'
-import OutlineButton from './OutlineButton'
+// import OutlineButton from './OutlineButton'
 import Spinner from 'components/Spinner'
 import { Typography } from '@mui/material'
 
@@ -13,7 +13,10 @@ export default function ActionButton({
   height,
   width,
   disableAction,
-  successText
+  successText,
+  borderRadius,
+  errorSubText,
+  onErrorAction
 }: {
   error?: string | undefined
   pending?: boolean
@@ -25,26 +28,34 @@ export default function ActionButton({
   height?: string
   width?: string
   disableAction?: boolean
+  borderRadius?: string
+  errorSubText?: string
+  onErrorAction?: (() => void) | undefined
 }) {
   return (
     <>
-      {error || pending ? (
-        <OutlineButton primary disabled height={height} width={width}>
-          {pending ? (
-            <>
-              <Spinner marginRight={16} />
-              {pendingText || 'Waiting Confirmation'}
-            </>
-          ) : (
-            error
+      {pending ? (
+        <Button disabled height={height} width={width} borderRadius={borderRadius}>
+          <Spinner marginRight={16} />
+          {pendingText || 'Waiting Confirmation'}
+        </Button>
+      ) : error ? (
+        <>
+          <Button height={height} width={width} borderRadius={borderRadius} onClick={onErrorAction}>
+            {error}
+          </Button>
+          {errorSubText && (
+            <Typography fontSize={11} color="#FF0000" mt={12}>
+              {errorSubText}
+            </Typography>
           )}
-        </OutlineButton>
+        </>
       ) : success ? (
-        <Button disabled height={height} width={width}>
+        <Button disabled height={height} width={width} borderRadius={borderRadius}>
           <Typography variant="inherit">{successText ?? actionText}</Typography>
         </Button>
       ) : (
-        <Button height={height} width={width} onClick={onAction} disabled={disableAction}>
+        <Button height={height} width={width} onClick={onAction} disabled={disableAction} borderRadius={borderRadius}>
           {actionText}
         </Button>
       )}

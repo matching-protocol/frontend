@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Box, Typography, MenuItem, Grid } from '@mui/material'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
@@ -18,6 +19,7 @@ import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import { useActiveWeb3React } from 'hooks'
 import { useTakeOrderCallback } from 'hooks/useTakeOrder'
+import { routes } from 'constants/routes'
 
 enum Mode {
   TABLE,
@@ -181,6 +183,13 @@ export default function Market() {
 function OrderOperate({ width, order }: { width: string; order: OrderInfo }) {
   const { account } = useActiveWeb3React()
   const { getTakeSign, takeCallback } = useTakeOrderCallback()
+  const history = useHistory()
+  const onTakeOffer = useCallback(
+    (orderId: string | number) => {
+      history.push(routes.takeOffer + `/${orderId}`)
+    },
+    [history]
+  )
 
   const take = useCallback(
     async (orderId: string | number) => {
@@ -204,7 +213,7 @@ function OrderOperate({ width, order }: { width: string; order: OrderInfo }) {
         // } else {
         return {
           msg: 'Take Offer',
-          event: () => take(order.global_order_id)
+          event: () => onTakeOffer(order.global_order_id)
         }
       // }
       case OrderStatus.Order_Taken:
@@ -243,7 +252,7 @@ function OrderOperate({ width, order }: { width: string; order: OrderInfo }) {
           event: undefined
         }
     }
-  }, [account, order.global_order_id, order.receiver, order.status, take])
+  }, [account, onTakeOffer, order.global_order_id, order.receiver, order.status, take])
 
   return (
     <>

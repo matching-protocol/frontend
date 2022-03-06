@@ -27,6 +27,9 @@ import StatIcon from 'assets/images/statistics.png'
 import HelpIcon from 'assets/images/help.png'
 import { ExternalLink } from 'theme/components'
 import { useHistory } from 'react-router-dom'
+import { useActiveWeb3React } from 'hooks'
+import { triggerSwitchChain } from 'utils/triggerSwitchChain'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 interface TabContent {
   title: string
@@ -139,6 +142,16 @@ const StyledExternalLink = styled(ExternalLink)(({ theme }) => ({
 
 export default function Header() {
   const history = useHistory()
+  const { chainId, library, account } = useActiveWeb3React()
+  const toggleWalletModal = useWalletModalToggle()
+
+  const selectedChain = useMemo(() => {
+    if (!chainId) return undefined
+    for (const item of ChainList) {
+      if (chainId === item.id) return item
+    }
+    return undefined
+  }, [chainId])
 
   const onOffer = useCallback(() => {
     history.push(routes.offer)
@@ -242,10 +255,18 @@ export default function Header() {
         </HideOnMobile>
         {/* <Web3Status /> */}
         <Box display="flex" gap={16}>
-          <Button width="144px" height="44px" onClick={onOffer} fontSize={13}>
+          <Button width="144px" height="44px" onClick={account ? onOffer : toggleWalletModal} fontSize={13}>
             Make an Offer
           </Button>
-          <SwapSelect list={ChainList} selected={ChainList[0]} width="fit-content" fontSize={13} />
+          {selectedChain && (
+            <SwapSelect
+              list={ChainList}
+              onChange={e => account && triggerSwitchChain(library, e.id, account)}
+              selected={selectedChain}
+              width="fit-content"
+              fontSize={13}
+            />
+          )}
         </Box>
       </StyledAppBar>
       <Drawer

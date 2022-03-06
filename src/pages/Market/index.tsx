@@ -10,13 +10,13 @@ import Button from 'components/Button/Button'
 import Pagination from 'components/Pagination'
 import MarketCard from './MarketCard'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import CurrencyText from 'components/CurrencyText'
-import { ETHER } from 'constants/token'
-import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
-import { OrderStatus, useOrderList } from 'hooks/useFetch'
+import { OrderInfo, OrderStatus, useOrderList } from 'hooks/useFetch'
+import ChainLogo from 'components/ChainLogo'
+import CurrencyInfo from './CurrencyInfo'
+import { useActiveWeb3React } from 'hooks'
 import { useTakeOrderCallback } from 'hooks/useTakeOrder'
 
 enum Mode {
@@ -37,22 +37,8 @@ export const MarketTableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incent
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
-  const [page, setPage] = useState(1)
   const [filterToggle, setFilterToggle] = useState(false)
-  const { list: orderList } = useOrderList(OrderStatus.Order_Open)
-
-  const { getTakeSign, takeCallback } = useTakeOrderCallback()
-
-  const take = useCallback(
-    async (orderId: string | number) => {
-      const data = await getTakeSign(orderId)
-      if (!data) {
-        return
-      }
-      takeCallback(data)
-    },
-    [getTakeSign, takeCallback]
-  )
+  const { list: orderList, page: orderListPage } = useOrderList(OrderStatus.Order_Open)
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
@@ -60,49 +46,42 @@ export default function Market() {
         #{item.global_order_id}
       </Typography>,
       <Box key={1} display="flex" alignItems="center" gap={12}>
-        <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={mode === Mode.TABLE ? '32px' : '24px'} />
+        <ChainLogo chainId={item.chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
         <ArrowForwardIcon />
-        <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={mode === Mode.TABLE ? '32px' : '24px'} />
+        <ChainLogo chainId={item.to_chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
       </Box>,
       <Box key={1} display="flex" alignItems="center" gap={12}>
-        <CurrencyText
-          currency={ETHER}
+        <CurrencyInfo
+          key={0}
+          chainId={item.chain_id}
+          amount={item.amount}
+          address={item.token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-          text={'123'}
-          subText={'$123'}
           textSize={mode === Mode.TABLE ? 16 : 13}
           subTextSize={mode === Mode.TABLE ? 13 : 11}
         />
         <ArrowForwardIcon />
-        <CurrencyText
-          currency={ETHER}
+        <CurrencyInfo
+          key={0}
+          chainId={item.to_chain_id}
+          address={item.receive_token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-          text={'123'}
-          subText={'$123'}
           textSize={mode === Mode.TABLE ? 16 : 13}
           subTextSize={mode === Mode.TABLE ? 13 : 11}
         />
       </Box>,
-      <CurrencyText
-        key={1}
-        currency={ETHER}
+      <CurrencyInfo
+        key={0}
+        chainId={item.chain_id}
+        address={item.token_address}
+        amount={item.incentive}
         currencySize={mode === Mode.TABLE ? '32px' : '24px'}
-        text={'123'}
-        subText={'$123'}
         textSize={mode === Mode.TABLE ? 16 : 13}
         subTextSize={mode === Mode.TABLE ? 13 : 11}
       />,
-      <Button
-        key={1}
-        width={mode === Mode.TABLE ? '94px' : '120px'}
-        height="32px"
-        fontSize={13}
-        onClick={() => take(item.global_order_id)}
-      >
-        Take Offer
-      </Button>
+      <OrderOperate key={1} order={item} width={mode === Mode.TABLE ? '94px' : '120px'} />
     ])
-  }, [mode, orderList, take])
+  }, [mode, orderList])
 
   return (
     <>
@@ -151,7 +130,7 @@ export default function Market() {
                 backgroundColor={'#FFFFFF'}
               />
               <Box display="flex" gap={20} alignItems="center">
-                <Typography fontSize={16} fontWeight={700} onClick={() => take(1)}>
+                <Typography fontSize={16} fontWeight={700}>
                   Sort by
                 </Typography>
                 <Select value="MAX Amount" height={60} width="fit-content">
@@ -167,7 +146,12 @@ export default function Market() {
             {mode === Mode.TABLE && (
               <Box mt={40} display="grid" gap={24}>
                 <Table fontSize="12px" header={MarketTableHeader} rows={dataRows} variant="outlined" />
-                <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+                <Pagination
+                  count={orderListPage.totalPages}
+                  page={orderListPage.page}
+                  boundaryCount={0}
+                  onChange={(_, value) => orderListPage.setPage(value)}
+                />
               </Box>
             )}
           </Box>
@@ -181,10 +165,93 @@ export default function Market() {
                 </Grid>
               ))}
             </Grid>
-            <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+            <Pagination
+              count={orderListPage.totalPages}
+              page={orderListPage.page}
+              boundaryCount={0}
+              onChange={(_, value) => orderListPage.setPage(value)}
+            />
           </>
         )}
       </Box>
+    </>
+  )
+}
+
+function OrderOperate({ width, order }: { width: string; order: OrderInfo }) {
+  const { account } = useActiveWeb3React()
+  const { getTakeSign, takeCallback } = useTakeOrderCallback()
+
+  const take = useCallback(
+    async (orderId: string | number) => {
+      const data = await getTakeSign(orderId)
+      if (!data) {
+        return
+      }
+      takeCallback(data)
+    },
+    [getTakeSign, takeCallback]
+  )
+
+  const action = useMemo(() => {
+    switch (order.status) {
+      case OrderStatus.Order_Open:
+        // if (account === order.sender) {
+        //   return {
+        //     msg: 'Cancel',
+        //     event: undefined
+        //   }
+        // } else {
+        return {
+          msg: 'Take Offer',
+          event: () => take(order.global_order_id)
+        }
+      // }
+      case OrderStatus.Order_Taken:
+        if (account === order.receiver) {
+          return {
+            msg: 'Continue',
+            event: () => take(order.global_order_id)
+          }
+        } else {
+          return {
+            msg: 'Ordering',
+            event: undefined
+          }
+        }
+      case OrderStatus.Order_Finished:
+        if (account === order.receiver) {
+          return {
+            msg: 'withdraw',
+            event: () => alert('withdraw')
+          }
+        } else {
+          return {
+            msg: 'Finished',
+            event: undefined
+          }
+        }
+      case OrderStatus.Order_Withdrawed:
+        return {
+          msg: 'Finished',
+          event: undefined
+        }
+
+      default:
+        return {
+          msg: '',
+          event: undefined
+        }
+    }
+  }, [account, order.global_order_id, order.receiver, order.status, take])
+
+  return (
+    <>
+      {action.msg && (
+        <Button disabled={action.event === undefined} height="32px" width={width} fontSize={13} onClick={action.event}>
+          {action.msg}
+        </Button>
+      )}
     </>
   )
 }

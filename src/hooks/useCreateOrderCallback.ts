@@ -15,6 +15,7 @@ export function useCreateOrderCallback() {
       if (!account) throw new Error('none account')
       if (!contract) throw new Error('none contract')
       const args = [token, to, amountInt, incentiveInt, toChain]
+      console.log('🚀 ~ file: useCreateOrderCallback.ts ~ line 18 ~ useCreateOrderCallback ~ args', args)
 
       return contract.estimateGas.createOrder(...args, { from: account }).then(estimatedGasLimit => {
         return contract

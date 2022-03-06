@@ -27,4 +27,16 @@ export function useCurrencyListByChain(chain: number | ChainId | null | undefine
   )
 }
 
+export function useLocalCurrency(chainId: number, address: string) {
+  const list = useCurrencyListByChain(chainId)
+  return useMemo(() => {
+    for (const item of list) {
+      if (item instanceof Token && address.toUpperCase() === item.address.toUpperCase()) {
+        return item
+      }
+    }
+    return undefined
+  }, [address, list])
+}
+
 export default list

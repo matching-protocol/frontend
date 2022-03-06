@@ -32,7 +32,7 @@ export default function LogoText({
         }
       }}
     >
-      {typeof logo === 'string' ? <Image src={logo as string} alt={`${text} logo`} /> : logo}
+      {typeof logo === 'string' ? <Image src={logo as string} /> : logo}
       <span>{text}</span>
     </Wrapper>
   )

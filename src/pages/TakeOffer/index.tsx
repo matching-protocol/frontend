@@ -1,53 +1,73 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import Card from 'components/Card'
 import { Box, Typography, Grid } from '@mui/material'
-import ActionButton from 'components/Button/ActionButton'
+// import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import WarningCard, { Subject } from '../WarningCard'
-import useModal from 'hooks/useModal'
-import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import LogoText from 'components/LogoText'
 import { CSSProperties } from 'react'
-import DummyLogo from 'assets/svg/eth_logo.svg'
 import TextButton from 'components/Button/TextButton'
 import Stepper from './Stepper'
 import OutlineButton from 'components/Button/OutlineButton'
 import Button from 'components/Button/Button'
-import { useParams } from 'react-router-dom'
-import { useOrderById } from 'hooks/useFetch'
+import { useHistory, useParams } from 'react-router-dom'
+import { OrderStatus, useOrderById } from 'hooks/useFetch'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import { useLocalCurrency } from 'hooks/useCurrencyList'
 import { getEtherscanLink } from 'utils'
-import OrderDetailOperate from './OrderDetailOperate'
+import { OrderTakeSign } from './OrderDetailOperate'
+import Spinner from 'components/Spinner'
+import { TokenAmount } from 'constants/token'
+import { ChainListMap } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
+import { useTokenBalance } from 'state/wallet/hooks'
+import { OrderDetailOperate } from './OrderDetailOperate'
+import { routes } from 'constants/routes'
 
 export enum Step {
   Confirm,
-  Exeute
+  Execute
 }
 
 export default function TakeOffer() {
-  const { showModal } = useModal()
+  const { account } = useActiveWeb3React()
   const [step, setStep] = useState(Step.Confirm)
-  console.log('🚀 ~ file: index.tsx ~ line 32 ~ TakeOffer ~ setStep', setStep)
-  const [completed, setCompleted] = useState(false)
   const { orderId } = useParams<{ orderId: string }>()
+  const history = useHistory()
 
   const { result: orderInfo } = useOrderById(orderId)
 
   const receiveToken = useLocalCurrency(orderInfo?.chain_id, orderInfo?.token_address)
   const payToken = useLocalCurrency(orderInfo?.to_chain_id, orderInfo?.receive_token_address)
 
-  const getExecuteAction = useCallback(() => {
-    showModal(<TransactionSubmittedModal hash="123" />)
-    setCompleted(true)
-  }, [showModal])
+  const payTokenAmount = useMemo(() => {
+    if (!payToken || !orderInfo?.amount) return undefined
+    return new TokenAmount(payToken, orderInfo.amount)
+  }, [orderInfo?.amount, payToken])
+
+  const usrBalance = useTokenBalance(account || undefined, payToken)
+
+  const incentiveAmount = useMemo(() => {
+    if (!payToken || !orderInfo?.incentive) return undefined
+    return new TokenAmount(payToken, orderInfo.incentive)
+  }, [orderInfo?.incentive, payToken])
+
+  const completed = useMemo(() => {
+    if (!orderInfo) return undefined
+    return OrderStatus.Order_Finished === orderInfo.status
+  }, [orderInfo])
 
   const getErrorSubText = useMemo(() => {
     return 'The operation has timed out, please retake offer'
   }, [])
 
-  if (!orderInfo) return null
+  if (!orderInfo)
+    return (
+      <Box display="flex" justifyContent="center" mt={'200px'}>
+        <Spinner size="40px" />
+      </Box>
+    )
 
   return (
     <Box pt={68} pb={90} display="grid" gap={20} maxWidth={828} width="100%">
@@ -56,7 +76,7 @@ export default function TakeOffer() {
           <Typography fontSize={28} fontWeight={700}>
             {step === Step.Confirm ? 'Take an Offer' : 'Execute Fund'}
           </Typography>
-          <Stepper current={step} steps={2} />
+          <Stepper current={step} steps={2} change={step => setStep(step as Step)} />
         </Box>
 
         {step === Step.Confirm && (
@@ -107,7 +127,9 @@ export default function TakeOffer() {
                   <CurrencyInfo
                     chainId={orderInfo.chain_id}
                     address={orderInfo.token_address}
-                    amount={orderInfo.amount}
+                    amount={
+                      payTokenAmount && incentiveAmount ? payTokenAmount.add(incentiveAmount).raw.toString() : '-'
+                    }
                     textSize={24}
                   />
                 </Box>
@@ -142,7 +164,8 @@ export default function TakeOffer() {
               </Grid>
               <Grid item md={6}>
                 <Typography fontSize={11} sx={{ opacity: 0.5 }}>
-                  21BTC (You recive) + 0.56BTC (Offer Incentive)
+                  {payTokenAmount?.toSignificant(6, { groupSeparator: ',' })}BTC (You recive) +{' '}
+                  {incentiveAmount?.toSignificant(6, { groupSeparator: ',' })}BTC (Offer Incentive)
                 </Typography>
               </Grid>
             </Grid>
@@ -228,19 +251,14 @@ export default function TakeOffer() {
                 </Box>
               </Grid>
             </Grid>
-            {/* <ActionButton
-              // error={getError}
-              actionText="Make an Offer"
-              onAction={() => setStep(Step.Exeute)}
-              borderRadius="16px"
-            /> */}
-            <OrderDetailOperate order={orderInfo} />
+            <OrderTakeSign order={orderInfo} next={() => setStep(Step.Execute)} />
           </>
         )}
-        {step === Step.Exeute && (
+        {step === Step.Execute && (
           <>
             <Typography mb={16}>
-              <b>1. Send.</b> You need to send 20.56 BTC to the requester on Binance Smart Chain
+              <b>1. Send.</b> You need to send {payTokenAmount?.toSignificant(6, { groupSeparator: ',' })}{' '}
+              {payToken?.symbol} to the requester on {ChainListMap[orderInfo.to_chain_id].name}
             </Typography>
             <Box
               border="1px solid rgba(66, 63, 71, 0.2)"
@@ -268,20 +286,37 @@ export default function TakeOffer() {
               borderRadius="16px"
             >
               <Box display="flex" alignItems="flex-end">
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={24} size="32px" gapSize={12} />/
-                <LogoText logo={DummyLogo} text={'20.56 BTC'} fontSize={12} size="14px" gapSize={4} />
+                <LogoText
+                  logo={payToken?.logo || ''}
+                  text={`${usrBalance?.toSignificant(6, { groupSeparator: ',' }) || '-'} ${payToken?.symbol}`}
+                  fontSize={24}
+                  size="32px"
+                  gapSize={12}
+                />
+                /
+                <LogoText
+                  logo={payToken?.logo || ''}
+                  text={`${payTokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${payToken?.symbol}`}
+                  fontSize={12}
+                  size="14px"
+                  gapSize={4}
+                />
               </Box>
             </Box>
-            <ActionButton
+            {/* <ActionButton
               actionText="Execute"
               onAction={getExecuteAction}
               borderRadius="16px"
               pending={false}
               pendingText={'Pending'}
-              error={'Try Again'}
+              // error={'Try Again'}
               errorSubText={getErrorSubText}
               onErrorAction={getExecuteAction}
-            />
+            /> */}
+            <OrderDetailOperate order={orderInfo} />
+            <Typography fontSize={11} color="#FF0000" mt={12}>
+              {getErrorSubText}
+            </Typography>
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
             <Box sx={{ position: 'relative', opacity: completed ? 1 : 0.5 }}>
               {!completed && (
@@ -298,10 +333,10 @@ export default function TakeOffer() {
                 <b>2. Finish.</b> Please go to your account to view the profit and details of this transaction
               </Typography>
               <Box display="flex" alignItems="center" gap={20} mt={32}>
-                <OutlineButton onClick={() => {}} primary>
+                <OutlineButton onClick={() => history.goBack()} primary>
                   Cancel
                 </OutlineButton>
-                <Button onClick={() => {}} borderRadius="16px">
+                <Button onClick={() => history.replace(routes.account)} borderRadius="16px">
                   Go to My Account
                 </Button>
               </Box>

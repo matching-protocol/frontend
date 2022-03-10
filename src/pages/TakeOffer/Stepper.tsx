@@ -1,6 +1,14 @@
 import { Box } from '@mui/material'
 
-export default function Stepper({ steps, current }: { steps: number; current: number }) {
+export default function Stepper({
+  steps,
+  current,
+  change
+}: {
+  steps: number
+  current: number
+  change: (step: number) => void
+}) {
   return (
     <Box display="flex" gap={8}>
       {[...Array(steps).keys()].map(step => (
@@ -14,8 +22,10 @@ export default function Stepper({ steps, current }: { steps: number; current: nu
             height: 32,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            cursor: current > step ? 'pointer' : 'auto'
           }}
+          onClick={() => current > step && change(step)}
         >
           {step + 1}
         </Box>

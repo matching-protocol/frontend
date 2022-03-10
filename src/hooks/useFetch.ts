@@ -37,7 +37,7 @@ function calcPageTotal(total: number, pageSize: number) {
 
 export function useOrderList(orderStatus: OrderStatus) {
   const [list, setList] = useState<OrderInfo[]>([])
-  const pageSize = 3
+  const pageSize = 10
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(0)

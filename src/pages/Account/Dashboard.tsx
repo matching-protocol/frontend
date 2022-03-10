@@ -12,11 +12,13 @@ import Button from 'components/Button/Button'
 import StatusTag from 'components/StatusTag'
 import OutlineButton from 'components/Button/OutlineButton'
 import Pagination from 'components/Pagination'
+import { useAccountTotalValue } from 'hooks/useAccountInfo'
 
 const WalletInfoTableHeader = ['Asset', 'Amount']
 const WithdrawlHistoryTableHeader = ['Date', 'Amount', 'Payment Address', 'Status']
 
 export default function Dashboard() {
+  const accountTotalValue = useAccountTotalValue()
   const [walletInfoTab, setWalletInfoTab] = useState(0)
   const [page, setPage] = useState(1)
 
@@ -73,7 +75,7 @@ export default function Dashboard() {
         </Typography>
         <Box display="flex" gap={12} alignItems="center">
           <Typography fontSize={32} fontWeight={700}>
-            $ 12345.00
+            $ {accountTotalValue ? accountTotalValue.toFixed(2) : '-'}
           </Typography>
           <Box
             borderRadius={18}

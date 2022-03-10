@@ -3,7 +3,7 @@ import Card from 'components/Card'
 import { Box, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
 import OfferIcon from 'assets/images/offer.png'
-import { ChainList } from 'constants/chain'
+import { ChainList, ChainListMap } from 'constants/chain'
 import Input from 'components/Input'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
@@ -24,7 +24,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { MATCHING_ADDRESS } from '../../constants'
-import { Token } from 'constants/token'
+import { Token, TokenAmount } from 'constants/token'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 import { useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
@@ -107,8 +107,9 @@ export default function MakeOffer() {
     }
     const _amount = tryParseAmount(fromValue, fromCurrency)
     if (!_amount) return
+    const _receiveAmount = _amount.subtract(new TokenAmount(fromCurrency, minIncentive))
     showModal(<TransactionPendingModal />)
-    createOrderCallback(fromCurrency.address, account, _amount.raw.toString(), minIncentive, toChain.id)
+    createOrderCallback(fromCurrency.address, account, _receiveAmount.raw.toString(), minIncentive, toChain.id)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -159,7 +160,7 @@ export default function MakeOffer() {
 
     if (chainId !== fromChain.id) {
       return {
-        msg: 'Switch',
+        msg: `Switch to ${ChainListMap[fromChain.id].symbol}`,
         event: () => fromChain.id && triggerSwitchChain(library, fromChain.id, account)
       }
     }

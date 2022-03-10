@@ -16,6 +16,8 @@ import { OrderStatus, useOrderList } from 'hooks/useFetch'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import OrderListOperate from './OrderListOperate'
+import Spinner from 'components/Spinner'
+import SwapSelect from 'components/Swap/SwapSelect'
 
 enum Mode {
   TABLE,
@@ -36,7 +38,7 @@ export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
   const [filterToggle, setFilterToggle] = useState(false)
-  const { list: orderList, page: orderListPage } = useOrderList(OrderStatus.Order_ALL)
+  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_ALL)
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
@@ -99,6 +101,20 @@ export default function Market() {
             <Box width="100%" padding="28px 28px 36px" display="flex" gap={56}>
               <Box display="grid" gap={20}>
                 <Typography fontSize={16} fontWeight={700}>
+                  Currency:
+                </Typography>
+                <SwapSelect
+                  list={[]}
+                  selected={1}
+                  width="192px"
+                  height="60px"
+                  onChange={() => {}}
+                  disabled={false}
+                  active={false}
+                />
+              </Box>
+              <Box display="grid" gap={20}>
+                <Typography fontSize={16} fontWeight={700}>
                   Route:
                 </Typography>
                 <UniSwap
@@ -108,12 +124,6 @@ export default function Market() {
                   onSelectFrom={() => {}}
                   onSelectTo={() => {}}
                 />
-              </Box>
-              <Box display="grid" gap={20}>
-                <Typography fontSize={16} fontWeight={700}>
-                  Currency:
-                </Typography>
-                <UniSwap from={null} to={null} list={[]} onSelectFrom={() => {}} onSelectTo={() => {}} />
               </Box>
             </Box>
           </Card>
@@ -144,6 +154,11 @@ export default function Market() {
             {mode === Mode.TABLE && (
               <Box mt={40} display="grid" gap={24}>
                 <Table fontSize="12px" header={MarketTableHeader} rows={dataRows} variant="outlined" />
+                {loading && (
+                  <Box display="flex" justifyContent="center">
+                    <Spinner size="40px" />
+                  </Box>
+                )}
                 <Pagination
                   count={orderListPage.totalPages}
                   page={orderListPage.page}

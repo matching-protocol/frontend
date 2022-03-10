@@ -67,6 +67,7 @@ export default function App() {
               <WarningModal />
               <Web3ReactManager>
                 <Switch>
+                  <Route exact strict path="/" component={Market} />
                   <Route exact strict path={routes.market} component={Market} />
                   <Route exact strict path={routes.makeOffer} component={MakeOffer} />
                   <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />

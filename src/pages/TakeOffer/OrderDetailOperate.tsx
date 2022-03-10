@@ -1,8 +1,7 @@
 import { OrderInfo, OrderStatus } from 'hooks/useFetch'
 import { useTakeOrderCallback } from 'hooks/useTakeOrder'
-import { useOrderWithdraw } from 'hooks/useOrderWithdraw'
 import { useActiveWeb3React } from 'hooks'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Button from 'components/Button/Button'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
@@ -15,11 +14,158 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
+import { ChainListMap } from 'constants/chain'
+import { Dots } from 'theme/components'
 
-export default function OrderDetailOperate({ order }: { order: OrderInfo }) {
+export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => void }) {
+  const { account, library, chainId } = useActiveWeb3React()
+  const { getTakeSign } = useTakeOrderCallback()
+  const toggleWalletModal = useWalletModalToggle()
+  const { showModal } = useModal()
+  const [request, setRequest] = useState(false)
+
+  const payToken = useLocalCurrency(order.to_chain_id, order.receive_token_address)
+
+  const payBalance = useMemo(() => {
+    if (!payToken) {
+      return undefined
+    }
+    return new TokenAmount(payToken, order.amount)
+  }, [order.amount, payToken])
+
+  const balance = useTokenBalance(account || undefined, payToken)
+
+  const onTake = useCallback(
+    async (orderId: string | number) => {
+      try {
+        setRequest(true)
+        const data = await getTakeSign(orderId)
+        if (!data) {
+          showModal(<MessageBox type="error">get sign error</MessageBox>)
+          return
+        }
+        next()
+      } catch (error) {
+        console.error(error)
+        showModal(<MessageBox type="error">get sign error</MessageBox>)
+      }
+      setRequest(false)
+    },
+    [getTakeSign, next, showModal]
+  )
+
+  const payStatus = useMemo(() => {
+    if (!account || !library) {
+      return {
+        msg: 'Connect wallet',
+        event: toggleWalletModal
+      }
+    }
+
+    if (chainId !== order.to_chain_id) {
+      return {
+        msg: `Switch to ${ChainListMap[order.to_chain_id].symbol}`,
+        event: () => order.to_chain_id && triggerSwitchChain(library, order.to_chain_id, account)
+      }
+    }
+
+    if (!balance || !payBalance || balance.lessThan(payBalance)) {
+      return {
+        msg: 'Balance Insufficient',
+        event: undefined
+      }
+    }
+
+    if (OrderStatus.Order_Taken === order.status && account === order.receiver) {
+      return {
+        msg: 'Continue',
+        event: () => next()
+      }
+    }
+    return {
+      msg: 'Take Offer',
+      event: () => onTake(order.global_order_id)
+    }
+  }, [
+    account,
+    balance,
+    chainId,
+    library,
+    next,
+    onTake,
+    order.global_order_id,
+    order.receiver,
+    order.status,
+    order.to_chain_id,
+    payBalance,
+    toggleWalletModal
+  ])
+
+  const action = useMemo(() => {
+    switch (order.status) {
+      case OrderStatus.Order_Open:
+        // if (account === order.sender) {
+        //   return {
+        //     msg: 'Cancel',
+        //     event: undefined
+        //   }
+        // } else {
+        return payStatus
+      // }
+      case OrderStatus.Order_Taken:
+        if (account === order.receiver) {
+          return payStatus
+        } else {
+          return {
+            msg: 'Ordering',
+            event: undefined
+          }
+        }
+      case OrderStatus.Order_Finished:
+        return {
+          msg: 'Completed',
+          event: undefined
+        }
+      case OrderStatus.Order_Withdrawed:
+        return {
+          msg: 'Completed',
+          event: undefined
+        }
+
+      default:
+        return {
+          msg: 'Completed',
+          event: undefined
+        }
+    }
+  }, [order.status, order.receiver, payStatus, account])
+
+  return (
+    <>
+      {!request ? (
+        <Button
+          borderRadius="16px"
+          disabled={action.event === undefined}
+          height="60px"
+          width={'100%'}
+          fontSize={13}
+          onClick={action.event}
+        >
+          {action.msg}
+        </Button>
+      ) : (
+        <Button borderRadius="16px" disabled={true} height="60px" width={'100%'} fontSize={13}>
+          Take Offer
+          <Dots />
+        </Button>
+      )}
+    </>
+  )
+}
+
+export function OrderDetailOperate({ order }: { order: OrderInfo }) {
   const { account, library, chainId } = useActiveWeb3React()
   const { getTakeSign, takeCallback } = useTakeOrderCallback()
-  const { getWithdrawSign, withdrawCallback } = useOrderWithdraw()
   const toggleWalletModal = useWalletModalToggle()
   const { showModal, hideModal } = useModal()
 
@@ -57,30 +203,6 @@ export default function OrderDetailOperate({ order }: { order: OrderInfo }) {
         })
     },
     [getTakeSign, hideModal, showModal, takeCallback]
-  )
-
-  const onWithdraw = useCallback(
-    async (orderId: string | number) => {
-      const data = await getWithdrawSign(orderId)
-      if (!data) {
-        showModal(<MessageBox type="error">get sign error</MessageBox>)
-        return
-      }
-      showModal(<TransactionPendingModal />)
-      withdrawCallback(data)
-        .then(() => {
-          hideModal()
-          showModal(<TransactionSubmittedModal />)
-        })
-        .catch((err: any) => {
-          hideModal()
-          showModal(
-            <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
-          )
-          console.error(err)
-        })
-    },
-    [getWithdrawSign, hideModal, showModal, withdrawCallback]
   )
 
   const [approvalState, approvalCallback] = useApproveCallback(
@@ -147,27 +269,6 @@ export default function OrderDetailOperate({ order }: { order: OrderInfo }) {
     toggleWalletModal
   ])
 
-  const withdrawStatus = useMemo(() => {
-    if (!account || !library) {
-      return {
-        msg: 'Connect wallet',
-        event: toggleWalletModal
-      }
-    }
-
-    if (chainId !== order.chain_id) {
-      return {
-        msg: 'Switch',
-        event: () => order.chain_id && triggerSwitchChain(library, order.chain_id, account)
-      }
-    }
-
-    return {
-      msg: 'Withdraw',
-      event: () => onWithdraw(order.global_order_id)
-    }
-  }, [account, chainId, library, onWithdraw, order.chain_id, order.global_order_id, toggleWalletModal])
-
   const action = useMemo(() => {
     switch (order.status) {
       case OrderStatus.Order_Open:
@@ -189,27 +290,23 @@ export default function OrderDetailOperate({ order }: { order: OrderInfo }) {
           }
         }
       case OrderStatus.Order_Finished:
-        if (account === order.receiver) {
-          return withdrawStatus
-        } else {
-          return {
-            msg: 'Finished',
-            event: undefined
-          }
+        return {
+          msg: 'Completed',
+          event: undefined
         }
       case OrderStatus.Order_Withdrawed:
         return {
-          msg: 'Finished',
+          msg: 'Completed',
           event: undefined
         }
 
       default:
         return {
-          msg: '',
+          msg: 'Completed',
           event: undefined
         }
     }
-  }, [order.status, order.receiver, payStatus, account, withdrawStatus])
+  }, [order.status, order.receiver, payStatus, account])
 
   return (
     <>

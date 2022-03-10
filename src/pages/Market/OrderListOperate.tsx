@@ -42,26 +42,19 @@ export default function OrderListOperate({ width, order }: { width: string; orde
           }
         }
       case OrderStatus.Order_Finished:
-        if (account === order.receiver) {
-          return {
-            msg: 'withdraw',
-            event: () => onTakeOffer(order.global_order_id)
-          }
-        } else {
-          return {
-            msg: 'Finished',
-            event: undefined
-          }
+        return {
+          msg: 'Completed',
+          event: undefined
         }
       case OrderStatus.Order_Withdrawed:
         return {
-          msg: 'Finished',
+          msg: 'Completed',
           event: undefined
         }
 
       default:
         return {
-          msg: '',
+          msg: 'Completed',
           event: undefined
         }
     }

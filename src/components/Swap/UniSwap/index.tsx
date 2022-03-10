@@ -40,7 +40,7 @@ export default function UniSwap({
         disabled={disabledFrom}
         active={activeFrom}
       />
-      <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)' }} />
+      <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 6px)' }} />
       <SwapSelect
         label="To"
         list={toList}

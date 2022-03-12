@@ -41,7 +41,8 @@ export default function PaginationView({
             justifyContent: 'flex-end',
             alignItems: 'center',
             gap: { xs: 20, sm: 26 },
-            flexDirection: { xs: 'column', sm: 'row' }
+            flexDirection: { xs: 'column', sm: 'row' },
+            marginBottom: 15
           }}
         >
           {perPage && (

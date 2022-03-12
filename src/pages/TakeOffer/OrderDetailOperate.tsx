@@ -44,7 +44,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
           showModal(<MessageBox type="error">get sign error</MessageBox>)
           return
         }
-        next()
+        setTimeout(() => next(), 500)
       } catch (error) {
         console.error(error)
         showModal(<MessageBox type="error">get sign error</MessageBox>)
@@ -76,7 +76,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
       }
     }
 
-    if (OrderStatus.Order_Taken === order.status && account === order.receiver) {
+    if (OrderStatus.Order_Taken === order.status && account === order.taker) {
       return {
         msg: 'Continue',
         event: () => next()
@@ -94,8 +94,8 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
     next,
     onTake,
     order.global_order_id,
-    order.receiver,
     order.status,
+    order.taker,
     order.to_chain_id,
     payBalance,
     toggleWalletModal
@@ -103,7 +103,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
 
   const action = useMemo(() => {
     switch (order.status) {
-      case OrderStatus.Order_Open:
+      case OrderStatus.Order_ForTaking:
         // if (account === order.sender) {
         //   return {
         //     msg: 'Cancel',
@@ -113,23 +113,13 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
         return payStatus
       // }
       case OrderStatus.Order_Taken:
-        if (account === order.receiver) {
+        if (account === order.taker) {
           return payStatus
         } else {
           return {
             msg: 'Ordering',
             event: undefined
           }
-        }
-      case OrderStatus.Order_Finished:
-        return {
-          msg: 'Completed',
-          event: undefined
-        }
-      case OrderStatus.Order_Withdrawed:
-        return {
-          msg: 'Completed',
-          event: undefined
         }
 
       default:
@@ -138,7 +128,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
           event: undefined
         }
     }
-  }, [order.status, order.receiver, payStatus, account])
+  }, [order.status, order.taker, payStatus, account])
 
   return (
     <>
@@ -163,7 +153,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
   )
 }
 
-export function OrderDetailOperate({ order }: { order: OrderInfo }) {
+export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?: boolean }) {
   const { account, library, chainId } = useActiveWeb3React()
   const { getTakeSign, takeCallback } = useTakeOrderCallback()
   const toggleWalletModal = useWalletModalToggle()
@@ -252,10 +242,11 @@ export function OrderDetailOperate({ order }: { order: OrderInfo }) {
     }
 
     return {
-      msg: 'Take Offer',
+      msg: again ? 'Try Again' : 'Take Offer',
       event: () => onTake(order.global_order_id)
     }
   }, [
+    again,
     account,
     approvalCallback,
     approvalState,
@@ -271,7 +262,7 @@ export function OrderDetailOperate({ order }: { order: OrderInfo }) {
 
   const action = useMemo(() => {
     switch (order.status) {
-      case OrderStatus.Order_Open:
+      case OrderStatus.Order_ForTaking:
         // if (account === order.sender) {
         //   return {
         //     msg: 'Cancel',
@@ -281,23 +272,13 @@ export function OrderDetailOperate({ order }: { order: OrderInfo }) {
         return payStatus
       // }
       case OrderStatus.Order_Taken:
-        if (account === order.receiver) {
+        if (account === order.taker) {
           return payStatus
         } else {
           return {
             msg: 'Ordering',
             event: undefined
           }
-        }
-      case OrderStatus.Order_Finished:
-        return {
-          msg: 'Completed',
-          event: undefined
-        }
-      case OrderStatus.Order_Withdrawed:
-        return {
-          msg: 'Completed',
-          event: undefined
         }
 
       default:
@@ -306,7 +287,7 @@ export function OrderDetailOperate({ order }: { order: OrderInfo }) {
           event: undefined
         }
     }
-  }, [order.status, order.receiver, payStatus, account])
+  }, [order.status, order.taker, payStatus, account])
 
   return (
     <>

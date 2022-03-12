@@ -1,17 +1,19 @@
+import { useActiveWeb3React } from 'hooks'
 import { useEffect, useState } from 'react'
-import { getOrderById, getOrders } from 'utils/fetch/order'
+import { getOrderById, getOrders, getAccountOrderList, AccountOrderStatus, AccountOrderRole } from 'utils/fetch/order'
 
 export enum OrderStatus {
   Order_Unstarted,
-  Order_Open,
+  Order_ForTaking,
   Order_Taken,
-  Order_Finished,
+  Order_Received,
   Order_Withdrawed,
   Order_Outdated,
-  Order_ALL
+  Order_Any
 }
 
 export interface OrderInfo {
+  Deadline: number
   amount: string
   chain_id: number
   created_on: number
@@ -26,6 +28,7 @@ export interface OrderInfo {
   receiver: string
   sender: string
   status: OrderStatus
+  taker: string
   to_chain_id: number
   token_address: string
   tx_hash: string
@@ -41,6 +44,7 @@ export function useOrderList(orderStatus: OrderStatus) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(0)
+  const [index, setIndex] = useState(0)
 
   useEffect(() => {
     setPage(1)
@@ -59,9 +63,10 @@ export function useOrderList(orderStatus: OrderStatus) {
         setList([])
         console.error('fetch useOrderList', error)
       }
+      setTimeout(() => setIndex(index + 1), 10000)
       setIsLoading(false)
     })()
-  }, [orderStatus, page])
+  }, [index, orderStatus, page])
 
   return {
     page: {
@@ -74,7 +79,7 @@ export function useOrderList(orderStatus: OrderStatus) {
   }
 }
 
-export function useOrderById(orderId: string | number) {
+export function useOrderById(orderId: string | number, reRequest?: any) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [result, setResult] = useState<OrderInfo>()
   const [index, setIndex] = useState(0)
@@ -91,12 +96,56 @@ export function useOrderById(orderId: string | number) {
         console.error('fetch useOrderById', error)
       }
       setIsLoading(false)
-      setTimeout(() => setIndex(index + 1), 10000)
+      setTimeout(() => setIndex(index + 1), 5000)
     })()
-  }, [orderId, index])
+  }, [orderId, index, reRequest])
 
   return {
     loading: isLoading,
     result
+  }
+}
+
+export function useAccountOrderList(status: AccountOrderStatus, role: AccountOrderRole) {
+  const [list, setList] = useState<OrderInfo[]>([])
+  const pageSize = 10
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [page, setPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(0)
+  const { account } = useActiveWeb3React()
+
+  useEffect(() => {
+    setPage(1)
+  }, [status, role])
+
+  useEffect(() => {
+    ;(async () => {
+      if (!account) {
+        setList([])
+        return
+      }
+      try {
+        setIsLoading(true)
+        setList([])
+        const res: any = await getAccountOrderList(account, status, role, page, pageSize)
+        const data = res.data
+        setList(data.orders)
+        setTotalPages(calcPageTotal(data.total, pageSize))
+      } catch (error) {
+        setList([])
+        console.error('fetch useAccountOrderList', error)
+      }
+      setIsLoading(false)
+    })()
+  }, [account, page, role, status])
+
+  return {
+    page: {
+      page,
+      setPage,
+      totalPages
+    },
+    loading: isLoading,
+    list
   }
 }

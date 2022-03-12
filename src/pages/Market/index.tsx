@@ -38,7 +38,7 @@ export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
   const [filterToggle, setFilterToggle] = useState(false)
-  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_ALL)
+  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any)
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
@@ -171,6 +171,11 @@ export default function Market() {
         </Card>
         {mode === Mode.CARD && (
           <>
+            {loading && (
+              <Box display="flex" mt={30} justifyContent="center">
+                <Spinner size="40px" />
+              </Box>
+            )}
             <Grid container spacing={20} mt={24} mb={24}>
               {dataRows.map((row, index) => (
                 <Grid item xs={12} md={4} key={index}>

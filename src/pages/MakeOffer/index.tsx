@@ -113,6 +113,7 @@ export default function MakeOffer() {
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
+        setFromValue('')
       })
       .catch((err: any) => {
         hideModal()

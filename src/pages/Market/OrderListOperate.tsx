@@ -17,7 +17,7 @@ export default function OrderListOperate({ width, order }: { width: string; orde
 
   const action = useMemo(() => {
     switch (order.status) {
-      case OrderStatus.Order_Open:
+      case OrderStatus.Order_ForTaking:
         // if (account === order.sender) {
         //   return {
         //     msg: 'Cancel',
@@ -30,7 +30,7 @@ export default function OrderListOperate({ width, order }: { width: string; orde
         }
       // }
       case OrderStatus.Order_Taken:
-        if (account === order.receiver) {
+        if (account === order.taker) {
           return {
             msg: 'Continue',
             event: () => onTakeOffer(order.global_order_id)
@@ -41,24 +41,13 @@ export default function OrderListOperate({ width, order }: { width: string; orde
             event: undefined
           }
         }
-      case OrderStatus.Order_Finished:
-        return {
-          msg: 'Completed',
-          event: undefined
-        }
-      case OrderStatus.Order_Withdrawed:
-        return {
-          msg: 'Completed',
-          event: undefined
-        }
-
       default:
         return {
           msg: 'Completed',
           event: undefined
         }
     }
-  }, [account, onTakeOffer, order.global_order_id, order.receiver, order.status])
+  }, [account, onTakeOffer, order.global_order_id, order.status, order.taker])
 
   return (
     <>

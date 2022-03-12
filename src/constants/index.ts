@@ -129,7 +129,7 @@ export const MATCHING_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
-  [ChainId.KOVAN]: '0x08809D21A89DD7beE8A81C3cBb3b0ccae03fb24D',
+  [ChainId.KOVAN]: '0x96E4E0C6BB08ce69A6741E8242Bb60D682F0D4aE',
   [ChainId.GÖRLI]: '',
-  [ChainId.BSCTEST]: '0xaD22869D823A6098014D55674E24194b794A5360'
+  [ChainId.BSCTEST]: '0x5D3EeA9aeDD3E17fb322cbBaf7df1495C92B45BE'
 }

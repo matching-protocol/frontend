@@ -26,13 +26,28 @@ export const takeOrder = (orderId: number | string, account: string) => {
   )
 }
 
-export const withdrawOrder = (orderId: number | string, account: string) => {
-  return Axios.post(
-    'api/v1/withdraw',
-    {},
-    {
-      id: orderId,
-      taker: account
-    }
-  )
+export enum AccountOrderStatus {
+  OrderLive,
+  OrderOld,
+  OrderAny
+}
+export enum AccountOrderRole {
+  OrderMake,
+  OrderTake,
+  OrderParticipate
+}
+export const getAccountOrderList = (
+  account: string,
+  status: AccountOrderStatus,
+  role: AccountOrderRole,
+  page: number,
+  pagesize = 10
+) => {
+  return Axios.get('api/v1/accountorders', {
+    account,
+    status,
+    role,
+    page,
+    pagesize
+  })
 }

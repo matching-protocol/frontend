@@ -24,6 +24,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { OrderDetailOperate } from './OrderDetailOperate'
 import { routes } from 'constants/routes'
+import { Timer } from 'components/Timer'
 
 export enum Step {
   Confirm,
@@ -35,8 +36,9 @@ export default function TakeOffer() {
   const [step, setStep] = useState(Step.Confirm)
   const { orderId } = useParams<{ orderId: string }>()
   const history = useHistory()
+  const [isDeadline, setIsDeadline] = useState(false)
 
-  const { result: orderInfo } = useOrderById(orderId)
+  const { result: orderInfo } = useOrderById(orderId, step)
 
   const receiveToken = useLocalCurrency(orderInfo?.chain_id, orderInfo?.token_address)
   const payToken = useLocalCurrency(orderInfo?.to_chain_id, orderInfo?.receive_token_address)
@@ -55,12 +57,12 @@ export default function TakeOffer() {
 
   const completed = useMemo(() => {
     if (!orderInfo) return undefined
-    return OrderStatus.Order_Finished === orderInfo.status
+    return OrderStatus.Order_Received === orderInfo.status
   }, [orderInfo])
 
   const getErrorSubText = useMemo(() => {
-    return 'The operation has timed out, please retake offer'
-  }, [])
+    return isDeadline ? 'The operation has timed out, please retake offer' : ''
+  }, [isDeadline])
 
   if (!orderInfo)
     return (
@@ -251,7 +253,13 @@ export default function TakeOffer() {
                 </Box>
               </Grid>
             </Grid>
-            <OrderTakeSign order={orderInfo} next={() => setStep(Step.Execute)} />
+            <OrderTakeSign
+              order={orderInfo}
+              next={() => {
+                setStep(Step.Execute)
+                setIsDeadline(false)
+              }}
+            />
           </>
         )}
         {step === Step.Execute && (
@@ -271,8 +279,26 @@ export default function TakeOffer() {
               mb={24}
             >
               <Typography fontSize={16} fontWeight={500}>
-                Please the operation within <span style={{ color: 'red' }}>00 : 10 : 23</span> , otherwise the order
-                will be invalid
+                Please the operation within{' '}
+                {completed ? (
+                  '-'
+                ) : (
+                  <span style={{ color: 'red' }}>
+                    <Timer
+                      onlyNumber
+                      timer={orderInfo.Deadline}
+                      onZero={() => setIsDeadline(true)}
+                      onHeartbeat={val => {
+                        if (val) {
+                          setIsDeadline(false)
+                        } else {
+                          setIsDeadline(true)
+                        }
+                      }}
+                    />
+                  </span>
+                )}{' '}
+                , otherwise the order will be invalid
               </Typography>
             </Box>
             <Box
@@ -313,7 +339,7 @@ export default function TakeOffer() {
               errorSubText={getErrorSubText}
               onErrorAction={getExecuteAction}
             /> */}
-            <OrderDetailOperate order={orderInfo} />
+            <OrderDetailOperate order={orderInfo} again={!!getErrorSubText} />
             <Typography fontSize={11} color="#FF0000" mt={12}>
               {getErrorSubText}
             </Typography>

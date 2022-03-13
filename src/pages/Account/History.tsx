@@ -3,16 +3,18 @@ import { Typography, Box } from '@mui/material'
 import Card from 'components/Card'
 import Table from 'components/Table'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import CurrencyText from 'components/CurrencyText'
-import { ETHER } from 'constants/token'
-import CurrencyLogo from 'components/essential/CurrencyLogo'
-import LogoText from 'components/LogoText'
 import Pagination from 'components/Pagination'
-import OutlineButton from 'components/Button/OutlineButton'
+// import OutlineButton from 'components/Button/OutlineButton'
 import RoundTabs from 'components/Tabs/RoundTabs'
-import StatusTag from 'components/StatusTag'
 import TextButton from 'components/Button/TextButton'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import { useAccountOrderList } from 'hooks/useFetch'
+import { AccountOrderRole, AccountOrderStatus } from 'utils/fetch/order'
+import ChainLogo from 'components/ChainLogo'
+import CurrencyInfo from 'pages/Market/CurrencyInfo'
+import Spinner from 'components/Spinner'
+import { getEtherscanLink } from 'utils'
+import TakeStatus from './TakeStatus'
 
 enum Tab {
   MAKE_OFFER,
@@ -24,101 +26,110 @@ const HistoryMakeOfferHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentiv
 const HistoryTakeOfferHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', 'Status']
 
 export default function History() {
-  const [page, setPage] = useState(1)
   const [tab, setTab] = useState(Tab.MAKE_OFFER)
+  const { page: makePage, list: orderMakeList, loading: makeLoading } = useAccountOrderList(
+    AccountOrderStatus.OrderAny,
+    AccountOrderRole.OrderMake
+  )
+  const { page: takePage, list: orderTakeList, loading: takeLoading } = useAccountOrderList(
+    AccountOrderStatus.OrderAny,
+    AccountOrderRole.OrderTake
+  )
 
-  const historyMakeOfferDataRows = useMemo(() => {
-    return [
-      [
+  const historyMakeOfferDataRows = useMemo(
+    () =>
+      orderMakeList.map(item => [
         <Typography key={1} fontSize={16} fontWeight={500}>
-          #000001
+          #{item.global_order_id}
         </Typography>,
         <Box key={1} display="flex" alignItems="center" gap={12}>
-          <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={'32px'} />
+          <ChainLogo chainId={item.chain_id} size={'32px'} />
           <ArrowForwardIcon />
-          <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={'32px'} />
+          <ChainLogo chainId={item.to_chain_id} size={'32px'} />
         </Box>,
         <Box key={1} display="flex" alignItems="center" gap={12}>
-          <CurrencyText
-            currency={ETHER}
+          <CurrencyInfo
+            key={0}
+            chainId={item.chain_id}
+            amount={item.amount}
+            address={item.token_address}
             currencySize={'32px'}
-            text={'123'}
-            subText={'$123'}
             textSize={16}
             subTextSize={13}
           />
           <ArrowForwardIcon />
-          <CurrencyText
-            currency={ETHER}
+          <CurrencyInfo
+            key={0}
+            chainId={item.to_chain_id}
+            address={item.receive_token_address}
             currencySize={'32px'}
-            text={'123'}
-            subText={'$123'}
             textSize={16}
             subTextSize={13}
           />
         </Box>,
-        <CurrencyText
-          key={1}
-          currency={ETHER}
+        <CurrencyInfo
+          key={0}
+          chainId={item.chain_id}
+          address={item.token_address}
+          amount={item.incentive}
           currencySize={'32px'}
-          text={'123'}
-          subText={'$123'}
+          textSize={16}
+          subTextSize={13}
+        />
+        // <OutlineButton key={1} width="94px" height="32px" fontSize={13} primary>
+        //   Cancel
+        // </OutlineButton>
+      ]),
+    [orderMakeList]
+  )
+
+  const historyTakeOfferDataRows = useMemo(
+    () =>
+      orderTakeList.map(item => [
+        <Typography key={1} fontSize={16} fontWeight={500}>
+          #{item.global_order_id}
+        </Typography>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <ChainLogo chainId={item.chain_id} size={'32px'} />
+          <ArrowForwardIcon />
+          <ChainLogo chainId={item.to_chain_id} size={'32px'} />
+        </Box>,
+        <Box key={1} display="flex" alignItems="center" gap={12}>
+          <CurrencyInfo
+            key={0}
+            chainId={item.chain_id}
+            amount={item.amount}
+            address={item.token_address}
+            currencySize={'32px'}
+            textSize={16}
+            subTextSize={13}
+          />
+          <ArrowForwardIcon />
+          <CurrencyInfo
+            key={0}
+            chainId={item.to_chain_id}
+            address={item.receive_token_address}
+            currencySize={'32px'}
+            textSize={16}
+            subTextSize={13}
+          />
+        </Box>,
+        <CurrencyInfo
+          key={0}
+          chainId={item.chain_id}
+          address={item.token_address}
+          amount={item.incentive}
+          currencySize={'32px'}
           textSize={16}
           subTextSize={13}
         />,
-        <OutlineButton key={1} width="94px" height="32px" fontSize={13} primary>
-          Cancel
-        </OutlineButton>
-      ]
-    ]
-  }, [])
-
-  const historyTakeOfferDataRows = useMemo(() => {
-    return [
-      [
-        <Typography key={1} fontSize={16} fontWeight={500}>
-          #000001
-        </Typography>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={'32px'} />
-          <ArrowForwardIcon />
-          <LogoText logo={<CurrencyLogo currency={ETHER} />} text="Ether" size={'32px'} />
-        </Box>,
-        <Box key={1} display="flex" alignItems="center" gap={12}>
-          <CurrencyText
-            currency={ETHER}
-            currencySize={'32px'}
-            text={'123'}
-            subText={'$123'}
-            textSize={16}
-            subTextSize={13}
-          />
-          <ArrowForwardIcon />
-          <CurrencyText
-            currency={ETHER}
-            currencySize={'32px'}
-            text={'123'}
-            subText={'$123'}
-            textSize={16}
-            subTextSize={13}
-          />
-        </Box>,
-        <CurrencyText
-          key={1}
-          currency={ETHER}
-          currencySize={'32px'}
-          text={'123'}
-          subText={'$123'}
-          textSize={16}
-          subTextSize={13}
-        />,
-        <StatusTag key={1} type="complete" />,
-        <TextButton key={1} onClick={() => {}}>
+        <TakeStatus key={1} order={item} />,
+        <TextButton key={1} onClick={() => window.open(getEtherscanLink(item.chain_id, item.tx_hash, 'transaction'))}>
           <ArrowForwardIosIcon color="primary" sx={{ fontSize: 14 }} />
         </TextButton>
-      ]
-    ]
-  }, [])
+      ]),
+    [orderTakeList]
+  )
 
   return (
     <Card width={980} padding="30px 28px">
@@ -127,13 +138,48 @@ export default function History() {
       </Typography>
       <Box display="grid" gap={40}>
         <RoundTabs titles={HistoryTabs} current={tab} onChange={setTab} />
-        <Table
-          fontSize="12px"
-          header={tab === Tab.MAKE_OFFER ? HistoryMakeOfferHeader : HistoryTakeOfferHeader}
-          rows={tab === Tab.MAKE_OFFER ? historyMakeOfferDataRows : historyTakeOfferDataRows}
-          variant="outlined"
-        />
-        <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+        {tab === Tab.MAKE_OFFER && (
+          <>
+            <Table fontSize="12px" header={HistoryMakeOfferHeader} rows={historyMakeOfferDataRows} variant="outlined" />
+            {makeLoading && (
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
+                <Spinner size="40px" />
+              </Box>
+            )}
+            {!makeLoading && !makePage.totalPages && (
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
+                No data
+              </Box>
+            )}
+            <Pagination
+              count={makePage.totalPages}
+              page={makePage.page}
+              boundaryCount={0}
+              onChange={(_, value) => makePage.setPage(value)}
+            />
+          </>
+        )}
+        {tab === Tab.TAKE_OFFER && (
+          <>
+            <Table fontSize="12px" header={HistoryTakeOfferHeader} rows={historyTakeOfferDataRows} variant="outlined" />
+            {takeLoading && (
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
+                <Spinner size="40px" />
+              </Box>
+            )}
+            {!takeLoading && !takePage.totalPages && (
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
+                No data
+              </Box>
+            )}
+            <Pagination
+              count={takePage.totalPages}
+              page={takePage.page}
+              boundaryCount={0}
+              onChange={(_, value) => takePage.setPage(value)}
+            />
+          </>
+        )}
       </Box>
     </Card>
   )

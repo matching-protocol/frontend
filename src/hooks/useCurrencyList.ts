@@ -9,6 +9,7 @@ const list: {
   chainId: number
   name: string
   decimals: number
+  logo: string
 }[] = currencyList
 
 export function useCurrencyListByChain(chain: number | ChainId | null | undefined) {
@@ -18,7 +19,7 @@ export function useCurrencyListByChain(chain: number | ChainId | null | undefine
         .filter(item => item.chainId === chain)
         .map(item => {
           if (item.address) {
-            return new Token(item.chainId, item.address, item.decimals, item.symbol, item.name)
+            return new Token(item.chainId, item.address, item.decimals, item.symbol, item.name, item.logo)
           } else {
             return ETHER
           }

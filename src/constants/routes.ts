@@ -2,5 +2,7 @@ export const routes = {
   market: '/market',
   makeOffer: '/makeOffer',
   account: '/account',
-  takeOffer: '/takeOffer'
+  takeOffer: '/takeOffer',
+  help: '/help',
+  stat: '/stat'
 }

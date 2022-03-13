@@ -16,6 +16,9 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
+    if (currency?.logo) {
+      return [currency.logo]
+    }
     if (currency instanceof Token) {
       return [getTokenLogoURL(currency.address)]
     }

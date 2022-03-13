@@ -6,7 +6,7 @@ import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
-// import ComingSoon from './ComingSoon'
+import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 // import Footer from 'components/Footer'
 import { routes } from 'constants/routes'
@@ -72,6 +72,8 @@ export default function App() {
                   <Route exact strict path={routes.makeOffer} component={MakeOffer} />
                   <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
                   <Route exact strict path={routes.account} component={Account} />
+                  <Route exact strict path={routes.stat} component={ComingSoon} />
+                  <Route exact strict path={routes.help} component={ComingSoon} />
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>

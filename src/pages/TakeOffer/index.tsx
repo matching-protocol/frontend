@@ -314,7 +314,7 @@ export default function TakeOffer() {
               <Box display="flex" alignItems="flex-end">
                 <LogoText
                   logo={payToken?.logo || ''}
-                  text={`${usrBalance?.toSignificant(6, { groupSeparator: ',' }) || '-'} ${payToken?.symbol}`}
+                  text={`${payTokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${payToken?.symbol}`}
                   fontSize={24}
                   size="32px"
                   gapSize={12}
@@ -322,7 +322,7 @@ export default function TakeOffer() {
                 /
                 <LogoText
                   logo={payToken?.logo || ''}
-                  text={`${payTokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${payToken?.symbol}`}
+                  text={`${usrBalance?.toSignificant(6, { groupSeparator: ',' }) || '-'} ${payToken?.symbol}`}
                   fontSize={12}
                   size="14px"
                   gapSize={4}

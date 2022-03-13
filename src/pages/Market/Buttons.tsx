@@ -53,7 +53,12 @@ function StyledOutlineButton({
       height={height}
       style={{
         '& > *': { opacity: selected ? 1 : 0.5 },
-        '&:hover > *': { opacity: 1 }
+        '&:hover > *': {
+          opacity: 1
+        },
+        '&:hover svg path, &:hover svg circle': {
+          stroke: '#fff'
+        }
       }}
       onClick={onClick}
     >

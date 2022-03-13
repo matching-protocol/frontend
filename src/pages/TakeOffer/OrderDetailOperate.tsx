@@ -16,6 +16,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 import { ChainListMap } from 'constants/chain'
 import { Dots } from 'theme/components'
+import { useTagCompletedTx } from 'state/transactions/hooks'
 
 export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => void }) {
   const { account, library, chainId } = useActiveWeb3React()
@@ -83,7 +84,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
       }
     }
     return {
-      msg: 'Take Offer',
+      msg: 'Confirm',
       event: () => onTake(order.global_order_id)
     }
   }, [
@@ -101,7 +102,10 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
     toggleWalletModal
   ])
 
-  const action = useMemo(() => {
+  const action: {
+    msg: string | JSX.Element
+    event: (() => void) | undefined
+  } = useMemo(() => {
     switch (order.status) {
       case OrderStatus.Order_ForTaking:
         // if (account === order.sender) {
@@ -171,6 +175,8 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
 
   const balance = useTokenBalance(account || undefined, payToken)
 
+  const isCompleted = useTagCompletedTx('take', order.global_order_id.toString())
+
   const onTake = useCallback(
     async (orderId: string | number) => {
       const data = await getTakeSign(orderId)
@@ -179,7 +185,7 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
         return
       }
       showModal(<TransactionPendingModal />)
-      takeCallback(data)
+      takeCallback(data, order.global_order_id.toString())
         .then(() => {
           hideModal()
           showModal(<TransactionSubmittedModal />)
@@ -192,7 +198,7 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
           console.error(err)
         })
     },
-    [getTakeSign, hideModal, showModal, takeCallback]
+    [getTakeSign, hideModal, order.global_order_id, showModal, takeCallback]
   )
 
   const [approvalState, approvalCallback] = useApproveCallback(
@@ -212,6 +218,25 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
       return {
         msg: 'Switch',
         event: () => order.to_chain_id && triggerSwitchChain(library, order.to_chain_id, account)
+      }
+    }
+
+    if (isCompleted === false) {
+      return {
+        msg: (
+          <>
+            Pending
+            <Dots />
+          </>
+        ),
+        event: undefined
+      }
+    }
+
+    if (isCompleted === true) {
+      return {
+        msg: <>Completed</>,
+        event: undefined
       }
     }
 
@@ -242,22 +267,23 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
     }
 
     return {
-      msg: again ? 'Try Again' : 'Take Offer',
+      msg: again ? 'Try Again' : 'Execute',
       event: () => onTake(order.global_order_id)
     }
   }, [
-    again,
     account,
-    approvalCallback,
-    approvalState,
-    balance,
-    chainId,
     library,
-    onTake,
-    order.global_order_id,
+    chainId,
     order.to_chain_id,
+    order.global_order_id,
+    isCompleted,
+    balance,
     payBalance,
-    toggleWalletModal
+    approvalState,
+    again,
+    toggleWalletModal,
+    approvalCallback,
+    onTake
   ])
 
   const action = useMemo(() => {

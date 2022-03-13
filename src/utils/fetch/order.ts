@@ -27,14 +27,14 @@ export const takeOrder = (orderId: number | string, account: string) => {
 }
 
 export enum AccountOrderStatus {
-  OrderLive,
-  OrderOld,
-  OrderAny
+  OrderLive = 1,
+  OrderOld = 2,
+  OrderAny = 3
 }
 export enum AccountOrderRole {
-  OrderMake,
-  OrderTake,
-  OrderParticipate
+  OrderMake = 1,
+  OrderTake = 2,
+  OrderParticipate = 3
 }
 export const getAccountOrderList = (
   account: string,

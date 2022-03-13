@@ -155,8 +155,13 @@ export default function Market() {
               <Box mt={40} display="grid" gap={24}>
                 <Table fontSize="12px" header={MarketTableHeader} rows={dataRows} variant="outlined" />
                 {loading && (
-                  <Box display="flex" justifyContent="center">
+                  <Box display="flex" pt={20} pb={20} justifyContent="center">
                     <Spinner size="40px" />
+                  </Box>
+                )}
+                {!loading && !orderListPage.totalPages && (
+                  <Box display="flex" pt={20} pb={20} justifyContent="center">
+                    No data
                   </Box>
                 )}
                 <Pagination
@@ -172,8 +177,13 @@ export default function Market() {
         {mode === Mode.CARD && (
           <>
             {loading && (
-              <Box display="flex" mt={30} justifyContent="center">
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
                 <Spinner size="40px" />
+              </Box>
+            )}
+            {!loading && !orderListPage.totalPages && (
+              <Box display="flex" pt={20} pb={20} justifyContent="center">
+                No data
               </Box>
             )}
             <Grid container spacing={20} mt={24} mb={24}>

@@ -43,7 +43,7 @@ export default function Dashboard() {
         />,
         <ComposedText key={0} text={'1286952'} subText={'/123.53'} textSize={16} subTextSize={13} textOpacity={1} />,
         <Button key={0} onClick={() => {}} width="112px" height="36px" fontSize={13}>
-          Withdrawl
+          Withdraw
         </Button>
       ]
     ]
@@ -77,7 +77,7 @@ export default function Dashboard() {
           <Typography fontSize={32} fontWeight={700}>
             $ {accountTotalValue ? accountTotalValue.toFixed(2) : '-'}
           </Typography>
-          <Box
+          {/* <Box
             borderRadius={18}
             bgcolor="rgba(17, 191, 45, 0.16)"
             height={28}
@@ -88,7 +88,7 @@ export default function Dashboard() {
             <Typography fontSize={13} color="#11BF2D">
               + 8.91% / $350.28
             </Typography>
-          </Box>
+          </Box> */}
         </Box>
       </Card>
       <Card width={980} padding="30px 28px">

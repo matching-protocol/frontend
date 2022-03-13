@@ -12,7 +12,7 @@ export function useTakeOrderCallback() {
   const addTransaction = useTransactionAdder()
 
   const takeCallback = useCallback(
-    (args: any[]) => {
+    (args: any[], key: string) => {
       console.log('🚀 ~ file: useTakeOrder.ts ~ line 16 ~ useTakeOrderCallback ~ args', args)
       if (!contract || !account) throw new Error('none contract or account')
 
@@ -41,7 +41,11 @@ export function useTakeOrderCallback() {
           })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: 'Take Order'
+              summary: 'Take Order',
+              tag: {
+                type: 'take',
+                key
+              }
             })
             return response.hash
           })

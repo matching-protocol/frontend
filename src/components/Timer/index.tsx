@@ -34,7 +34,7 @@ export const Timer = ({
   timer: number
   onZero: () => void
   onlyNumber?: boolean
-  onHeartbeat: (number: number) => void
+  onHeartbeat?: (number: number) => void
 }) => {
   const [time, setTime] = useState(getDeltaTime(timer))
   onHeartbeat && onHeartbeat(time)

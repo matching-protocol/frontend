@@ -51,3 +51,31 @@ export const getAccountOrderList = (
     pagesize
   })
 }
+
+export const getAccountWalletInformation = (account: string, chainId: number) => {
+  return Axios.get('api/v1/accountwithdraws', {
+    account,
+    chainid: chainId
+  })
+}
+
+export const getAccountWithdrawAllSign = (account: string, chainId: number, tokenAddress: string) => {
+  return Axios.post(
+    'api/v1/withdrawall',
+    {},
+    {
+      taker: account,
+      chainid: chainId,
+      token: tokenAddress
+    }
+  )
+}
+
+export const getAccountWithdrawList = (account: string, chainId: number, page: number, pagesize = 10) => {
+  return Axios.get('api/v1/accountwithdrawed', {
+    account,
+    chainid: chainId,
+    page,
+    pagesize
+  })
+}

@@ -1,4 +1,4 @@
-import { Axios } from './axios'
+import { Axios } from '../axios'
 import { ChainId } from 'constants/chain'
 
 const { get } = Axios

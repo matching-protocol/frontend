@@ -24,7 +24,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { OrderDetailOperate } from './OrderDetailOperate'
 import { routes } from 'constants/routes'
-import { Timer } from 'components/Timer'
+import { Timer, getDeltaTime } from 'components/Timer'
 
 export enum Step {
   Confirm,
@@ -61,8 +61,8 @@ export default function TakeOffer() {
   }, [orderInfo])
 
   const getErrorSubText = useMemo(() => {
-    return isDeadline ? 'The operation has timed out, please retake offer' : ''
-  }, [isDeadline])
+    return isDeadline && orderInfo?.Deadline ? 'The operation has timed out, please retake offer' : ''
+  }, [isDeadline, orderInfo?.Deadline])
 
   if (!orderInfo)
     return (
@@ -287,11 +287,11 @@ export default function TakeOffer() {
                     <Timer
                       onlyNumber
                       timer={orderInfo.Deadline}
-                      onZero={() => setIsDeadline(true)}
+                      onZero={() => {}}
                       onHeartbeat={val => {
                         if (val) {
                           setIsDeadline(false)
-                        } else {
+                        } else if (orderInfo.Deadline && !getDeltaTime(orderInfo.Deadline)) {
                           setIsDeadline(true)
                         }
                       }}
@@ -339,7 +339,13 @@ export default function TakeOffer() {
               errorSubText={getErrorSubText}
               onErrorAction={getExecuteAction}
             /> */}
-            <OrderDetailOperate order={orderInfo} again={!!getErrorSubText} />
+            <OrderDetailOperate
+              order={orderInfo}
+              again={!!getErrorSubText}
+              next={() => {
+                setIsDeadline(false)
+              }}
+            />
             <Typography fontSize={11} color="#FF0000" mt={12}>
               {getErrorSubText}
             </Typography>

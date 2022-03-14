@@ -58,6 +58,9 @@ function StyledOutlineButton({
         },
         '&:hover svg path, &:hover svg circle': {
           stroke: '#fff'
+        },
+        '&:hover span': {
+          color: '#fff'
         }
       }}
       onClick={onClick}

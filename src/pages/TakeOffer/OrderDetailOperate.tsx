@@ -45,7 +45,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
           showModal(<MessageBox type="error">get sign error</MessageBox>)
           return
         }
-        setTimeout(() => next(), 500)
+        next()
       } catch (error) {
         console.error(error)
         showModal(<MessageBox type="error">get sign error</MessageBox>)
@@ -157,7 +157,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
   )
 }
 
-export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?: boolean }) {
+export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; again?: boolean; next: () => void }) {
   const { account, library, chainId } = useActiveWeb3React()
   const { getTakeSign, takeCallback } = useTakeOrderCallback()
   const toggleWalletModal = useWalletModalToggle()
@@ -179,12 +179,13 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
 
   const onTake = useCallback(
     async (orderId: string | number) => {
+      showModal(<TransactionPendingModal />)
       const data = await getTakeSign(orderId)
       if (!data) {
         showModal(<MessageBox type="error">get sign error</MessageBox>)
         return
       }
-      showModal(<TransactionPendingModal />)
+      next()
       takeCallback(data, order.global_order_id.toString())
         .then(() => {
           hideModal()
@@ -198,7 +199,7 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
           console.error(err)
         })
     },
-    [getTakeSign, hideModal, order.global_order_id, showModal, takeCallback]
+    [getTakeSign, hideModal, next, order.global_order_id, showModal, takeCallback]
   )
 
   const [approvalState, approvalCallback] = useApproveCallback(
@@ -250,8 +251,13 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
     if (approvalState !== ApprovalState.APPROVED) {
       if (approvalState === ApprovalState.PENDING) {
         return {
-          msg: 'Approving...',
-          event: toggleWalletModal
+          msg: (
+            <>
+              Approving
+              <Dots />
+            </>
+          ),
+          event: undefined
         }
       } else if (approvalState === ApprovalState.NOT_APPROVED) {
         return {
@@ -267,7 +273,7 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
     }
 
     return {
-      msg: again ? 'Try Again' : 'Execute',
+      msg: again || !order.taker ? 'Try Again' : 'Execute',
       event: () => onTake(order.global_order_id)
     }
   }, [
@@ -275,6 +281,7 @@ export function OrderDetailOperate({ order, again }: { order: OrderInfo; again?:
     library,
     chainId,
     order.to_chain_id,
+    order.taker,
     order.global_order_id,
     isCompleted,
     balance,

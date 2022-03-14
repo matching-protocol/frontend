@@ -17,7 +17,7 @@ export default function TakeStatus({ order }: { order: OrderInfo }) {
   switch (order.status) {
     case OrderStatus.Order_ForTaking:
       return (
-        <OutlineButton height="32px" fontSize={13} onClick={toTake}>
+        <OutlineButton height="32px" fontSize={13} onClick={toTake} primary>
           Take Offer
         </OutlineButton>
       )
@@ -37,7 +37,7 @@ export default function TakeStatus({ order }: { order: OrderInfo }) {
         )
       } else {
         return (
-          <OutlineButton height="32px" fontSize={13} onClick={toTake}>
+          <OutlineButton height="32px" fontSize={13} onClick={toTake} primary>
             Take Offer
           </OutlineButton>
         )

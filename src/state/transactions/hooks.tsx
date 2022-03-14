@@ -114,11 +114,12 @@ export function useUserHasSubmittedClaim(
   return { claimSubmitted: Boolean(claimTxn), claimTxn }
 }
 
-export function useTagCompletedTx(type: 'claim' | 'withdraw' | 'take', key: string) {
+export function useTagCompletedTx(type: 'claim' | 'withdraw' | 'take', key: string, isRecent = true) {
   const allTransactions = useAllTransactions()
   const { account } = useActiveWeb3React()
 
   return useMemo(() => {
+    if (!key) return undefined
     for (const hash in allTransactions) {
       if (Object.prototype.hasOwnProperty.call(allTransactions, hash)) {
         const tx = allTransactions[hash]
@@ -128,14 +129,21 @@ export function useTagCompletedTx(type: 'claim' | 'withdraw' | 'take', key: stri
         } else {
           const tagTx = tx.tag
           if (!tagTx) continue
-          if (tagTx.type === type && tagTx.key === key) {
-            const rt = tx.receipt as any
-            return rt?.status === 1
+          if (isRecent) {
+            if (tagTx.type === type && tagTx.key === key && new Date().getTime() - tx.addedTime < 10 * 60 * 1000) {
+              const rt = tx.receipt as any
+              return rt?.status === 1
+            }
+          } else {
+            if (tagTx.type === type && tagTx.key === key) {
+              const rt = tx.receipt as any
+              return rt?.status === 1
+            }
           }
           continue
         }
       }
     }
     return undefined
-  }, [type, key, allTransactions, account])
+  }, [allTransactions, account, type, key, isRecent])
 }

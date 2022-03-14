@@ -8,7 +8,7 @@
     "logo": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F/logo.png"
   },
   {
-    "symbol": "TEST1",
+    "symbol": "TEST",
     "address": "0xfE1e3D33305a88bEaE7EEE1590Ef025b8117E5D7",
     "chainId": 97,
     "name": "TEST",

@@ -51,4 +51,17 @@ export function getLocalToken(chainId: number, address: string) {
   return undefined
 }
 
+export function useLocalTokenSymbolList() {
+  return useMemo(() => {
+    const ret: Token[] = []
+    const has: string[] = []
+    for (const item of list) {
+      if (has.includes(item.symbol)) continue
+      ret.push(new Token(item.chainId, item.address, item.decimals, item.symbol, item.name, item.logo))
+      has.push(item.symbol)
+    }
+    return ret
+  }, [])
+}
+
 export default list

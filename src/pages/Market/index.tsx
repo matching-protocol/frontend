@@ -22,6 +22,9 @@ import SelectButton from 'components/Button/SelectButton'
 import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
 import useModal from 'hooks/useModal'
 import { Currency } from 'constants/token'
+import { useLocalTokenSymbolList } from 'hooks/useCurrencyList'
+import Button from 'components/Button/Button'
+import { Chain } from 'models/chain'
 
 enum Mode {
   TABLE,
@@ -45,6 +48,15 @@ export default function Market() {
   const { showModal } = useModal()
   const [searchCurrency, setSearchCurrency] = useState<null | Currency>(null)
   const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any)
+  const [searchFromChain, setSearchFromChain] = useState<Chain | null>(null)
+  const [searchToChain, setSearchToChain] = useState<Chain | null>(null)
+  const searchCurrencyList = useLocalTokenSymbolList()
+
+  const resetSearch = useCallback(() => {
+    setSearchFromChain(null)
+    setSearchToChain(null)
+    setSearchCurrency(null)
+  }, [])
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
@@ -95,10 +107,10 @@ export default function Market() {
         onSelectCurrency={currency => {
           setSearchCurrency(currency)
         }}
-        tokenList={[]}
+        tokenList={searchCurrencyList}
       />
     )
-  }, [showModal])
+  }, [searchCurrencyList, showModal])
 
   return (
     <>
@@ -122,7 +134,7 @@ export default function Market() {
                 </Typography>
                 <SelectButton width="192px" onClick={onSelectSearchCurrency}>
                   {searchCurrency ? (
-                    <LogoText logo={'matter'} text={'matter'} />
+                    <LogoText logo={searchCurrency.logo || ''} text={searchCurrency.symbol || ''} />
                   ) : (
                     <Typography fontSize="16px" color={'rgba(22, 22, 22, 0.5)'}>
                       Select currency
@@ -135,12 +147,17 @@ export default function Market() {
                   Route:
                 </Typography>
                 <UniSwap
-                  from={ChainList[0]}
-                  to={ChainList[1]}
+                  from={searchFromChain}
+                  to={searchToChain}
                   list={ChainList}
-                  onSelectFrom={() => {}}
-                  onSelectTo={() => {}}
+                  onSelectFrom={e => setSearchFromChain(e)}
+                  onSelectTo={e => setSearchToChain(e)}
                 />
+              </Box>
+              <Box display="grid" gap={20}>
+                <Button height="32px" width="80px" onClick={resetSearch}>
+                  Reset
+                </Button>
               </Box>
             </Box>
           </Card>

@@ -4,19 +4,30 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { CurrencyAmount } from 'constants/token'
 
-export function useMinIncentive(
+export function useMinIncentive(currency?: Currency, value?: string) {
+  return useMemo(() => {
+    const inputAmount = tryParseAmount(value, currency)
+    if (!inputAmount) {
+      return undefined
+    }
+    const min = inputAmount.multiply(JSBI.BigInt(2)).divide(JSBI.BigInt(100))
+    return min
+  }, [currency, value])
+}
+
+export function useCurrentIncentive(
   incentive: string,
   setIncentive: (val: string) => void,
   currency?: Currency,
   value?: string
 ) {
+  const min = useMinIncentive(currency, value)
   return useMemo(() => {
     const inputAmount = tryParseAmount(value, currency)
-    if (!inputAmount) {
+    if (!min || !inputAmount) {
       setIncentive('')
       return ''
     }
-    const min = inputAmount.multiply(JSBI.BigInt(2)).divide(JSBI.BigInt(100))
 
     const incentiveAmount = tryParseAmount(incentive, currency)
     if (incentiveAmount?.toSignificant(6) === min.toSignificant(6)) {
@@ -35,7 +46,7 @@ export function useMinIncentive(
       setIncentive(minAmount.toSignificant(6))
       return minAmount.raw.toString()
     }
-  }, [currency, setIncentive, value, incentive])
+  }, [value, currency, min, incentive, setIncentive])
 }
 
 export function useReceiveValue(currency: Currency | undefined, value: string, incentive: string) {

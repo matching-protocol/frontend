@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import Card from 'components/Card'
 import { Typography, Box } from '@mui/material'
 import RoundTabs from 'components/Tabs/RoundTabs'
@@ -6,66 +6,129 @@ import LogoText from 'components/LogoText'
 import Table from 'components/Table'
 import CurrencyText from 'components/CurrencyText'
 import ComposedText from 'components/ComposedText'
-import DummyLogo from 'assets/svg/eth_logo.svg'
-import { ETHER } from 'constants/token'
 import Button from 'components/Button/Button'
 import StatusTag from 'components/StatusTag'
 import OutlineButton from 'components/Button/OutlineButton'
 import Pagination from 'components/Pagination'
 import { useAccountTotalValue } from 'hooks/useAccountInfo'
+import { AccountWithdrawStatus, useAccountWalletInformation, useAccountWithdrawList } from 'hooks/useFetch'
+import ChainLogo from 'components/ChainLogo'
+import { ChainList, ChainListMap } from 'constants/chain'
+import Spinner from 'components/Spinner'
+import { useWalletWithdrawCallback } from 'hooks/useWalletWithdraw'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import useModal from 'hooks/useModal'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { useActiveWeb3React } from 'hooks'
+import { TokenAmount } from 'constants/token'
+import { triggerSwitchChain } from 'utils/triggerSwitchChain'
+import { useTagCompletedTx } from 'state/transactions/hooks'
+import { Dots } from 'theme/components'
+import { getEtherscanLink } from 'utils'
 
 const WalletInfoTableHeader = ['Asset', 'Amount']
-const WithdrawlHistoryTableHeader = ['Date', 'Amount', 'Payment Address', 'Status']
+const WithdrawlHistoryTableHeader = ['Date', 'Amount', 'Status']
 
 export default function Dashboard() {
   const accountTotalValue = useAccountTotalValue()
   const [walletInfoTab, setWalletInfoTab] = useState(0)
-  const [page, setPage] = useState(1)
+  const [historyTab, setHistoryTab] = useState(0)
+  const { showModal, hideModal } = useModal()
+  const { loading: walletInfoLoading, list: walletInfoList } = useAccountWalletInformation(ChainList[walletInfoTab].id)
+  const { loading: historyLoading, list: historyList, page: historyPage } = useAccountWithdrawList(
+    ChainList[historyTab].id
+  )
 
   const walletInfoTabs = useMemo(() => {
-    return [
-      <LogoText key={0} logo={DummyLogo} text={'BSC($908.12)'} />,
-      <LogoText key={0} logo={DummyLogo} text={'Ethereum($234.12)'} />
-    ]
+    return ChainList.map(item => <ChainLogo key={item.id} chainId={item.id} size="16px" />)
   }, [])
 
-  const walletInfoDataRows = useMemo(() => {
-    return [
-      [
-        <CurrencyText
+  const { getWithdrawSign, withdrawCallback } = useWalletWithdrawCallback()
+
+  const onWithdraw = useCallback(
+    async (tokenAddress: string) => {
+      showModal(<TransactionPendingModal />)
+      try {
+        const data = await getWithdrawSign(tokenAddress)
+        if (!data) {
+          showModal(<MessageBox type="error">get sign error</MessageBox>)
+          return
+        }
+        withdrawCallback(data, tokenAddress)
+          .then(() => {
+            hideModal()
+            showModal(<TransactionSubmittedModal />)
+          })
+          .catch((err: any) => {
+            hideModal()
+            showModal(
+              <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+            )
+            console.error(err)
+          })
+      } catch (error) {
+        console.error(error)
+        showModal(<MessageBox type="error">get sign error</MessageBox>)
+      }
+    },
+    [getWithdrawSign, hideModal, showModal, withdrawCallback]
+  )
+
+  const walletInfoDataRows = useMemo(
+    () =>
+      walletInfoList.map(item => [
+        item ? (
+          <CurrencyText
+            key={0}
+            currency={item.token}
+            currencySize={'32px'}
+            text={item.token.symbol || ''}
+            subText={item.token.name || ''}
+            textSize={16}
+            subTextSize={12}
+          />
+        ) : (
+          '-'
+        ),
+        <ComposedText
           key={0}
-          currency={ETHER}
-          currencySize={'32px'}
-          text={ETHER.symbol || ''}
-          subText={ETHER.name || ''}
+          text={item?.toSignificant(6, { groupSeparator: ',' }) || '-'}
+          subText=""
           textSize={16}
-          subTextSize={12}
+          subTextSize={13}
+          textOpacity={1}
         />,
-        <ComposedText key={0} text={'1286952'} subText={'/123.53'} textSize={16} subTextSize={13} textOpacity={1} />,
-        <Button key={0} onClick={() => {}} width="112px" height="36px" fontSize={13}>
-          Withdraw
-        </Button>
-      ]
-    ]
-  }, [])
+        <WithdrawButton onWithdraw={onWithdraw} key={1} tokenAmount={item} />
+      ]),
+    [onWithdraw, walletInfoList]
+  )
 
-  const withdrawlHistoryDataRows = useMemo(() => {
-    return [
-      [
-        <Typography key={0} fontSize={16}>
-          05.07.2021 10:32
-        </Typography>,
-        <LogoText key={0} logo={DummyLogo} text={'2259.256 DAI'} />,
-        <Typography key={0} fontSize={16}>
-          0x3550...6206882
-        </Typography>,
-        <StatusTag key={0} type="pending" />,
-        <OutlineButton key={0} onClick={() => {}} width={84} height={36} fontSize={13} primary>
-          Details
-        </OutlineButton>
-      ]
-    ]
-  }, [])
+  const withdrawHistoryDataRows = useMemo(() => {
+    return historyList.map(item => [
+      <Typography key={0} fontSize={16}>
+        {new Date(item.createdAt * 1000).toLocaleString()}
+      </Typography>,
+      <LogoText
+        key={0}
+        logo={item.tokenAmount?.token.logo || ''}
+        text={`${item.tokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${item.tokenAmount?.token.symbol}`}
+      />,
+      <StatusTag key={0} type={item.status === AccountWithdrawStatus.complete ? 'complete' : 'pending'} />,
+      <OutlineButton
+        key={0}
+        onClick={() => {
+          window.open(getEtherscanLink(ChainList[historyTab].id, item.hash, 'transaction'))
+        }}
+        width={84}
+        height={36}
+        fontSize={13}
+        primary
+      >
+        Details
+      </OutlineButton>
+    ])
+  }, [historyList, historyTab])
 
   return (
     <Box display="grid" gap={24}>
@@ -97,22 +160,106 @@ export default function Dashboard() {
         </Typography>
         <RoundTabs titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
         <Table fontSize="12px" header={WalletInfoTableHeader} rows={walletInfoDataRows} variant="outlined" />
+        {walletInfoLoading && (
+          <Box display="flex" pt={20} pb={20} justifyContent="center">
+            <Spinner size="40px" />
+          </Box>
+        )}
+        {!walletInfoLoading && !walletInfoDataRows.length && (
+          <Box display="flex" pt={20} pb={20} justifyContent="center">
+            No data
+          </Box>
+        )}
       </Card>
       <Card width={980} padding="30px 28px">
         <Typography fontSize={16} fontWeight={500} mb={28}>
-          Withdrawl History
+          Withdraw History
         </Typography>
         <Box display="grid" gap={40}>
-          <RoundTabs titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
+          <RoundTabs titles={walletInfoTabs} current={historyTab} onChange={setHistoryTab} />
           <Table
             fontSize="12px"
             header={WithdrawlHistoryTableHeader}
-            rows={withdrawlHistoryDataRows}
+            rows={withdrawHistoryDataRows}
             variant="outlined"
           />
-          <Pagination count={10} page={page} boundaryCount={0} onChange={(event, value) => setPage(value)} />
+          {historyLoading && (
+            <Box display="flex" pt={20} pb={20} justifyContent="center">
+              <Spinner size="40px" />
+            </Box>
+          )}
+          {!historyLoading && !historyList.length && (
+            <Box display="flex" pt={20} pb={20} justifyContent="center">
+              No data
+            </Box>
+          )}
+          <Pagination
+            count={historyPage.totalPages}
+            page={historyPage.page}
+            boundaryCount={0}
+            onChange={(_, value) => historyPage.setPage(value)}
+          />
         </Box>
       </Card>
     </Box>
+  )
+}
+
+function WithdrawButton({
+  tokenAmount,
+  onWithdraw
+}: {
+  tokenAmount: TokenAmount | undefined
+  onWithdraw: (tokenAddress: string) => Promise<void>
+}) {
+  const { account, chainId, library } = useActiveWeb3React()
+
+  const isCompletedTx = useTagCompletedTx('withdraw', tokenAmount?.token.address || '')
+
+  if (!account || !chainId || !library || !tokenAmount) return null
+
+  if (chainId !== tokenAmount.token.chainId) {
+    return (
+      <Button
+        onClick={() => triggerSwitchChain(library, tokenAmount.token.chainId, account)}
+        height="36px"
+        width="auto"
+        style={{ padding: '0 10px' }}
+        fontSize={13}
+      >
+        Switch to {ChainListMap[tokenAmount.token.chainId].symbol}
+      </Button>
+    )
+  }
+
+  if (isCompletedTx === false) {
+    return (
+      <Button disabled width="112px" height="36px" fontSize={13}>
+        Withdrawing
+        <Dots />
+      </Button>
+    )
+  }
+
+  if (isCompletedTx === true) {
+    return (
+      <Button disabled width="112px" height="36px" fontSize={13}>
+        Withdrew
+      </Button>
+    )
+  }
+
+  return (
+    <Button
+      onClick={() => {
+        if (!tokenAmount?.token) return
+        onWithdraw(tokenAmount.token.address)
+      }}
+      width="112px"
+      height="36px"
+      fontSize={13}
+    >
+      Withdraw
+    </Button>
   )
 }

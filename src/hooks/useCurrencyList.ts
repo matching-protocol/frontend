@@ -41,4 +41,14 @@ export function useLocalCurrency(chainId: number | undefined, address: string | 
   }, [address, chainId, list])
 }
 
+export function getLocalToken(chainId: number, address: string) {
+  for (const item of list) {
+    if (item.chainId !== chainId) continue
+    if (item.address === address) {
+      return new Token(item.chainId, item.address, item.decimals, item.symbol, item.name, item.logo)
+    }
+  }
+  return undefined
+}
+
 export default list

@@ -27,7 +27,8 @@ import { MATCHING_ADDRESS } from '../../constants'
 import { Token, TokenAmount } from 'constants/token'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
-import { useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
+import { useCurrentIncentive, useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
+import JSBI from 'jsbi'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -51,10 +52,14 @@ export default function MakeOffer() {
     setIncentive(val)
   }, [])
 
-  const minIncentive = useMinIncentive(incentive, updateIncentive, fromCurrency || undefined, fromValue)
+  const currentIncentiveRaw = useCurrentIncentive(incentive, updateIncentive, fromCurrency || undefined, fromValue)
   const receiveValue = useReceiveValue(fromCurrency || undefined, fromValue, incentive)
 
-  const chainList = ChainList.filter(i => [42, 97].indexOf(i.id) !== -1)
+  const minIncentiveValue = useMinIncentive(fromCurrency || undefined, fromValue)
+  const recommendValue = useMemo(() => minIncentiveValue?.multiply(JSBI.BigInt(15)).divide(JSBI.BigInt(10)), [
+    minIncentiveValue
+  ])
+
   const fromCurrencyList: Currency[] = useCurrencyListByChain(fromChain?.id)
   const toCurrencyList: Currency[] = useCurrencyListByChain(toChain?.id)
 
@@ -101,15 +106,15 @@ export default function MakeOffer() {
 
   const createOrderCallback = useCreateOrderCallback()
   const onCreateOrderCallback = useCallback(() => {
-    if (!fromCurrency || !toChain || !toChain.id || !account || !minIncentive) return
+    if (!fromCurrency || !toChain || !toChain.id || !account || !currentIncentiveRaw) return
     if (!(fromCurrency instanceof Token)) {
       return
     }
     const _amount = tryParseAmount(fromValue, fromCurrency)
     if (!_amount) return
-    const _receiveAmount = _amount.subtract(new TokenAmount(fromCurrency, minIncentive))
+    const _receiveAmount = _amount.subtract(new TokenAmount(fromCurrency, currentIncentiveRaw))
     showModal(<TransactionPendingModal />)
-    createOrderCallback(fromCurrency.address, account, _receiveAmount.raw.toString(), minIncentive, toChain.id)
+    createOrderCallback(fromCurrency.address, account, _receiveAmount.raw.toString(), currentIncentiveRaw, toChain.id)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -122,7 +127,7 @@ export default function MakeOffer() {
         )
         console.error(err)
       })
-  }, [fromCurrency, toChain, account, fromValue, minIncentive, showModal, createOrderCallback, hideModal])
+  }, [fromCurrency, toChain, account, fromValue, currentIncentiveRaw, showModal, createOrderCallback, hideModal])
 
   const [approvalState, approvalCallback] = useApproveCallback(
     exchangeTokenAmount,
@@ -176,8 +181,8 @@ export default function MakeOffer() {
     if (approvalState !== ApprovalState.APPROVED) {
       if (approvalState === ApprovalState.PENDING) {
         return {
-          msg: 'Approving...',
-          event: toggleWalletModal
+          error: 'Approving...',
+          msg: ''
         }
       } else if (approvalState === ApprovalState.NOT_APPROVED) {
         return {
@@ -228,7 +233,7 @@ export default function MakeOffer() {
             toChain={toChain}
             toCurrency={toCurrency}
             toValue={receiveValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}
-            chainList={chainList}
+            chainList={ChainList}
             onSelectFromChain={setFromChain}
             onSelectToChain={setToChain}
             onSelectFromCurrency={onSelectFromCurrency}
@@ -266,11 +271,12 @@ export default function MakeOffer() {
                   width={164}
                   height={60}
                 >
-                  <ComposedText text={'> 0.00 '} subText={'/ $0.00'} />
+                  <ComposedText text={`> ${recommendValue?.toSignificant(6, { groupSeparator: ',' })}`} subText={''} />
                 </Box>
               </Box>
               <Box display="grid" gap={8}>
-                <ComposedText text={'Min'} subText={' (slightly higher than gas fee)'} textSize={14} subTextSize={10} />
+                {/* (slightly higher than gas fee) */}
+                <ComposedText text={'Min'} subText={''} textSize={14} subTextSize={10} />
                 <Box
                   border="1px solid #D9D9DA"
                   borderRadius="16px"
@@ -280,7 +286,10 @@ export default function MakeOffer() {
                   width={164}
                   height={60}
                 >
-                  <ComposedText text={'> 0.00'} subText={' / $0.00'} />
+                  <ComposedText
+                    text={`> ${minIncentiveValue?.toSignificant(6, { groupSeparator: ',' })}`}
+                    subText={''}
+                  />
                 </Box>
               </Box>
             </Box>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Box, Typography, MenuItem, Grid } from '@mui/material'
 import MarketIcon from 'assets/images/market-lg.png'
 import LogoText from 'components/LogoText'
@@ -17,7 +17,11 @@ import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import OrderListOperate from './OrderListOperate'
 import Spinner from 'components/Spinner'
-import SwapSelect from 'components/Swap/SwapSelect'
+// import SwapSelect from 'components/Swap/SwapSelect'
+import SelectButton from 'components/Button/SelectButton'
+import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
+import useModal from 'hooks/useModal'
+import { Currency } from 'constants/token'
 
 enum Mode {
   TABLE,
@@ -38,6 +42,8 @@ export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
   const [search, setSearch] = useState('')
   const [filterToggle, setFilterToggle] = useState(false)
+  const { showModal } = useModal()
+  const [searchCurrency, setSearchCurrency] = useState<null | Currency>(null)
   const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any)
 
   const dataRows = useMemo(() => {
@@ -83,6 +89,17 @@ export default function Market() {
     ])
   }, [mode, orderList])
 
+  const onSelectSearchCurrency = useCallback(() => {
+    showModal(
+      <SelectCurrencyModal
+        onSelectCurrency={currency => {
+          setSearchCurrency(currency)
+        }}
+        tokenList={[]}
+      />
+    )
+  }, [showModal])
+
   return (
     <>
       <Box maxWidth="980px" width="100%" pt={60}>
@@ -103,15 +120,15 @@ export default function Market() {
                 <Typography fontSize={16} fontWeight={700}>
                   Currency:
                 </Typography>
-                <SwapSelect
-                  list={[]}
-                  selected={1}
-                  width="192px"
-                  height="60px"
-                  onChange={() => {}}
-                  disabled={false}
-                  active={false}
-                />
+                <SelectButton width="192px" onClick={onSelectSearchCurrency}>
+                  {searchCurrency ? (
+                    <LogoText logo={'matter'} text={'matter'} />
+                  ) : (
+                    <Typography fontSize="16px" color={'rgba(22, 22, 22, 0.5)'}>
+                      Select currency
+                    </Typography>
+                  )}
+                </SelectButton>
               </Box>
               <Box display="grid" gap={20}>
                 <Typography fontSize={16} fontWeight={700}>

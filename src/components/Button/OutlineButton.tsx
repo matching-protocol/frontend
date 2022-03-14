@@ -29,12 +29,13 @@ export default function OutlineButton(props: Props) {
           `1px solid ${color ? color : primary ? theme.palette.primary.main : theme.palette.text.secondary}`,
         fontSize,
         fontWeight: 400,
+        padding: '0 10px',
         height: height || 60,
         color: primary ? theme.palette.primary.main : theme.palette.text.primary,
         borderRadius: borderRadius ?? 1.6,
         '&:hover': {
-          // color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary,
-          color: theme.palette.primary.contrastText,
+          color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary,
+          // color: theme.palette.primary.contrastText,
           borderColor: primary ? theme.palette.primary.dark : theme.palette.primary.main,
           background: theme.palette.primary.main
         },

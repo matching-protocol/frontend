@@ -3,6 +3,12 @@ import { Token } from './token'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
 import { ChainId } from './chain'
+import portisIconImage from 'assets/walletIcon/portisIcon.png'
+import InjectedImage from 'assets/walletIcon/arrow-right.svg'
+import fortmaticIconImage from 'assets/walletIcon/fortmaticIcon.png'
+import coinbaseWalletIconImage from 'assets/walletIcon/coinbaseWalletIcon.svg'
+import walletConnectIcon from 'assets/walletIcon/walletConnectIcon.svg'
+import metamaskIcon from 'assets/walletIcon/metamask.png'
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
@@ -38,7 +44,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
     connector: injected,
     name: 'Injected',
-    iconName: 'arrow-right.svg',
+    iconName: InjectedImage,
     description: 'Injected web3 provider.',
     href: null,
     color: '#010101',
@@ -47,7 +53,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   METAMASK: {
     connector: injected,
     name: 'MetaMask',
-    iconName: 'metamask.png',
+    iconName: metamaskIcon,
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D'
@@ -55,7 +61,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   WALLET_CONNECT: {
     connector: walletconnect,
     name: 'WalletConnect',
-    iconName: 'walletConnectIcon.svg',
+    iconName: walletConnectIcon,
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
     color: '#4196FC',
@@ -64,14 +70,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   WALLET_LINK: {
     connector: walletlink,
     name: 'Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
+    iconName: coinbaseWalletIconImage,
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
     color: '#315CF5'
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
+    iconName: coinbaseWalletIconImage,
     description: 'Open in Coinbase Wallet app.',
     href: 'https://go.cb-w.com/mtUDhEZPy1',
     color: '#315CF5',
@@ -81,7 +87,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   FORTMATIC: {
     connector: fortmatic,
     name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
+    iconName: fortmaticIconImage,
     description: 'Login using Fortmatic hosted wallet',
     href: null,
     color: '#6748FF',
@@ -90,7 +96,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   Portis: {
     connector: portis,
     name: 'Portis',
-    iconName: 'portisIcon.png',
+    iconName: portisIconImage,
     description: 'Login using Portis hosted wallet',
     href: null,
     color: '#4A6C9B',

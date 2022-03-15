@@ -14,12 +14,14 @@ export default function SwapSelectInput({
   onClick,
   onChange,
   inputDisabled,
+  selectDisabled,
   width
 }: {
   value: string
   selected: Currency | null
   selectPlaceholder?: string
   inputPlaceholder?: string
+  selectDisabled?: boolean
   onClick: () => void
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   width?: number | string
@@ -36,7 +38,11 @@ export default function SwapSelectInput({
       alignItems="center"
       padding={24}
     >
-      <SelectButton onClick={onClick} width="120px">
+      <SelectButton
+        onClick={onClick}
+        width="120px"
+        style={{ cursor: selectDisabled ? 'not-allowed' : 'pointer', opacity: selectDisabled ? 0.6 : 1 }}
+      >
         {selected ? (
           <LogoText logo={<CurrencyLogo currency={selected} />} text={selected?.symbol ?? ''} />
         ) : (

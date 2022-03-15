@@ -63,37 +63,46 @@ export default function MakeOffer() {
   const fromCurrencyList: Currency[] = useCurrencyListByChain(fromChain?.id)
   const toCurrencyList: Currency[] = useCurrencyListByChain(toChain?.id)
 
+  const fromCurrencyListAble = useMemo(
+    () =>
+      fromCurrencyList.filter(fromItem => {
+        for (const toItem of toCurrencyList) {
+          if (fromItem.symbol === toItem.symbol) return true
+        }
+        return false
+      }),
+    [toCurrencyList, fromCurrencyList]
+  )
+
   const onSelectFromCurrency = useCallback(() => {
-    fromCurrencyList.length &&
+    fromCurrencyListAble.length &&
       showModal(
         <SelectCurrencyModal
           onSelectCurrency={currency => {
             setFromCurrency(currency)
-            if (toCurrency === null) {
-              const _currency = toCurrencyList.find(item => item.symbol === currency.symbol)
-              setToCurrency(_currency || null)
-            }
+            const _currency = toCurrencyList.find(item => item.symbol === currency.symbol)
+            setToCurrency(_currency || null)
           }}
-          tokenList={fromCurrencyList}
+          tokenList={fromCurrencyListAble}
         />
       )
-  }, [fromCurrencyList, showModal, toCurrency, toCurrencyList])
+  }, [fromCurrencyListAble, showModal, toCurrencyList])
 
   const onSelectToCurrency = useCallback(() => {
-    toCurrencyList.length &&
-      showModal(
-        <SelectCurrencyModal
-          onSelectCurrency={currency => {
-            setToCurrency(currency)
-            if (fromCurrency === null) {
-              const _currency = fromCurrencyList.find(item => item.symbol === currency.symbol)
-              setFromCurrency(_currency || null)
-            }
-          }}
-          tokenList={toCurrencyList}
-        />
-      )
-  }, [toCurrencyList, showModal, fromCurrency, fromCurrencyList])
+    // toCurrencyList.length &&
+    //   showModal(
+    //     <SelectCurrencyModal
+    //       onSelectCurrency={currency => {
+    //         setToCurrency(currency)
+    //         if (fromCurrency === null) {
+    //           const _currency = fromCurrencyList.find(item => item.symbol === currency.symbol)
+    //           setFromCurrency(_currency || null)
+    //         }
+    //       }}
+    //       tokenList={toCurrencyList}
+    //     />
+    //   )
+  }, [])
 
   const exchangeTokenAmount = useMemo(() => tryParseAmount(fromValue, fromCurrency || undefined), [
     fromCurrency,
@@ -242,8 +251,16 @@ export default function MakeOffer() {
             toCurrency={toCurrency}
             toValue={receiveValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}
             chainList={ChainList}
-            onSelectFromChain={setFromChain}
-            onSelectToChain={setToChain}
+            onSelectFromChain={e => {
+              setFromCurrency(null)
+              setToCurrency(null)
+              setFromChain(e)
+            }}
+            onSelectToChain={e => {
+              setFromCurrency(null)
+              setToCurrency(null)
+              setToChain(e)
+            }}
             onSelectFromCurrency={onSelectFromCurrency}
             onSelectToCurrency={onSelectToCurrency}
             onChangeFromValue={e => setFromValue(e.target.value)}

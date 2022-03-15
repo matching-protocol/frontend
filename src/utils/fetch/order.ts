@@ -1,4 +1,4 @@
-import { OrderStatus } from 'hooks/useFetch'
+import { OrderStatus } from 'hooks/useFetchOrderList'
 import { Axios } from 'utils/axios'
 
 export const getOrders = (status: OrderStatus, page: number, pagesize = 10) => {

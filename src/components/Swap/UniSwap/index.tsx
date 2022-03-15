@@ -29,23 +29,25 @@ export default function UniSwap({
   }, [list, from?.symbol])
 
   return (
-    <Box display="flex" gap={16} alignItems="center" justifyContent="space-between" position="relative" width={434}>
+    <Box display="flex" gap={50} alignItems="center" justifyContent="space-between" position="relative" width={'100%'}>
       <SwapSelect
-        label="From"
+        // label="From"
         list={list}
         selected={from}
-        width="192px"
+        width="50%"
+        defaultText="From Chain"
         height="60px"
         onChange={onSelectFrom}
         disabled={disabledFrom}
         active={activeFrom}
       />
-      <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 6px)' }} />
+      <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)' }} />
       <SwapSelect
-        label="To"
+        // label="To"
         list={toList}
+        defaultText="To Chain"
         selected={to}
-        width="192px"
+        width="50%"
         height="60px"
         onChange={onSelectTo}
         disabled={disabledTo}

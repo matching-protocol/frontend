@@ -240,8 +240,8 @@ export default function MakeOffer() {
             onSelectToCurrency={onSelectToCurrency}
             onChangeFromValue={e => setFromValue(e.target.value)}
             onChangeToValue={() => {}}
-            fromSubStr={'0.001BTC = $286.01'}
-            toSubStr={'0.001BTC = $286.01'}
+            // fromSubStr={'0.001BTC = $286.01'}
+            // toSubStr={'0.001BTC = $286.01'}
             onSwitch={onSwitch}
           />
         </Box>
@@ -271,7 +271,10 @@ export default function MakeOffer() {
                   width={164}
                   height={60}
                 >
-                  <ComposedText text={`> ${recommendValue?.toSignificant(6, { groupSeparator: ',' })}`} subText={''} />
+                  <ComposedText
+                    text={`> ${recommendValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}`}
+                    subText={''}
+                  />
                 </Box>
               </Box>
               <Box display="grid" gap={8}>
@@ -287,7 +290,7 @@ export default function MakeOffer() {
                   height={60}
                 >
                   <ComposedText
-                    text={`> ${minIncentiveValue?.toSignificant(6, { groupSeparator: ',' })}`}
+                    text={`> ${minIncentiveValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}`}
                     subText={''}
                   />
                 </Box>

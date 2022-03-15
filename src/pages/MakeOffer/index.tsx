@@ -69,11 +69,15 @@ export default function MakeOffer() {
         <SelectCurrencyModal
           onSelectCurrency={currency => {
             setFromCurrency(currency)
+            if (toCurrency === null) {
+              const _currency = toCurrencyList.find(item => item.symbol === currency.symbol)
+              setToCurrency(_currency || null)
+            }
           }}
           tokenList={fromCurrencyList}
         />
       )
-  }, [fromCurrencyList, showModal])
+  }, [fromCurrencyList, showModal, toCurrency, toCurrencyList])
 
   const onSelectToCurrency = useCallback(() => {
     toCurrencyList.length &&
@@ -81,11 +85,15 @@ export default function MakeOffer() {
         <SelectCurrencyModal
           onSelectCurrency={currency => {
             setToCurrency(currency)
+            if (fromCurrency === null) {
+              const _currency = fromCurrencyList.find(item => item.symbol === currency.symbol)
+              setFromCurrency(_currency || null)
+            }
           }}
           tokenList={toCurrencyList}
         />
       )
-  }, [toCurrencyList, showModal])
+  }, [toCurrencyList, showModal, fromCurrency, fromCurrencyList])
 
   const exchangeTokenAmount = useMemo(() => tryParseAmount(fromValue, fromCurrency || undefined), [
     fromCurrency,

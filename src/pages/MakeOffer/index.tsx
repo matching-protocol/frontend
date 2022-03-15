@@ -188,7 +188,14 @@ export default function MakeOffer() {
       }
     }
 
-    if (!fromBalance || !exchangeTokenAmount || fromBalance.lessThan(exchangeTokenAmount)) {
+    if (!fromBalance || !exchangeTokenAmount) {
+      return {
+        error: 'Loading',
+        msg: ''
+      }
+    }
+
+    if (fromBalance.lessThan(exchangeTokenAmount)) {
       return {
         error: 'Balance Insufficient',
         msg: ''

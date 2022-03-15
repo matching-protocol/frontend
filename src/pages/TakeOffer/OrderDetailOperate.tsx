@@ -1,4 +1,4 @@
-import { OrderInfo, OrderStatus } from 'hooks/useFetch'
+import { OrderInfo, OrderStatus } from 'hooks/useFetchOrderList'
 import { useTakeOrderCallback } from 'hooks/useTakeOrder'
 import { useActiveWeb3React } from 'hooks'
 import { useCallback, useMemo, useState } from 'react'

@@ -12,7 +12,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
-import { OrderStatus, useOrderList } from 'hooks/useFetch'
+import { OrderStatus, useOrderList } from 'hooks/useFetchOrderList'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import OrderListOperate from './OrderListOperate'
@@ -23,7 +23,6 @@ import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurre
 import useModal from 'hooks/useModal'
 import { Currency } from 'constants/token'
 import { useLocalTokenSymbolList } from 'hooks/useCurrencyList'
-import Button from 'components/Button/Button'
 import { Chain } from 'models/chain'
 
 enum Mode {
@@ -51,12 +50,6 @@ export default function Market() {
   const [searchFromChain, setSearchFromChain] = useState<Chain | null>(null)
   const [searchToChain, setSearchToChain] = useState<Chain | null>(null)
   const searchCurrencyList = useLocalTokenSymbolList()
-
-  const resetSearch = useCallback(() => {
-    setSearchFromChain(null)
-    setSearchToChain(null)
-    setSearchCurrency(null)
-  }, [])
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
@@ -128,37 +121,45 @@ export default function Market() {
         {filterToggle && (
           <Card width="100%" style={{ marginBottom: 36 }}>
             <Box width="100%" padding="28px 28px 36px" display="flex" gap={56}>
-              <Box display="grid" gap={20}>
-                <Typography fontSize={16} fontWeight={700}>
-                  Currency:
-                </Typography>
-                <SelectButton width="192px" onClick={onSelectSearchCurrency}>
-                  {searchCurrency ? (
-                    <LogoText logo={searchCurrency.logo || ''} text={searchCurrency.symbol || ''} />
-                  ) : (
-                    <Typography fontSize="16px" color={'rgba(22, 22, 22, 0.5)'}>
-                      Select currency
+              <Grid container spacing={20} className="transactions">
+                <Grid item lg={6} xs={12}>
+                  <Box display="grid" gap={20}>
+                    <Typography fontSize={16} fontWeight={700}>
+                      Currency:
                     </Typography>
-                  )}
-                </SelectButton>
-              </Box>
-              <Box display="grid" gap={20}>
-                <Typography fontSize={16} fontWeight={700}>
-                  Route:
-                </Typography>
-                <UniSwap
-                  from={searchFromChain}
-                  to={searchToChain}
-                  list={ChainList}
-                  onSelectFrom={e => setSearchFromChain(e)}
-                  onSelectTo={e => setSearchToChain(e)}
-                />
-              </Box>
-              <Box display="grid" gap={20}>
-                <Button height="32px" width="80px" onClick={resetSearch}>
-                  Reset
-                </Button>
-              </Box>
+                    <SelectButton
+                      style={{
+                        justifyContent: 'space-between',
+                        padding: '0 20px'
+                      }}
+                      width="100%"
+                      onClick={onSelectSearchCurrency}
+                    >
+                      {searchCurrency ? (
+                        <LogoText logo={searchCurrency.logo || ''} text={searchCurrency.symbol || ''} />
+                      ) : (
+                        <Typography fontSize="16px" color={'rgba(22, 22, 22, 0.5)'}>
+                          Select currency
+                        </Typography>
+                      )}
+                    </SelectButton>
+                  </Box>
+                </Grid>
+                <Grid item lg={6} xs={12}>
+                  <Box display="grid" gap={20}>
+                    <Typography fontSize={16} fontWeight={700}>
+                      Route:
+                    </Typography>
+                    <UniSwap
+                      from={searchFromChain}
+                      to={searchToChain}
+                      list={ChainList}
+                      onSelectFrom={e => setSearchFromChain(e)}
+                      onSelectTo={e => setSearchToChain(e)}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
             </Box>
           </Card>
         )}
@@ -175,12 +176,9 @@ export default function Market() {
                 <Typography fontSize={16} fontWeight={700}>
                   Sort by
                 </Typography>
-                <Select value="MAX Amount" height={60} width="fit-content">
-                  <MenuItem value={'MAX Amount'} key={'MAX Amount'}>
-                    MAX Amount
-                  </MenuItem>
-                  <MenuItem value={'Another'} key={'Another'}>
-                    Another
+                <Select value="Create time" height={60} width="fit-content">
+                  <MenuItem value={'Create time'} key={'Create time'}>
+                    Create time
                   </MenuItem>
                 </Select>
               </Box>

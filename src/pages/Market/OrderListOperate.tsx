@@ -1,6 +1,6 @@
 import { useActiveWeb3React } from 'hooks'
 import { routes } from 'constants/routes'
-import { OrderInfo, OrderStatus } from 'hooks/useFetch'
+import { OrderInfo, OrderStatus } from 'hooks/useFetchOrderList'
 import { useCallback, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import Button from 'components/Button/Button'

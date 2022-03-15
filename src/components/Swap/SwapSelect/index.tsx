@@ -16,7 +16,8 @@ export default function SwapSelect({
   active,
   placeholder,
   fontSize,
-  menuWidth
+  menuWidth,
+  defaultText
 }: {
   label?: string
   disabled?: boolean
@@ -29,6 +30,7 @@ export default function SwapSelect({
   placeholder?: string
   fontSize?: string | number
   menuWidth?: string | number
+  defaultText?: string
 }) {
   const handleChange = useCallback(
     e => {
@@ -56,6 +58,7 @@ export default function SwapSelect({
           sx={{
             display: 'flex',
             alignItems: 'center',
+            padding: '0',
             gap: 12,
             '&.Mui-selected': {
               background: 'transparent'
@@ -78,7 +81,7 @@ export default function SwapSelect({
             <Box display="flex" gap={12} alignItems="center">
               <SvgCircle />
               <Typography fontSize={16} fontWeight={500} sx={{ opacity: 0.5 }}>
-                Select Chain
+                {defaultText || 'Select Chain'}
               </Typography>
             </Box>
           )}

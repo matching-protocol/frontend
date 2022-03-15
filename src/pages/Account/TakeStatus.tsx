@@ -3,7 +3,7 @@ import OutlineButton from 'components/Button/OutlineButton'
 import StatusTag from 'components/StatusTag'
 import { getDeltaTime, Timer } from 'components/Timer'
 import { routes } from 'constants/routes'
-import { OrderInfo, OrderStatus } from 'hooks/useFetch'
+import { OrderInfo, OrderStatus } from 'hooks/useFetchOrderList'
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 

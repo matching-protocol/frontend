@@ -13,6 +13,7 @@ import Button from 'components/Button/Button'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import { injected } from 'connectors/'
 import { useActiveWeb3React } from 'hooks/'
+import metamaskIcon from 'assets/walletIcon/metamask.png'
 
 const ActionButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.error.main,
@@ -56,17 +57,17 @@ function Web3StatusInner() {
     return <Typography sx={{ fontSize: 12, opacity: 0.6 }}>Connected with {name}</Typography>
   }
 
-  function formatWeb3StatusIcon() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const url = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
-      )
-      .map(k => SUPPORTED_WALLETS[k].iconName)[0]
-    return <img style={{ maxWidth: '20px', maxHeight: '20px' }} src={url} alt="" />
-  }
+  // function formatWeb3StatusIcon() {
+  //   const { ethereum } = window
+  //   const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+  //   const url = Object.keys(SUPPORTED_WALLETS)
+  //     .filter(
+  //       k =>
+  //         SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+  //     )
+  //     .map(k => SUPPORTED_WALLETS[k].iconName)[0]
+  //   return <img style={{ maxWidth: '20px', maxHeight: '20px' }} src={url} alt="" />
+  // }
 
   if (account) {
     return (
@@ -83,7 +84,7 @@ function Web3StatusInner() {
             mt: 8
           }}
         >
-          {formatWeb3StatusIcon()}
+          <img style={{ maxWidth: '20px', maxHeight: '20px' }} src={metamaskIcon} alt="" />
           {hasPendingTransactions ? (
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 8 }}>
               <Spinner color={theme.textColor.text1} size="16px" />

@@ -12,18 +12,18 @@ export const getOrders = (
   sortType: OrderListOrderType | undefined
 ) => {
   const req: any = {}
-  if (fromChain) req.fromChain = fromChain
-  if (toChain) req.toChain = toChain
+  if (fromChain) req.from_chain = fromChain
+  if (toChain) req.to_chain = toChain
   if (token) req.token = token
   if (id) req.id = id
-  if (sortType !== undefined) req.sortType = sortType
+  if (sortType !== undefined) req.sort_type = sortType
   return Axios.get(
     'api/v1/orders',
     Object.assign(
       {
         status,
         page,
-        pagesize
+        page_size: pagesize
       },
       req
     )

@@ -1,9 +1,8 @@
 import { Contract } from '@ethersproject/contracts'
 import { abi as GOVERNANCE_ABI } from '../constants/abis/governance.json'
-import ANTIMATTER_ABI from '../constants/abis/antimatter.json'
 import MATCHING_ABI from '../constants/abis/matching.json'
 import { useMemo } from 'react'
-import { ANTIMATTER_ADDRESS, GOVERNANCE_ADDRESS, MATCHING_ADDRESS } from '../constants'
+import { GOVERNANCE_ADDRESS, MATCHING_ADDRESS } from '../constants'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
@@ -69,20 +68,6 @@ export function useMulticallContract(): Contract | null {
 
 export function useGovernanceContract(): Contract | null {
   return useContract(GOVERNANCE_ADDRESS, GOVERNANCE_ABI, true)
-}
-
-export function useUniContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? ANTIMATTER_ADDRESS[chainId] : undefined, ANTIMATTER_ABI, true)
-}
-
-export function useAntimatterContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? ANTIMATTER_ADDRESS[chainId] : undefined, ANTIMATTER_ABI, true)
-}
-
-export function useCallOrPutContract(address: string): Contract | null {
-  return useContract(address, ANTIMATTER_ABI, true)
 }
 
 export function useSocksController(): Contract | null {

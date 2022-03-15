@@ -5,7 +5,7 @@ const Frame = styled('div')(`
 margin-top: 10vh;
 width: 500px;
 height: 280px;
-border: 1px solid rgba(0, 0, 0, 0.2);
+// border: 1px solid rgba(0, 0, 0, 0.2);
 box-sizing: border-box;
 border-radius: 32px;
 display: flex;

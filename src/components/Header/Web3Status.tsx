@@ -13,7 +13,7 @@ import Button from 'components/Button/Button'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import { injected } from 'connectors/'
 import { useActiveWeb3React } from 'hooks/'
-import { ReactComponent as Web3StatusIcon } from 'assets/svg/web3status_icon.svg'
+import { ReactComponent as Web3StatusIcon } from 'assets/walletIcon/walletConnectIcon.svg'
 
 const ActionButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.error.main,

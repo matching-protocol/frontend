@@ -3,7 +3,7 @@
     "symbol": "TEST",
     "address": "0x919BE0D40f5fc42E3CBf7A7F6454D9D33C82091d",
     "chainId": 42,
-    "name": "TEST",
+    "name": "Kovan TEST",
     "decimals": 18,
     "logo": "https://ethereum-optimism.github.io/logos/USDT.png"
   },
@@ -11,7 +11,15 @@
     "symbol": "TEST",
     "address": "0xfE1e3D33305a88bEaE7EEE1590Ef025b8117E5D7",
     "chainId": 97,
-    "name": "TEST",
+    "name": "BSC TEST",
+    "decimals": 18,
+    "logo": "https://ethereum-optimism.github.io/logos/USDT.png"
+  },
+  {
+    "symbol": "TEST",
+    "address": "0xBBC454c49fDA0E8D5F269C6cBccd045fb1c53982",
+    "chainId": 4,
+    "name": "Rinkeby TEST",
     "decimals": 18,
     "logo": "https://ethereum-optimism.github.io/logos/USDT.png"
   }

@@ -123,7 +123,7 @@ export const BLOCKED_ADDRESSES: string[] = [
 export const MATCHING_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
   [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '',
+  [ChainId.RINKEBY]: '0x11780891a3a843f82ccBC6b0ff850B643583e44B',
   [ChainId.KOVAN]: '0xcA671C62b4a4812574D793eeE7f9A063e08F831e',
   [ChainId.GÖRLI]: '',
   [ChainId.BSCTEST]: '0x8447131eD90A20B5D4bC6526dAF432670EBc44AF'

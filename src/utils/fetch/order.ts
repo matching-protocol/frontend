@@ -1,12 +1,33 @@
-import { OrderStatus } from 'hooks/useFetchOrderList'
+import { OrderStatus, OrderListOrderType } from 'hooks/useFetchOrderList'
 import { Axios } from 'utils/axios'
 
-export const getOrders = (status: OrderStatus, page: number, pagesize = 10) => {
-  return Axios.get('api/v1/orders', {
-    status,
-    page,
-    pagesize
-  })
+export const getOrders = (
+  status: OrderStatus,
+  page: number,
+  pagesize: number,
+  fromChain: number | undefined,
+  toChain: number | undefined,
+  token: string,
+  id: number | string,
+  sortType: OrderListOrderType | undefined
+) => {
+  const req: any = {}
+  if (fromChain) req.fromChain = fromChain
+  if (toChain) req.toChain = toChain
+  if (token) req.token = token
+  if (id) req.id = id
+  if (sortType !== undefined) req.sortType = sortType
+  return Axios.get(
+    'api/v1/orders',
+    Object.assign(
+      {
+        status,
+        page,
+        pagesize
+      },
+      req
+    )
+  )
 }
 
 export const getOrderById = (orderId: string | number) => {

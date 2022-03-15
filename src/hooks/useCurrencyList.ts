@@ -28,17 +28,16 @@ export function useCurrencyListByChain(chain: number | ChainId | null | undefine
   )
 }
 
-export function useLocalCurrency(chainId: number | undefined, address: string | undefined) {
-  const list = useCurrencyListByChain(chainId)
+export function useLocalCurrency(address: string | undefined) {
   return useMemo(() => {
-    if (!list || !chainId || !address) return undefined
+    if (!list || !address) return undefined
     for (const item of list) {
-      if (item instanceof Token && address.toUpperCase() === item.address.toUpperCase()) {
-        return item
+      if (item.address === address) {
+        return new Token(item.chainId, item.address, item.decimals, item.symbol, item.name, item.logo)
       }
     }
     return undefined
-  }, [address, chainId, list])
+  }, [address])
 }
 
 export function getLocalToken(chainId: number, address: string) {

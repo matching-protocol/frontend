@@ -25,7 +25,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
   const { showModal } = useModal()
   const [request, setRequest] = useState(false)
 
-  const payToken = useLocalCurrency(order.to_chain_id, order.receive_token_address)
+  const payToken = useLocalCurrency(order.receive_token_address)
 
   const payBalance = useMemo(() => {
     if (!payToken) {
@@ -164,7 +164,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
   const { showModal, hideModal } = useModal()
 
   // const receiveToken = useLocalCurrency(order.chain_id, order.token_address)
-  const payToken = useLocalCurrency(order.to_chain_id, order.receive_token_address)
+  const payToken = useLocalCurrency(order.receive_token_address)
 
   const payBalance = useMemo(() => {
     if (!payToken) {

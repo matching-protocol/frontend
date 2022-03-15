@@ -41,8 +41,8 @@ export default function TakeOffer() {
 
   const { result: orderInfo } = useOrderById(orderId, step)
 
-  const receiveToken = useLocalCurrency(orderInfo?.chain_id, orderInfo?.token_address)
-  const payToken = useLocalCurrency(orderInfo?.to_chain_id, orderInfo?.receive_token_address)
+  const receiveToken = useLocalCurrency(orderInfo?.token_address)
+  const payToken = useLocalCurrency(orderInfo?.receive_token_address)
 
   const payTokenAmount = useMemo(() => {
     if (!payToken || !orderInfo?.amount) return undefined

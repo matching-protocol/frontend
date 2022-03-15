@@ -24,6 +24,10 @@ export default function UniSwap({
   activeFrom?: boolean
   activeTo?: boolean
 }) {
+  const fromList = useMemo(() => {
+    return list.filter(el => !(el.symbol === to?.symbol))
+  }, [list, to?.symbol])
+
   const toList = useMemo(() => {
     return list.filter(el => !(el.symbol === from?.symbol))
   }, [list, from?.symbol])
@@ -32,7 +36,7 @@ export default function UniSwap({
     <Box display="flex" gap={50} alignItems="center" justifyContent="space-between" position="relative" width={'100%'}>
       <SwapSelect
         // label="From"
-        list={list}
+        list={fromList}
         selected={from}
         width="50%"
         defaultText="From Chain"
@@ -41,7 +45,13 @@ export default function UniSwap({
         disabled={disabledFrom}
         active={activeFrom}
       />
-      <ArrowForwardIcon sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)' }} />
+      <ArrowForwardIcon
+        onClick={() => {
+          onSelectFrom && onSelectFrom(to)
+          onSelectTo && onSelectTo(from)
+        }}
+        sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)', cursor: 'pointer' }}
+      />
       <SwapSelect
         // label="To"
         list={toList}

@@ -23,14 +23,14 @@ export const ChainList = [
   //   id: ChainId.ROPSTEN,
   //   hex: '0x3'
   // },
-  // {
-  //   icon: <ETH />,
-  //   logo: EthUrl,
-  //   symbol: 'Rinkeby',
-  //   name: 'Rinkeby Testnet',
-  //   id: ChainId.RINKEBY,
-  //   hex: '0x4'
-  // },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'Rinkeby',
+    name: 'Rinkeby Testnet',
+    id: ChainId.RINKEBY,
+    hex: '0x4'
+  },
   {
     icon: <ETH />,
     logo: EthUrl,

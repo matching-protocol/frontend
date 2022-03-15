@@ -12,7 +12,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
-import { OrderStatus, useOrderList } from 'hooks/useFetchOrderList'
+import { OrderListOrderType, OrderStatus, useOrderList } from 'hooks/useFetchOrderList'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
 import OrderListOperate from './OrderListOperate'
@@ -40,15 +40,50 @@ export enum MarketTableHeaderIndex {
 
 export const MarketTableHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', '']
 
+const SortByList = [
+  {
+    name: 'Default sort',
+    value: OrderListOrderType.SortByDefault
+  },
+  {
+    name: 'Create time',
+    value: OrderListOrderType.SortByCreateTimeDesc
+  },
+  {
+    name: 'Max Amount',
+    value: OrderListOrderType.SortByMaxAmount
+  },
+  {
+    name: 'Min Amount',
+    value: OrderListOrderType.SortByMinAmount
+  },
+  {
+    name: 'Min Incentive',
+    value: OrderListOrderType.SortByMinIncentive
+  }
+]
+
 export default function Market() {
   const [mode, setMode] = useState(Mode.TABLE)
-  const [search, setSearch] = useState('')
   const [filterToggle, setFilterToggle] = useState(false)
   const { showModal } = useModal()
   const [searchCurrency, setSearchCurrency] = useState<null | Currency>(null)
-  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any)
+  const [searchOrderId, setSearchOrderId] = useState<string>('')
+  const [searchOrderBy, setSearchOrderBy] = useState<OrderListOrderType>(OrderListOrderType.SortByDefault)
   const [searchFromChain, setSearchFromChain] = useState<Chain | null>(null)
   const [searchToChain, setSearchToChain] = useState<Chain | null>(null)
+
+  const searchParams = useMemo(() => {
+    return {
+      fromChain: filterToggle ? searchFromChain?.id || undefined : undefined,
+      toChain: filterToggle ? searchToChain?.id || undefined : undefined,
+      token: filterToggle ? searchCurrency?.symbol || '' : '',
+      id: searchOrderId,
+      sortType: searchOrderBy
+    }
+  }, [filterToggle, searchCurrency?.symbol, searchFromChain?.id, searchOrderBy, searchOrderId, searchToChain?.id])
+
+  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any, searchParams)
   const searchCurrencyList = useLocalTokenSymbolList()
 
   const dataRows = useMemo(() => {
@@ -167,19 +202,26 @@ export default function Market() {
           <Box width="100%" padding="30px 28px 40px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <InputSearch
-                value={search}
+                value={searchOrderId}
                 width={244}
-                onChange={e => setSearch(e.target.value)}
+                onChange={e => setSearchOrderId(e.target.value)}
                 backgroundColor={'#FFFFFF'}
               />
               <Box display="flex" gap={20} alignItems="center">
                 <Typography fontSize={16} fontWeight={700}>
                   Sort by
                 </Typography>
-                <Select value="Create time" height={60} width="fit-content">
-                  <MenuItem value={'Create time'} key={'Create time'}>
-                    Create time
-                  </MenuItem>
+                <Select
+                  value={searchOrderBy.toString()}
+                  onChange={e => e.target.value && setSearchOrderBy(Number(e.target.value))}
+                  height={60}
+                  width="fit-content"
+                >
+                  {SortByList.map(({ name, value }) => (
+                    <MenuItem value={value.toString()} key={value}>
+                      {name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </Box>
             </Box>

@@ -6,17 +6,16 @@ import { useMemo } from 'react'
 export default function CurrencyInfo({
   currencySize,
   textSize,
-  chainId,
   address,
   amount
 }: {
   currencySize?: string
   textSize?: string | number
-  chainId: number
+  chainId?: number
   address: string
   amount?: string
 }) {
-  const token = useLocalCurrency(chainId, address)
+  const token = useLocalCurrency(address)
   const tokenAmount = useMemo(() => {
     if (amount && token) return new TokenAmount(token, amount)
     return undefined

@@ -11,6 +11,16 @@ export enum OrderStatus {
   Order_Any
 }
 
+export enum OrderListOrderType {
+  SortByDefault,
+  SortByCreateTimeDesc,
+  SortByMaxAmount,
+  SortByMinAmount,
+  SortByMaxIncentive,
+  SortByMinIncentive,
+  SortByMax
+}
+
 export interface OrderInfo {
   Deadline: number
   amount: string
@@ -46,7 +56,16 @@ function orderListRequestNumber(plus = false) {
   return cur
 }
 
-export function useOrderList(orderStatus: OrderStatus) {
+export function useOrderList(
+  orderStatus: OrderStatus,
+  search: {
+    fromChain: number | undefined
+    toChain: number | undefined
+    token: string
+    id: number | string
+    sortType: OrderListOrderType | undefined
+  }
+) {
   const [list, setList] = useState<OrderInfo[]>([])
   const pageSize = 10
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -56,7 +75,8 @@ export function useOrderList(orderStatus: OrderStatus) {
 
   useEffect(() => {
     setPage(1)
-  }, [orderStatus])
+    setIsLoading(true)
+  }, [orderStatus, search])
 
   const setPageCallback = useCallback((page: number) => {
     setIsLoading(true)
@@ -69,7 +89,16 @@ export function useOrderList(orderStatus: OrderStatus) {
       try {
         // setIsLoading(true)
         if (isLoading) setList([])
-        const res: any = await getOrders(orderStatus, page, pageSize)
+        const res: any = await getOrders(
+          orderStatus,
+          page,
+          pageSize,
+          search.fromChain,
+          search.toChain,
+          search.token,
+          search.id,
+          search.sortType
+        )
         if (curRequestNumber === orderListRequestNumber()) {
           const data = res.data
           setList(data.orders)
@@ -84,7 +113,7 @@ export function useOrderList(orderStatus: OrderStatus) {
       setTimeout(() => setIndex(index + 1), 10000)
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, orderStatus, page])
+  }, [index, orderStatus, page, search])
 
   return {
     page: {

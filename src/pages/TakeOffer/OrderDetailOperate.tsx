@@ -241,7 +241,14 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
       }
     }
 
-    if (!balance || !payBalance || balance.lessThan(payBalance)) {
+    if (!balance || !payBalance) {
+      return {
+        msg: 'Loading',
+        event: undefined
+      }
+    }
+
+    if (balance.lessThan(payBalance)) {
       return {
         msg: 'Balance Insufficient',
         event: undefined

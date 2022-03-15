@@ -106,6 +106,7 @@ export default function BiSwap({
       <Grid item md={6}>
         <SwapSelectInput
           value={toValue}
+          selectDisabled
           selected={toCurrency}
           onClick={onSelectToCurrency}
           onChange={onChangeToValue}

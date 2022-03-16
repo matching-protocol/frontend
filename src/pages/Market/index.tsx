@@ -58,6 +58,10 @@ const SortByList = [
     value: OrderListOrderType.SortByMinAmount
   },
   {
+    name: 'Max Incentive',
+    value: OrderListOrderType.SortByMaxIncentive
+  },
+  {
     name: 'Min Incentive',
     value: OrderListOrderType.SortByMinIncentive
   }

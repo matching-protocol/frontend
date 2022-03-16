@@ -210,7 +210,7 @@ export default function MakeOffer() {
         }
       } else if (approvalState === ApprovalState.NOT_APPROVED) {
         return {
-          msg: 'Approval',
+          msg: 'Approve',
           event: approvalCallback
         }
       } else {

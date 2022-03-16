@@ -268,7 +268,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
         }
       } else if (approvalState === ApprovalState.NOT_APPROVED) {
         return {
-          msg: 'Approval',
+          msg: 'Approve',
           event: approvalCallback
         }
       } else {

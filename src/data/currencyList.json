@@ -22,5 +22,31 @@
     "name": "Rinkeby TEST",
     "decimals": 18,
     "logo": "https://ethereum-optimism.github.io/logos/USDT.png"
+  },
+
+  {
+    "chainId": 97,
+    "name": "FOO",
+    "symbol": "FOO",
+    "address": "0x3c96dA02bc760bD74ee334c7fFB77Cd6D844d982",
+    "logo": "https://get.celer.app/cbridge-icons/USDC.png",
+    "decimals": 18
+  },
+  {
+    "chainId": 4,
+    "name": "FOO",
+    "symbol": "FOO",
+    "address": "0xC44e7BE238a6Ec58e00A16b1Cac52bd3bd479960",
+    "logo": "https://get.celer.app/cbridge-icons/USDC.png",
+    "decimals": 18
+  },
+  {
+    "chainId": 42,
+    "name": "FOO",
+    "symbol": "FOO",
+    "address": "0x67823D0E2b2cb842Dd5668024ab1A70949bC5773",
+    "decimals": 18,
+    "logo": "https://get.celer.app/cbridge-icons/USDC.png",
+    "enable": true
   }
 ]

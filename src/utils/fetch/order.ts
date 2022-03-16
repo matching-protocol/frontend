@@ -100,3 +100,7 @@ export const getAccountWithdrawList = (account: string, chainId: number, page: n
     pagesize
   })
 }
+
+export const getGlobalTokenList = () => {
+  return Axios.get('api/v1/api/v1/tokens')
+}

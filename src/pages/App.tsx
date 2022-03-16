@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
@@ -55,6 +55,12 @@ const BodyWrapper = styled('div')(({ theme }) => ({
 }))
 
 export default function App() {
+  useEffect(() => {
+    const el = document.querySelector('.loader-container')
+    if (el) {
+      el.remove()
+    }
+  }, [])
   return (
     <Suspense fallback={null}>
       <ModalProvider>

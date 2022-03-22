@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import SwapSelect from '../SwapSelect'
 import { useMemo } from 'react'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { ReactComponent as ArrowIcon } from 'assets/svg/ArrowIcon.svg'
 
 export default function UniSwap({
   from,
@@ -45,12 +45,12 @@ export default function UniSwap({
         disabled={disabledFrom}
         active={activeFrom}
       />
-      <ArrowForwardIcon
+      <ArrowIcon
         onClick={() => {
           onSelectFrom && onSelectFrom(to)
           onSelectTo && onSelectTo(from)
         }}
-        sx={{ position: 'absolute', bottom: '18px', left: 'calc(50% - 12px)', cursor: 'pointer' }}
+        style={{ position: 'absolute', bottom: '23px', left: 'calc(50% - 9px)', cursor: 'pointer' }}
       />
       <SwapSelect
         // label="To"

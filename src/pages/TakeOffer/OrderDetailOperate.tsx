@@ -5,9 +5,8 @@ import { useCallback, useMemo, useState } from 'react'
 import Button from 'components/Button/Button'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
-import { useLocalCurrency } from 'hooks/useCurrencyList'
-import { useTokenBalance } from 'state/wallet/hooks'
-import { TokenAmount } from 'constants/token'
+import { useCurrencyBalance } from 'state/wallet/hooks'
+import { CurrencyAmount, ETHER, Token, TokenAmount } from 'constants/token'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { MATCHING_ADDRESS } from '../../constants'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
@@ -17,6 +16,7 @@ import useModal from 'hooks/useModal'
 import { ChainListMap } from 'constants/chain'
 import { Dots } from 'theme/components'
 import { useTagCompletedTx } from 'state/transactions/hooks'
+import { useLocalCurrency } from 'state/token/hooks'
 
 export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => void }) {
   const { account, library, chainId } = useActiveWeb3React()
@@ -25,16 +25,20 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
   const { showModal } = useModal()
   const [request, setRequest] = useState(false)
 
-  const payToken = useLocalCurrency(order.receive_token_address)
+  const payCurrency = useLocalCurrency(order.to_chain_id, order.receive_token_address)
 
   const payBalance = useMemo(() => {
-    if (!payToken) {
-      return undefined
-    }
-    return new TokenAmount(payToken, order.amount)
-  }, [order.amount, payToken])
+    if (!payCurrency || !order?.amount) return undefined
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, order.amount)
+    else return CurrencyAmount.getEther(payCurrency, order.amount)
+  }, [order.amount, payCurrency])
 
-  const balance = useTokenBalance(account || undefined, payToken)
+  const truePayCurrency = useMemo(() => {
+    if (payCurrency instanceof Token) return payCurrency
+    return ETHER
+  }, [payCurrency])
+
+  const balance = useCurrencyBalance(account || undefined, truePayCurrency)
 
   const onTake = useCallback(
     async (orderId: string | number) => {
@@ -163,17 +167,20 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
   const toggleWalletModal = useWalletModalToggle()
   const { showModal, hideModal } = useModal()
 
-  // const receiveToken = useLocalCurrency(order.chain_id, order.token_address)
-  const payToken = useLocalCurrency(order.receive_token_address)
+  const payCurrency = useLocalCurrency(order.to_chain_id, order.receive_token_address)
 
   const payBalance = useMemo(() => {
-    if (!payToken) {
-      return undefined
-    }
-    return new TokenAmount(payToken, order.amount)
-  }, [order.amount, payToken])
+    if (!payCurrency || !order?.amount) return undefined
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, order.amount)
+    else return CurrencyAmount.getEther(payCurrency, order.amount)
+  }, [order.amount, payCurrency])
 
-  const balance = useTokenBalance(account || undefined, payToken)
+  const truePayCurrency = useMemo(() => {
+    if (payCurrency instanceof Token) return payCurrency
+    return ETHER
+  }, [payCurrency])
+
+  const balance = useCurrencyBalance(account || undefined, truePayCurrency)
 
   const isCompleted = useTagCompletedTx('take', order.global_order_id.toString())
 

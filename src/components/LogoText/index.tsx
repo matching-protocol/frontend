@@ -26,7 +26,7 @@ export default function LogoText({
         fontWeight: fontWeight ?? 400,
         fontSize: fontSize ?? 16,
         '& > img, > svg': {
-          marginRight: gapSize || '12px',
+          marginRight: gapSize || '10px',
           height: size ? size : '20px',
           width: size ? size : '20px'
         }

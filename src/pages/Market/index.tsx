@@ -8,7 +8,7 @@ import Select from 'components/Select/Select'
 import Table from 'components/Table'
 import Pagination from 'components/Pagination'
 import MarketCard from './MarketCard'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { ReactComponent as ArrowIcon } from 'assets/svg/ArrowIcon.svg'
 import { ChainList } from 'constants/chain'
 import UniSwap from 'components/Swap/UniSwap'
 import { FilterButton, CardButton, TableButton } from './Buttons'
@@ -22,8 +22,8 @@ import SelectButton from 'components/Button/SelectButton'
 import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurrencyModal'
 import useModal from 'hooks/useModal'
 import { Currency } from 'constants/token'
-import { useLocalTokenSymbolList } from 'hooks/useCurrencyList'
 import { Chain } from 'models/chain'
+import { useTopTokenSymbolList } from 'state/token/hooks'
 
 enum Mode {
   TABLE,
@@ -88,16 +88,16 @@ export default function Market() {
   }, [filterToggle, searchCurrency?.symbol, searchFromChain?.id, searchOrderBy, searchOrderId, searchToChain?.id])
 
   const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any, searchParams)
-  const searchCurrencyList = useLocalTokenSymbolList()
+  const searchCurrencyList = useTopTokenSymbolList()
 
   const dataRows = useMemo(() => {
     return orderList.map(item => [
       <Typography key={1} fontSize={16} fontWeight={500}>
         #{item.global_order_id}
       </Typography>,
-      <Box key={1} display="flex" alignItems="center" gap={12}>
+      <Box key={1} display="flex" alignItems="center" gap={10}>
         <ChainLogo chainId={item.chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
-        <ArrowForwardIcon />
+        <ArrowIcon />
         <ChainLogo chainId={item.to_chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
       </Box>,
       <Box key={1} display="flex" alignItems="center" gap={12}>
@@ -110,7 +110,7 @@ export default function Market() {
           textSize={mode === Mode.TABLE ? 16 : 13}
           subTextSize={mode === Mode.TABLE ? 13 : 11}
         />
-        <ArrowForwardIcon />
+        <ArrowIcon />
         <CurrencyInfo
           key={0}
           chainId={item.to_chain_id}

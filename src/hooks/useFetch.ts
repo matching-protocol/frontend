@@ -1,7 +1,9 @@
 import { ChainId } from 'constants/chain'
-import { TokenAmount } from 'constants/token'
+import { Currency, CurrencyAmount, Token, TokenAmount } from 'constants/token'
+import { BigintIsh } from 'constants/token/constants'
 import { useActiveWeb3React } from 'hooks'
 import { useEffect, useState } from 'react'
+import { getLocalToken } from 'state/token/hooks'
 import {
   getOrderById,
   getAccountOrderList,
@@ -10,7 +12,6 @@ import {
   getAccountWalletInformation,
   getAccountWithdrawList
 } from 'utils/fetch/order'
-import { getLocalToken } from './useCurrencyList'
 import { calcPageTotal, OrderInfo } from './useFetchOrderList'
 
 export function useOrderById(orderId: string | number, reRequest?: any) {
@@ -86,7 +87,12 @@ export function useAccountOrderList(status: AccountOrderStatus, role: AccountOrd
 
 export function useAccountWalletInformation(chainId: ChainId) {
   const { account } = useActiveWeb3React()
-  const [list, setList] = useState<(TokenAmount | undefined)[]>([])
+  const [list, setList] = useState<
+    {
+      currency: Currency | undefined
+      currencyAmount: CurrencyAmount | TokenAmount | undefined
+    }[]
+  >([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
@@ -100,9 +106,23 @@ export function useAccountWalletInformation(chainId: ChainId) {
         setList([])
         const res: any = await getAccountWalletInformation(account, chainId)
         const data = res.data
-        const _list = data.tokens.map((item: any) => {
+        const _list = data.tokens.map((item: { TokenAddr: string; Amount: BigintIsh }) => {
           const _token = getLocalToken(chainId, item.TokenAddr)
-          return _token ? new TokenAmount(_token, item.Amount) : undefined
+          if (!_token)
+            return {
+              currency: undefined,
+              currencyAmount: undefined
+            }
+          if (_token instanceof Token) {
+            return {
+              currency: _token,
+              currencyAmount: new TokenAmount(_token, item.Amount)
+            }
+          }
+          return {
+            currency: _token,
+            currencyAmount: CurrencyAmount.getEther(_token, item.Amount)
+          }
         })
         setList(_list)
       } catch (error) {
@@ -127,7 +147,8 @@ export interface AccountWithdrawProp {
   createdAt: number
   status: AccountWithdrawStatus
   hash: string
-  tokenAmount: TokenAmount | undefined
+  currency: Currency | undefined
+  currencyAmount: TokenAmount | CurrencyAmount | undefined
 }
 
 export function useAccountWithdrawList(chainId: ChainId) {
@@ -156,8 +177,17 @@ export function useAccountWithdrawList(chainId: ChainId) {
         const data = res.data
         const _list: AccountWithdrawProp[] = data.withdrawed.map((item: any) => {
           const _token = getLocalToken(chainId, item.TokenAddr)
+          let _currencyAmount = undefined
+          if (_token) {
+            if (_token instanceof Token) {
+              _currencyAmount = new TokenAmount(_token, item.Amount)
+            } else {
+              _currencyAmount = CurrencyAmount.getEther(_token, item.Amount)
+            }
+          }
           return {
-            tokenAmount: _token ? new TokenAmount(_token, item.Amount) : undefined,
+            currencyAmount: _currencyAmount,
+            currency: _token,
             createdAt: item.CreatedAt,
             status: item.Status,
             hash: item.TxHash

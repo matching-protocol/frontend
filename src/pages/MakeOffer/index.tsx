@@ -15,7 +15,6 @@ import SelectCurrencyModal from 'components/Input/CurrencyInputPanel/SelectCurre
 import useModal from 'hooks/useModal'
 import ComposedText from 'components/ComposedText'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
-import { useCurrencyListByChain } from 'hooks/useCurrencyList'
 import { useCreateOrderCallback } from 'hooks/useCreateOrderCallback'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { tryParseAmount } from 'utils/parseAmount'
@@ -29,6 +28,7 @@ import { useCurrencyBalance } from 'state/wallet/hooks'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 import { useCurrentIncentive, useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
 import JSBI from 'jsbi'
+import { useEnableCurrencyListByTwoChains } from 'state/token/hooks'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -60,22 +60,13 @@ export default function MakeOffer() {
     minIncentiveValue
   ])
 
-  const fromCurrencyList: Currency[] = useCurrencyListByChain(fromChain?.id)
-  const toCurrencyList: Currency[] = useCurrencyListByChain(toChain?.id)
-
-  const fromCurrencyListAble = useMemo(
-    () =>
-      fromCurrencyList.filter(fromItem => {
-        for (const toItem of toCurrencyList) {
-          if (fromItem.symbol === toItem.symbol) return true
-        }
-        return false
-      }),
-    [toCurrencyList, fromCurrencyList]
+  const { fromList: fromCurrencyList, toList: toCurrencyList } = useEnableCurrencyListByTwoChains(
+    fromChain?.id,
+    toChain?.id
   )
 
   const onSelectFromCurrency = useCallback(() => {
-    fromCurrencyListAble.length &&
+    fromCurrencyList.length &&
       showModal(
         <SelectCurrencyModal
           onSelectCurrency={currency => {
@@ -83,10 +74,10 @@ export default function MakeOffer() {
             const _currency = toCurrencyList.find(item => item.symbol === currency.symbol)
             setToCurrency(_currency || null)
           }}
-          tokenList={fromCurrencyListAble}
+          tokenList={fromCurrencyList}
         />
       )
-  }, [fromCurrencyListAble, showModal, toCurrencyList])
+  }, [fromCurrencyList, showModal, toCurrencyList])
 
   const onSelectToCurrency = useCallback(() => {
     // toCurrencyList.length &&

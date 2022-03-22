@@ -72,6 +72,7 @@ export const SUPPORTED_NETWORKS: {
       name: string
       symbol: string
       decimals: number
+      logo: string
     }
     rpcUrls: string[]
     blockExplorerUrls: string[]
@@ -83,7 +84,8 @@ export const SUPPORTED_NETWORKS: {
     nativeCurrency: {
       name: 'Ethereum',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: EthUrl
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
     blockExplorerUrls: ['https://etherscan.com']
@@ -94,7 +96,8 @@ export const SUPPORTED_NETWORKS: {
     nativeCurrency: {
       name: 'Ropsten',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: EthUrl
     },
     rpcUrls: ['https://ropsten.infura.io/v3/'],
     blockExplorerUrls: ['https://ropsten.etherscan.io/']
@@ -105,7 +108,8 @@ export const SUPPORTED_NETWORKS: {
     nativeCurrency: {
       name: 'Rinkeby',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: EthUrl
     },
     rpcUrls: ['https://rinkeby.infura.io/v3/'],
     blockExplorerUrls: ['https://rinkeby.etherscan.io/']
@@ -116,7 +120,8 @@ export const SUPPORTED_NETWORKS: {
     nativeCurrency: {
       name: 'Kovan',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: EthUrl
     },
     rpcUrls: ['https://kovan.infura.io/v3/'],
     blockExplorerUrls: ['https://kovan.etherscan.io/']
@@ -127,7 +132,8 @@ export const SUPPORTED_NETWORKS: {
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
-      decimals: 18
+      decimals: 18,
+      logo: BSCUrl
     },
     rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
     blockExplorerUrls: ['https://testnet.bscscan.com/']

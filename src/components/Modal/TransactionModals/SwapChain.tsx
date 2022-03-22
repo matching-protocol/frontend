@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { ReactComponent as ArrowIcon } from 'assets/svg/ArrowIcon.svg'
 import { Chain } from 'models/chain'
 import LogoText from 'components/LogoText'
 
@@ -29,7 +29,7 @@ export default function SwapChain(props: Props) {
         <LogoText logo={from.logo} text={from.symbol} />
       </Box>
       <Box color={'#FFFFFF'} style={{ marginBottom: -5 }}>
-        <ArrowForwardIcon />
+        <ArrowIcon />
       </Box>
       <Box display="flex">
         <Box marginRight={'12px'}>

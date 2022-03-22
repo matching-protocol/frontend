@@ -22,6 +22,10 @@ export class CurrencyAmount extends Fraction {
     return new CurrencyAmount(ETHER, amount)
   }
 
+  public static getEther(currency: Currency, amount: BigintIsh): CurrencyAmount | undefined {
+    return new CurrencyAmount(currency, amount)
+  }
+
   // amount _must_ be raw, i.e. in the native representation
   protected constructor(currency: Currency, amount: BigintIsh) {
     const parsedAmount = parseBigintIsh(amount)

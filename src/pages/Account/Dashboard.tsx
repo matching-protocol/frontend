@@ -21,11 +21,12 @@ import useModal from 'hooks/useModal'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useActiveWeb3React } from 'hooks'
-import { TokenAmount } from 'constants/token'
+import { Currency, CurrencyAmount, TokenAmount } from 'constants/token'
 import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 import { useTagCompletedTx } from 'state/transactions/hooks'
 import { Dots } from 'theme/components'
 import { getEtherscanLink } from 'utils'
+import NoData from 'components/NoData'
 
 const WalletInfoTableHeader = ['Asset', 'Amount']
 const WithdrawlHistoryTableHeader = ['Date', 'Amount', 'Status']
@@ -78,13 +79,13 @@ export default function Dashboard() {
   const walletInfoDataRows = useMemo(
     () =>
       walletInfoList.map(item => [
-        item ? (
+        item.currency ? (
           <CurrencyText
             key={0}
-            currency={item.token}
+            currency={item.currency}
             currencySize={'32px'}
-            text={item.token.symbol || ''}
-            subText={item.token.name || ''}
+            text={item.currency.symbol || ''}
+            subText={item.currency.name || ''}
             textSize={16}
             subTextSize={12}
           />
@@ -93,13 +94,13 @@ export default function Dashboard() {
         ),
         <ComposedText
           key={0}
-          text={item?.toSignificant(6, { groupSeparator: ',' }) || '-'}
+          text={item?.currencyAmount?.toSignificant(6, { groupSeparator: ',' }) || '-'}
           subText=""
           textSize={16}
           subTextSize={13}
           textOpacity={1}
         />,
-        <WithdrawButton onWithdraw={onWithdraw} key={1} tokenAmount={item} />
+        <WithdrawButton onWithdraw={onWithdraw} key={1} currency={item.currency} currencyAmount={item.currencyAmount} />
       ]),
     [onWithdraw, walletInfoList]
   )
@@ -111,8 +112,8 @@ export default function Dashboard() {
       </Typography>,
       <LogoText
         key={0}
-        logo={item.tokenAmount?.token.logo || ''}
-        text={`${item.tokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${item.tokenAmount?.token.symbol}`}
+        logo={item.currency?.logo || ''}
+        text={`${item.currencyAmount?.toSignificant(6, { groupSeparator: ',' })} ${item.currency?.symbol}`}
       />,
       <StatusTag key={0} type={item.status === AccountWithdrawStatus.complete ? 'complete' : 'pending'} />,
       <OutlineButton
@@ -188,11 +189,7 @@ export default function Dashboard() {
               <Spinner size="40px" />
             </Box>
           )}
-          {!historyLoading && !historyList.length && (
-            <Box display="flex" pt={20} pb={20} justifyContent="center">
-              No data
-            </Box>
-          )}
+          {!historyLoading && !historyList.length && <NoData />}
           <Pagination
             count={historyPage.totalPages}
             page={historyPage.page}
@@ -206,28 +203,30 @@ export default function Dashboard() {
 }
 
 function WithdrawButton({
-  tokenAmount,
+  currencyAmount,
+  currency,
   onWithdraw
 }: {
-  tokenAmount: TokenAmount | undefined
+  currencyAmount: TokenAmount | undefined | CurrencyAmount
+  currency: Currency | undefined
   onWithdraw: (tokenAddress: string) => Promise<void>
 }) {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const isCompletedTx = useTagCompletedTx('withdraw', tokenAmount?.token.address || '')
+  const isCompletedTx = useTagCompletedTx('withdraw', currency?.address || '')
 
-  if (!account || !chainId || !library || !tokenAmount) return null
+  if (!account || !chainId || !library || !currencyAmount || !currency || !currency.chainId) return null
 
-  if (chainId !== tokenAmount.token.chainId) {
+  if (chainId !== currency.chainId) {
     return (
       <Button
-        onClick={() => triggerSwitchChain(library, tokenAmount.token.chainId, account)}
+        onClick={() => currency.chainId && triggerSwitchChain(library, currency.chainId, account)}
         height="36px"
         width="auto"
         style={{ padding: '0 10px' }}
         fontSize={13}
       >
-        Switch to {ChainListMap[tokenAmount.token.chainId].symbol}
+        Switch to {ChainListMap[currency.chainId].symbol}
       </Button>
     )
   }
@@ -252,8 +251,8 @@ function WithdrawButton({
   return (
     <Button
       onClick={() => {
-        if (!tokenAmount?.token) return
-        onWithdraw(tokenAmount.token.address)
+        if (!currency.address) return
+        onWithdraw(currency.address)
       }}
       width="112px"
       height="36px"

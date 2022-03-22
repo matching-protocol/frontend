@@ -15,17 +15,17 @@ import { useOrderById } from 'hooks/useFetch'
 import { OrderStatus } from 'hooks/useFetchOrderList'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from './CurrencyInfo'
-import { useLocalCurrency } from 'hooks/useCurrencyList'
 import { getEtherscanLink } from 'utils'
 import { OrderTakeSign } from './OrderDetailOperate'
 import Spinner from 'components/Spinner'
-import { TokenAmount } from 'constants/token'
+import { CurrencyAmount, ETHER, Token, TokenAmount } from 'constants/token'
 import { ChainListMap } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
-import { useTokenBalance } from 'state/wallet/hooks'
+import { useCurrencyBalance } from 'state/wallet/hooks'
 import { OrderDetailOperate } from './OrderDetailOperate'
 import { routes } from 'constants/routes'
 import { Timer, getDeltaTime } from 'components/Timer'
+import { useLocalCurrency } from 'state/token/hooks'
 
 export enum Step {
   Confirm,
@@ -41,20 +41,27 @@ export default function TakeOffer() {
 
   const { result: orderInfo } = useOrderById(orderId, step)
 
-  const receiveToken = useLocalCurrency(orderInfo?.token_address)
-  const payToken = useLocalCurrency(orderInfo?.receive_token_address)
+  const receiveToken = useLocalCurrency(orderInfo?.chain_id, orderInfo?.token_address)
+  const payCurrency = useLocalCurrency(orderInfo?.to_chain_id, orderInfo?.receive_token_address)
 
-  const payTokenAmount = useMemo(() => {
-    if (!payToken || !orderInfo?.amount) return undefined
-    return new TokenAmount(payToken, orderInfo.amount)
-  }, [orderInfo?.amount, payToken])
+  const payCurrencyAmount = useMemo(() => {
+    if (!payCurrency || !orderInfo?.amount) return undefined
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, orderInfo.amount)
+    else return CurrencyAmount.getEther(payCurrency, orderInfo.amount)
+  }, [orderInfo?.amount, payCurrency])
 
-  const usrBalance = useTokenBalance(account || undefined, payToken)
+  const truePayCurrency = useMemo(() => {
+    if (payCurrency instanceof Token) return payCurrency
+    return ETHER
+  }, [payCurrency])
+
+  const usrBalance = useCurrencyBalance(account || undefined, truePayCurrency)
 
   const incentiveAmount = useMemo(() => {
-    if (!payToken || !orderInfo?.incentive) return undefined
-    return new TokenAmount(payToken, orderInfo.incentive)
-  }, [orderInfo?.incentive, payToken])
+    if (!payCurrency || !orderInfo?.incentive) return undefined
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, orderInfo.incentive)
+    else return CurrencyAmount.getEther(payCurrency, orderInfo.incentive)
+  }, [orderInfo?.incentive, payCurrency])
 
   const completed = useMemo(() => {
     if (!orderInfo) return undefined
@@ -131,7 +138,7 @@ export default function TakeOffer() {
                     chainId={orderInfo.chain_id}
                     address={orderInfo.token_address}
                     amount={
-                      payTokenAmount && incentiveAmount ? payTokenAmount.add(incentiveAmount).raw.toString() : '-'
+                      payCurrencyAmount && incentiveAmount ? payCurrencyAmount.add(incentiveAmount).raw.toString() : '-'
                     }
                     textSize={24}
                   />
@@ -167,7 +174,7 @@ export default function TakeOffer() {
               </Grid>
               <Grid item md={6}>
                 <Typography fontSize={11} sx={{ opacity: 0.5 }}>
-                  {payTokenAmount?.toSignificant(6, { groupSeparator: ',' })}BTC (You recive) +{' '}
+                  {payCurrencyAmount?.toSignificant(6, { groupSeparator: ',' })}BTC (You recive) +{' '}
                   {incentiveAmount?.toSignificant(6, { groupSeparator: ',' })}BTC (Offer Incentive)
                 </Typography>
               </Grid>
@@ -184,7 +191,7 @@ export default function TakeOffer() {
                   <TextButton
                     underline
                     onClick={() => {
-                      receiveToken &&
+                      receiveToken?.chainId &&
                         window.open(getEtherscanLink(receiveToken?.chainId, receiveToken?.address, 'token'))
                     }}
                     primary
@@ -200,7 +207,8 @@ export default function TakeOffer() {
                   <TextButton
                     underline
                     onClick={() => {
-                      payToken && window.open(getEtherscanLink(payToken?.chainId, payToken?.address, 'token'))
+                      payCurrency?.chainId &&
+                        window.open(getEtherscanLink(payCurrency?.chainId, payCurrency?.address, 'token'))
                     }}
                     primary
                     fontSize={12}
@@ -243,13 +251,13 @@ export default function TakeOffer() {
                   padding="18px 24px"
                 >
                   <LogoText
-                    logo={payToken?.logo || ''}
-                    text={`${payToken?.name}(${payToken?.symbol})`}
+                    logo={payCurrency?.logo || ''}
+                    text={`${payCurrency?.name}(${payCurrency?.symbol})`}
                     fontSize={16}
                     size="24px"
                   />
                   <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                    {payToken?.address}
+                    {payCurrency?.address}
                   </Typography>
                 </Box>
               </Grid>
@@ -266,8 +274,8 @@ export default function TakeOffer() {
         {step === Step.Execute && (
           <>
             <Typography mb={16}>
-              <b>1. Send.</b> You need to send {payTokenAmount?.toSignificant(6, { groupSeparator: ',' })}{' '}
-              {payToken?.symbol} to the requester on {ChainListMap[orderInfo.to_chain_id].name}
+              <b>1. Send.</b> You need to send {payCurrencyAmount?.toSignificant(6, { groupSeparator: ',' })}{' '}
+              {payCurrency?.symbol} to the requester on {ChainListMap[orderInfo.to_chain_id].name}
             </Typography>
             <Box
               border="1px solid rgba(66, 63, 71, 0.2)"
@@ -314,16 +322,16 @@ export default function TakeOffer() {
             >
               <Box display="flex" alignItems="flex-end">
                 <LogoText
-                  logo={payToken?.logo || ''}
-                  text={`${payTokenAmount?.toSignificant(6, { groupSeparator: ',' })} ${payToken?.symbol}`}
+                  logo={payCurrency?.logo || ''}
+                  text={`${payCurrencyAmount?.toSignificant(6, { groupSeparator: ',' })} ${payCurrency?.symbol}`}
                   fontSize={24}
                   size="32px"
                   gapSize={12}
                 />
                 /
                 <LogoText
-                  logo={payToken?.logo || ''}
-                  text={`${usrBalance?.toSignificant(6, { groupSeparator: ',' }) || '-'} ${payToken?.symbol}`}
+                  logo={payCurrency?.logo || ''}
+                  text={`${usrBalance?.toSignificant(6, { groupSeparator: ',' }) || '-'} ${payCurrency?.symbol}`}
                   fontSize={12}
                   size="14px"
                   gapSize={4}

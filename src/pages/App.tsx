@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
@@ -14,6 +14,7 @@ import Market from './Market'
 import MakeOffer from './MakeOffer'
 import TakeOffer from './TakeOffer'
 import Account from './Account'
+import InitProvider from './InitProvider'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -55,37 +56,33 @@ const BodyWrapper = styled('div')(({ theme }) => ({
 }))
 
 export default function App() {
-  useEffect(() => {
-    const el = document.querySelector('.loader-container')
-    if (el) {
-      el.remove()
-    }
-  }, [])
   return (
     <Suspense fallback={null}>
       <ModalProvider>
-        <AppWrapper id="app">
-          <ContentWrapper>
-            <Header />
-            <BodyWrapper id="body">
-              <Popups />
-              <Polling />
-              <WarningModal />
-              <Web3ReactManager>
-                <Switch>
-                  <Route exact strict path="/" component={Market} />
-                  <Route exact strict path={routes.market} component={Market} />
-                  <Route exact strict path={routes.makeOffer} component={MakeOffer} />
-                  <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
-                  <Route exact strict path={routes.account} component={Account} />
-                  <Route exact strict path={routes.stat} component={ComingSoon} />
-                  <Route exact strict path={routes.help} component={ComingSoon} />
-                </Switch>
-              </Web3ReactManager>
-            </BodyWrapper>
-            {/* <Footer /> */}
-          </ContentWrapper>
-        </AppWrapper>
+        <InitProvider>
+          <AppWrapper id="app">
+            <ContentWrapper>
+              <Header />
+              <BodyWrapper id="body">
+                <Popups />
+                <Polling />
+                <WarningModal />
+                <Web3ReactManager>
+                  <Switch>
+                    <Route exact strict path="/" component={Market} />
+                    <Route exact strict path={routes.market} component={Market} />
+                    <Route exact strict path={routes.makeOffer} component={MakeOffer} />
+                    <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
+                    <Route exact strict path={routes.account} component={Account} />
+                    <Route exact strict path={routes.stat} component={ComingSoon} />
+                    <Route exact strict path={routes.help} component={ComingSoon} />
+                  </Switch>
+                </Web3ReactManager>
+              </BodyWrapper>
+              {/* <Footer /> */}
+            </ContentWrapper>
+          </AppWrapper>
+        </InitProvider>
       </ModalProvider>
     </Suspense>
   )

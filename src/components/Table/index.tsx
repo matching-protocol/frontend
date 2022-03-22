@@ -47,7 +47,7 @@ const StyledTableContainer = styled(TableContainer)({
   borderRadius: '40px',
   '& .MuiTableCell-root': {
     borderBottom: 'none',
-    fontWeight: 400,
+    fontWeight: 500,
     padding: '14px 20px',
     '&:first-of-type': {
       paddingLeft: 20
@@ -71,12 +71,12 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     whiteSpace: 'pre',
     lineHeight: '12px',
     background: 'rgba(255, 255, 255, 0.08)',
-    padding: '12px 20px 12px 0',
+    padding: '12px 20px 6px 0',
     color: theme.palette.primary.main,
     opacity: 0.5,
     borderBottom: 'none',
     '& .MuiTableSortLabel-root': {
-      fontWeight: 400,
+      // fontWeight: 400,
       // fontSize: '12px!important',
       color: theme.palette.primary.main,
       opacity: 0.5

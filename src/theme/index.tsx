@@ -153,12 +153,12 @@ export const override: any = {
     styleOverrides: {
       body: { backgroundColor: theme.palette.background.default, fontSize: 16 },
       'html, input, textarea, button': {
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: 'HelveticaNeueCyr',
         fontDisplay: 'fallback'
       },
       '@supports (font-variation-settings: normal)': {
         'html, input, textarea, button ': {
-          fontFamily: 'Roboto, sans-serif',
+          fontFamily: 'HelveticaNeueCyr',
           fontDisplay: 'fallback'
         }
       }
@@ -247,7 +247,7 @@ export const override: any = {
   MuiTypography: {
     styleOverrides: {
       root: {
-        fontFamily: 'Roboto'
+        fontFamily: 'HelveticaNeueCyr'
       },
       body1: {
         fontSize: 14
@@ -256,11 +256,9 @@ export const override: any = {
         fontSize: 12
       },
       h5: {
-        fontFamily: 'Futura PT',
         fontSize: 28
       },
       h6: {
-        fontFamily: 'Futura PT',
         fontSize: 22
       },
       caption: {

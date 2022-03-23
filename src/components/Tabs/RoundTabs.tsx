@@ -4,11 +4,13 @@ import { Tabs as MuiTabs, Tab } from '@mui/material'
 export default function Tabs({
   titles,
   current,
-  onChange
+  onChange,
+  minHeight
 }: {
   titles: string[] | JSX.Element[]
   current: number
   onChange: (val: number) => void
+  minHeight?: number
   // onChange?: ((event: SyntheticEvent<Element, Event>, value: any) => void
 }) {
   const handleOnChange = useCallback(
@@ -42,6 +44,7 @@ export default function Tabs({
             fontSize: 13,
             fontWeight: 500,
             color: '#000000',
+            minHeight: minHeight || 48,
             border: '1px solid rgba(22, 22, 22, 0.1)',
             borderRadius: 60,
             '&.Mui-selected': {

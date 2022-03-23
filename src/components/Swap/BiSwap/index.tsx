@@ -111,7 +111,7 @@ export default function BiSwap({
           onClick={onSelectToCurrency}
           onChange={onChangeToValue}
           inputDisabled={true}
-          inputPlaceholder={'-'}
+          inputPlaceholder={'0.00'}
         />
       </Grid>
       <Grid item md={6}>

@@ -42,7 +42,7 @@ export default function Dashboard() {
   )
 
   const walletInfoTabs = useMemo(() => {
-    return ChainList.map(item => <ChainLogo key={item.id} chainId={item.id} size="16px" />)
+    return ChainList.map(item => <ChainLogo gapSize="6px" key={item.id} chainId={item.id} size="16px" />)
   }, [])
 
   const { getWithdrawSign, withdrawCallback } = useWalletWithdrawCallback()
@@ -159,25 +159,21 @@ export default function Dashboard() {
         <Typography fontSize={16} fontWeight={500} mb={28}>
           Wallet Information
         </Typography>
-        <RoundTabs titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
+        <RoundTabs minHeight={40} titles={walletInfoTabs} current={walletInfoTab} onChange={setWalletInfoTab} />
         <Table fontSize="12px" header={WalletInfoTableHeader} rows={walletInfoDataRows} variant="outlined" />
         {walletInfoLoading && (
           <Box display="flex" pt={20} pb={20} justifyContent="center">
             <Spinner size="40px" />
           </Box>
         )}
-        {!walletInfoLoading && !walletInfoDataRows.length && (
-          <Box display="flex" pt={20} pb={20} justifyContent="center">
-            No data
-          </Box>
-        )}
+        {!walletInfoLoading && !walletInfoDataRows.length && <NoData />}
       </Card>
       <Card width={980} padding="30px 28px">
         <Typography fontSize={16} fontWeight={500} mb={28}>
           Withdraw History
         </Typography>
         <Box display="grid" gap={40}>
-          <RoundTabs titles={walletInfoTabs} current={historyTab} onChange={setHistoryTab} />
+          <RoundTabs minHeight={40} titles={walletInfoTabs} current={historyTab} onChange={setHistoryTab} />
           <Table
             fontSize="12px"
             header={WithdrawlHistoryTableHeader}

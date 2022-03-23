@@ -5,7 +5,6 @@ import LogoText from 'components/LogoText'
 import OfferIcon from 'assets/images/offer.png'
 import { ChainList, ChainListMap } from 'constants/chain'
 import Input from 'components/Input'
-import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import WarningCard, { Subject } from '../WarningCard'
 import BiSwap from 'components/Swap/BiSwap'
@@ -29,6 +28,7 @@ import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 import { useCurrentIncentive, useMinIncentive, useReceiveValue } from 'hooks/useIncentive'
 import JSBI from 'jsbi'
 import { useEnableCurrencyListByTwoChains } from 'state/token/hooks'
+import Button from 'components/Button/Button'
 
 enum ERROR {
   SELECT_CHAIN = 'Select Chain',
@@ -237,8 +237,8 @@ export default function MakeOffer() {
   return (
     <Box pt={68} display="grid" gap={20} maxWidth={828} width="100%">
       <Card width="100%" padding="24px 60px 44px">
-        <LogoText logo={OfferIcon} text=" Make an Offer" size="32px" fontSize={36} fontWeight={700} />
-        <Box mt={32}>
+        <LogoText logo={OfferIcon} text=" Make an Offer" size="24px" fontSize={28} fontWeight={700} />
+        <Box mt={26}>
           <BiSwap
             fromLabel={"You'll send"}
             toLabel={"You'll receive"}
@@ -247,7 +247,7 @@ export default function MakeOffer() {
             fromValue={fromValue}
             toChain={toChain}
             toCurrency={toCurrency}
-            toValue={receiveValue?.toSignificant(6, { groupSeparator: ',' }) || '-'}
+            toValue={receiveValue?.toSignificant(6, { groupSeparator: ',' }) || ''}
             chainList={ChainList}
             onSelectFromChain={e => {
               setFromCurrency(null)
@@ -325,7 +325,16 @@ export default function MakeOffer() {
           </Box>
         </Box>
 
-        <ActionButton error={getAction.error} actionText={getAction.msg} onAction={getAction.event} />
+        <Button
+          borderRadius="16px"
+          disabled={getAction.event === undefined}
+          height="60px"
+          width={'100%'}
+          fontSize={13}
+          onClick={getAction.event}
+        >
+          {getAction.error || getAction.msg}
+        </Button>
       </Card>
       <WarningCard subject={Subject.MakeOffer} />
     </Box>

@@ -52,7 +52,14 @@ export default function OrderListOperate({ width, order }: { width: string; orde
   return (
     <>
       {action.msg && (
-        <Button disabled={action.event === undefined} height="32px" width={width} fontSize={13} onClick={action.event}>
+        <Button
+          disabled={action.event === undefined}
+          style={{ fontWeight: 400 }}
+          height="32px"
+          width={width}
+          fontSize={13}
+          onClick={action.event}
+        >
           {action.msg}
         </Button>
       )}

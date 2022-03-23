@@ -10,6 +10,7 @@ import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from 'pages/Market/CurrencyInfo'
 import Spinner from 'components/Spinner'
 import TakeStatus from './TakeStatus'
+import NoData from 'components/NoData'
 
 export const LiveTaskListHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', '']
 
@@ -76,11 +77,7 @@ export default function LiveTaskList() {
             <Spinner size="40px" />
           </Box>
         )}
-        {!liveTaskLoading && !liveTaskPage.totalPages && (
-          <Box display="flex" pt={20} pb={20} justifyContent="center">
-            No data
-          </Box>
-        )}
+        {!liveTaskLoading && !liveTaskPage.totalPages && <NoData />}
         <Pagination
           count={liveTaskPage.totalPages}
           page={liveTaskPage.page}

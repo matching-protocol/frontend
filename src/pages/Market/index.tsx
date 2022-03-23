@@ -24,6 +24,7 @@ import useModal from 'hooks/useModal'
 import { Currency } from 'constants/token'
 import { Chain } from 'models/chain'
 import { useTopTokenSymbolList } from 'state/token/hooks'
+import NoData from 'components/NoData'
 
 enum Mode {
   TABLE,
@@ -95,10 +96,16 @@ export default function Market() {
       <Typography key={1} fontSize={16} fontWeight={500}>
         #{item.global_order_id}
       </Typography>,
-      <Box key={1} display="flex" alignItems="center" gap={10}>
-        <ChainLogo chainId={item.chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
+      <Box
+        key={1}
+        display="flex"
+        alignItems="center"
+        gap={10}
+        justifyContent={mode === Mode.TABLE ? 'unset' : 'center'}
+      >
+        <ChainLogo widthEllipsis="52px" chainId={item.chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
         <ArrowIcon />
-        <ChainLogo chainId={item.to_chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
+        <ChainLogo widthEllipsis="52px" chainId={item.to_chain_id} size={mode === Mode.TABLE ? '32px' : '24px'} />
       </Box>,
       <Box key={1} display="flex" alignItems="center" gap={12}>
         <CurrencyInfo
@@ -129,7 +136,7 @@ export default function Market() {
         textSize={mode === Mode.TABLE ? 16 : 13}
         subTextSize={mode === Mode.TABLE ? 13 : 11}
       />,
-      <OrderListOperate key={1} order={item} width={mode === Mode.TABLE ? '94px' : '120px'} />
+      <OrderListOperate key={1} order={item} width={mode === Mode.TABLE ? '94px' : '100px'} />
     ])
   }, [mode, orderList])
 
@@ -237,11 +244,7 @@ export default function Market() {
                     <Spinner size="40px" />
                   </Box>
                 )}
-                {!loading && !orderListPage.totalPages && (
-                  <Box display="flex" pt={20} pb={20} justifyContent="center">
-                    No data
-                  </Box>
-                )}
+                {!loading && !orderListPage.totalPages && <NoData />}
                 <Pagination
                   count={orderListPage.totalPages}
                   page={orderListPage.page}
@@ -259,11 +262,7 @@ export default function Market() {
                 <Spinner size="40px" />
               </Box>
             )}
-            {!loading && !orderListPage.totalPages && (
-              <Box display="flex" pt={20} pb={20} justifyContent="center">
-                No data
-              </Box>
-            )}
+            {!loading && !orderListPage.totalPages && <NoData />}
             <Grid container spacing={20} mt={24} mb={24}>
               {dataRows.map((row, index) => (
                 <Grid item xs={12} md={4} key={index}>

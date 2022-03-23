@@ -9,6 +9,7 @@ import { useAccountOrderList } from 'hooks/useFetch'
 import ChainLogo from 'components/ChainLogo'
 import CurrencyInfo from 'pages/Market/CurrencyInfo'
 import Spinner from 'components/Spinner'
+import NoData from 'components/NoData'
 
 export const LiveOfferHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', '']
 
@@ -77,11 +78,7 @@ export default function LiveOffer() {
             <Spinner size="40px" />
           </Box>
         )}
-        {!liveOfferLoading && !liveOfferPage.totalPages && (
-          <Box display="flex" pt={20} pb={20} justifyContent="center">
-            No data
-          </Box>
-        )}
+        {!liveOfferLoading && !liveOfferPage.totalPages && <NoData />}
         <Pagination
           count={liveOfferPage.totalPages}
           page={liveOfferPage.page}

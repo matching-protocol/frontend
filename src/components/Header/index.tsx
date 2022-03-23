@@ -22,7 +22,7 @@ import { ChainList } from 'constants/chain'
 import SwapSelect from 'components/Swap/SwapSelect'
 import Web3Status from './Web3Status'
 import MarketIcon from 'assets/images/market.png'
-import AccountIcon from 'assets/images/account.png'
+import AccountIcon from 'assets/images/account-lg.png'
 import StatIcon from 'assets/images/statistics.png'
 import HelpIcon from 'assets/images/help.png'
 import { ExternalLink } from 'theme/components'
@@ -45,7 +45,7 @@ interface Tab extends TabContent {
 
 export const Tabs: Tab[] = [
   { title: 'Market', route: routes.market, icon: <Image src={MarketIcon} /> },
-  { title: 'Account', route: routes.account, icon: <Image src={AccountIcon} /> },
+  { title: 'Account', route: routes.account, icon: <Image src={AccountIcon} width="24px" /> },
   { title: 'Statistics', route: routes.stat, icon: <Image src={StatIcon} /> },
   { title: 'Help', route: routes.help, icon: <Image src={HelpIcon} /> }
 ]
@@ -100,8 +100,10 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
   opacity: 0.6,
   display: 'flex',
   alignItems: 'center',
+  filter: 'grayscale(1)',
   '&.active': {
     opacity: 1,
+    filter: 'unset',
     '& svg': {
       stroke: theme.palette.primary.main
     },
@@ -161,7 +163,7 @@ export default function Header() {
     () => (
       <Box
         sx={{
-          padding: '136px 44px',
+          padding: '115px 44px',
           minHeight: '100%'
         }}
         gridTemplateRows="auto auto auto 1fr"
@@ -171,7 +173,7 @@ export default function Header() {
       >
         <List>
           {Tabs.map(({ title, route, icon, link }, idx) => (
-            <ListItem key={title} sx={{ padding: '10px 0' }}>
+            <ListItem key={title} sx={{ padding: '12px 0' }}>
               {link ? (
                 <StyledExternalLink href={link}>
                   <ListItemIcon sx={{ color: 'currentColor', minWidth: 40 }}>{icon}</ListItemIcon>
@@ -202,7 +204,7 @@ export default function Header() {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ mt: 'auto', alignSelf: 'flex-end', height: '100%', display: 'flex', alignItems: 'flex-end' }}>
+        <Box sx={{ position: 'fixed', bottom: '20px' }}>
           <Web3Status />
         </Box>
         <Box sx={{ opacity: 0 }}>1</Box>

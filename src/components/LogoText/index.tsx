@@ -1,4 +1,4 @@
-import { styled } from '@mui/material'
+import { styled, Typography } from '@mui/material'
 import Image from '../Image'
 
 const Wrapper = styled('div')({})
@@ -9,7 +9,8 @@ export default function LogoText({
   fontWeight,
   fontSize,
   gapSize,
-  size
+  size,
+  widthEllipsis
 }: {
   logo: string | JSX.Element
   text?: string | React.ReactNode
@@ -17,6 +18,7 @@ export default function LogoText({
   fontSize?: number | string
   gapSize?: number | string
   size?: string
+  widthEllipsis?: string
 }) {
   return (
     <Wrapper
@@ -33,7 +35,13 @@ export default function LogoText({
       }}
     >
       {typeof logo === 'string' ? <Image src={logo as string} /> : logo}
-      <span>{text}</span>
+      {widthEllipsis ? (
+        <Typography textOverflow={'ellipsis'} sx={{ width: widthEllipsis || 'unset', overflowX: 'hidden' }}>
+          {text}
+        </Typography>
+      ) : (
+        <span>{text}</span>
+      )}
     </Wrapper>
   )
 }

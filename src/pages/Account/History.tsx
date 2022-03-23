@@ -15,6 +15,7 @@ import CurrencyInfo from 'pages/Market/CurrencyInfo'
 import Spinner from 'components/Spinner'
 import { getEtherscanLink } from 'utils'
 import TakeStatus from './TakeStatus'
+import NoData from 'components/NoData'
 
 enum Tab {
   MAKE_OFFER,
@@ -146,11 +147,7 @@ export default function History() {
                 <Spinner size="40px" />
               </Box>
             )}
-            {!makeLoading && !makePage.totalPages && (
-              <Box display="flex" pt={20} pb={20} justifyContent="center">
-                No data
-              </Box>
-            )}
+            {!makeLoading && !makePage.totalPages && <NoData />}
             <Pagination
               count={makePage.totalPages}
               page={makePage.page}
@@ -167,11 +164,7 @@ export default function History() {
                 <Spinner size="40px" />
               </Box>
             )}
-            {!takeLoading && !takePage.totalPages && (
-              <Box display="flex" pt={20} pb={20} justifyContent="center">
-                No data
-              </Box>
-            )}
+            {!takeLoading && !takePage.totalPages && <NoData />}
             <Pagination
               count={takePage.totalPages}
               page={takePage.page}

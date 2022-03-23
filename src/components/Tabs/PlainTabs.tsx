@@ -29,9 +29,12 @@ export default function Tabs({
             textTransform: 'none',
             padding: '0 20px',
             fontSize: 20,
-            opacity: 0.6,
+            color: 'rgba(0,0,0,.4)',
             '&.Mui-selected': {
               opacity: 1
+            },
+            '&:hover': {
+              color: 'rgba(0,0,0,.8)'
             }
           }}
         />

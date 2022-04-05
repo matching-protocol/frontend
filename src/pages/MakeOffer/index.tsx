@@ -273,6 +273,9 @@ export default function MakeOffer() {
         <Box display="flex" gap={24} mb={32}>
           <Input
             label="Incentive"
+            rightLabel={`Available: ${
+              fromBalance ? fromBalance.toSignificant(6, { groupSeparator: ',' }) + ' ' + fromCurrency?.symbol : '-'
+            }`}
             value={incentive}
             placeholder={'Input Amount'}
             maxWidth="339px"

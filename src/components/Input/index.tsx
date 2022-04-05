@@ -1,5 +1,5 @@
 import React, { ChangeEvent, InputHTMLAttributes } from 'react'
-import { InputBase, Typography } from '@mui/material'
+import { Box, InputBase, Typography } from '@mui/material'
 import { inputBaseClasses } from '@mui/material/InputBase'
 import InputLabel from './InputLabel'
 import theme from 'theme'
@@ -22,6 +22,7 @@ export interface InputProps {
   subStr?: string
   backgroundColor?: string
   fontSize?: string | number
+  rightLabel?: string
 }
 
 // const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -72,11 +73,15 @@ export default function Input({
   subStr,
   backgroundColor,
   fontSize,
+  rightLabel,
   ...rest
 }: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>) {
   return (
     <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
-      {label && <InputLabel>{label}</InputLabel>}
+      <Box display={'flex'} justifyContent="space-between">
+        {label ? <InputLabel>{label}</InputLabel> : ''}
+        {rightLabel ? <InputLabel>{rightLabel}</InputLabel> : ''}
+      </Box>
       <InputBase
         sx={{
           height: height || 60,

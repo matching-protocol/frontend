@@ -88,7 +88,7 @@ export default function Market() {
     }
   }, [filterToggle, searchCurrency?.symbol, searchFromChain?.id, searchOrderBy, searchOrderId, searchToChain?.id])
 
-  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_Any, searchParams)
+  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_ForTaking, searchParams)
   const searchCurrencyList = useTopTokenSymbolList()
 
   const dataRows = useMemo(() => {

@@ -26,6 +26,7 @@ import { OrderDetailOperate } from './OrderDetailOperate'
 import { routes } from 'constants/routes'
 import { Timer, getDeltaTime } from 'components/Timer'
 import { useLocalCurrency } from 'state/token/hooks'
+import { useTagCompletedTx } from 'state/transactions/hooks'
 
 export enum Step {
   Confirm,
@@ -71,6 +72,8 @@ export default function TakeOffer() {
   const getErrorSubText = useMemo(() => {
     return isDeadline && orderInfo?.Deadline ? 'The operation has timed out, please retake offer' : ''
   }, [isDeadline, orderInfo?.Deadline])
+
+  const isContractCompleted = useTagCompletedTx('take', orderInfo?.global_order_id.toString())
 
   if (!orderInfo)
     return (
@@ -289,7 +292,7 @@ export default function TakeOffer() {
             >
               <Typography fontSize={16} fontWeight={500}>
                 Please the operation within{' '}
-                {completed ? (
+                {completed || isContractCompleted === true ? (
                   '-'
                 ) : (
                   <span style={{ color: 'red' }}>
@@ -359,8 +362,8 @@ export default function TakeOffer() {
               {getErrorSubText}
             </Typography>
             <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
-            <Box sx={{ position: 'relative', opacity: completed ? 1 : 0.5 }}>
-              {!completed && (
+            <Box sx={{ position: 'relative', opacity: completed || isContractCompleted ? 1 : 0.5 }}>
+              {!completed && isContractCompleted !== true && (
                 <Box
                   sx={{
                     position: 'absolute',

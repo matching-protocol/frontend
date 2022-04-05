@@ -114,7 +114,7 @@ export function useUserHasSubmittedClaim(
   return { claimSubmitted: Boolean(claimTxn), claimTxn }
 }
 
-export function useTagCompletedTx(type: 'claim' | 'withdraw' | 'take', key: string, isRecent = true) {
+export function useTagCompletedTx(type: 'claim' | 'withdraw' | 'take', key: string | undefined, isRecent = true) {
   const allTransactions = useAllTransactions()
   const { account } = useActiveWeb3React()
 

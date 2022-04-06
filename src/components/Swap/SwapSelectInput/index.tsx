@@ -15,7 +15,9 @@ export default function SwapSelectInput({
   onChange,
   inputDisabled,
   selectDisabled,
-  width
+  width,
+  onMax,
+  hideSelectArrow
 }: {
   value: string
   selected: Currency | null
@@ -26,6 +28,8 @@ export default function SwapSelectInput({
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   width?: number | string
   inputDisabled?: boolean
+  onMax?: () => void
+  hideSelectArrow?: boolean
 }) {
   return (
     <Box
@@ -41,6 +45,7 @@ export default function SwapSelectInput({
       <SelectButton
         onClick={onClick}
         width="120px"
+        hideArrow={hideSelectArrow}
         style={{ cursor: selectDisabled ? 'not-allowed' : 'pointer', opacity: selectDisabled ? 0.6 : 1 }}
       >
         {selected ? (
@@ -51,15 +56,37 @@ export default function SwapSelectInput({
           </Typography>
         )}
       </SelectButton>
-      <Input
-        width={160}
-        value={value}
-        disabled={inputDisabled}
-        placeholder={inputPlaceholder}
-        onChange={onChange}
-        backgroundColor="#FFFFFF"
-        fontSize={24}
-      />
+      <Box sx={{ position: 'relative', '&:hover .max': { display: 'block' } }}>
+        <Input
+          width={160}
+          value={value}
+          disabled={inputDisabled}
+          placeholder={inputPlaceholder}
+          onChange={onChange}
+          backgroundColor="#FFFFFF"
+          fontSize={24}
+        />
+        {onMax && (
+          <Box
+            className="max"
+            onClick={onMax}
+            sx={{
+              position: 'absolute',
+              display: 'none',
+              top: '50%',
+              right: 10,
+              transform: 'translateY(-50%)',
+              fontSize: 12,
+              background: '#ddd',
+              padding: '2px 6px',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Max
+          </Box>
+        )}
+      </Box>
     </Box>
   )
 }

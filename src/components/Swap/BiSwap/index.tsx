@@ -1,5 +1,5 @@
 import { ChangeEvent, useMemo } from 'react'
-import { Typography, Grid } from '@mui/material'
+import { Typography, Grid, Box } from '@mui/material'
 import { Chain } from 'models/chain'
 import { Currency } from 'constants/token/currency'
 import SwapSelect from 'components/Swap/SwapSelect'
@@ -25,7 +25,10 @@ export default function BiSwap({
   onChangeToValue,
   fromSubStr,
   toSubStr,
-  onSwitch
+  onSwitch,
+  fromRightLabel,
+  toRightLabel,
+  onFromMax
 }: {
   fromLabel: string
   toLabel: string
@@ -46,6 +49,9 @@ export default function BiSwap({
   fromSubStr?: string
   toSubStr?: string
   onSwitch?: () => void
+  fromRightLabel?: string
+  toRightLabel?: string
+  onFromMax?: () => void
 }) {
   // const handleSwitch = () => {
   //   onSelectFromChain(toChain)
@@ -70,15 +76,29 @@ export default function BiSwap({
   return (
     <Grid container columnSpacing={20} rowSpacing={8}>
       <Grid item md={6}>
-        <Typography fontSize={16} fontWeight={700} mb={16}>
-          {fromLabel}
-        </Typography>
+        <Box display={'flex'} justifyContent="space-between" alignItems={'center'} mb={24}>
+          <Typography fontSize={16} fontWeight={700}>
+            {fromLabel}
+          </Typography>
+          {fromRightLabel && (
+            <Typography mr={10} fontSize={14} fontWeight={500} color="rgba(22, 22, 22, 0.5)">
+              {fromRightLabel}
+            </Typography>
+          )}
+        </Box>
         <SwapSelect menuWidth={320} list={fromList} selected={fromChain} height="60px" onChange={onSelectFromChain} />
       </Grid>
       <Grid item md={6}>
-        <Typography fontSize={16} fontWeight={700} mb={16}>
-          {toLabel}
-        </Typography>
+        <Box display={'flex'} justifyContent="space-between" alignItems={'center'} mb={24}>
+          <Typography fontSize={16} fontWeight={700}>
+            {toLabel}
+          </Typography>
+          {toRightLabel && (
+            <Typography fontSize={14} fontWeight={500} color="rgba(22, 22, 22, 0.5)">
+              {toRightLabel}
+            </Typography>
+          )}
+        </Box>
         <SwapSelect menuWidth={320} list={toList} selected={toChain} height="60px" onChange={onSelectToChain} />
       </Grid>
       <Grid item md={6} position="relative">
@@ -88,6 +108,7 @@ export default function BiSwap({
           onClick={onSelectFromCurrency}
           onChange={onChangeFromValue}
           inputPlaceholder={'0.00'}
+          onMax={onFromMax}
         />
         <TextButton
           onClick={onSwitch}
@@ -112,6 +133,7 @@ export default function BiSwap({
           onChange={onChangeToValue}
           inputDisabled={true}
           inputPlaceholder={'0.00'}
+          hideSelectArrow={true}
         />
       </Grid>
       <Grid item md={6}>

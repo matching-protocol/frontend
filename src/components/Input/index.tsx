@@ -80,7 +80,7 @@ export default function Input({
     <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
       <Box display={'flex'} justifyContent="space-between">
         {label ? <InputLabel>{label}</InputLabel> : ''}
-        {rightLabel ? <InputLabel>{rightLabel}</InputLabel> : ''}
+        {rightLabel ? <InputLabel style={{ marginRight: 10 }}>{rightLabel}</InputLabel> : ''}
       </Box>
       <InputBase
         sx={{

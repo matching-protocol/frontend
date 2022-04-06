@@ -241,6 +241,9 @@ export default function MakeOffer() {
         <Box mt={26}>
           <BiSwap
             fromLabel={"You'll send"}
+            fromRightLabel={`Available: ${
+              fromBalance ? fromBalance.toSignificant(6, { groupSeparator: ',' }) + ' ' + fromCurrency?.symbol : '-'
+            }`}
             toLabel={"You'll receive"}
             fromChain={fromChain}
             fromCurrency={fromCurrency}
@@ -266,15 +269,18 @@ export default function MakeOffer() {
             // fromSubStr={'0.001BTC = $286.01'}
             // toSubStr={'0.001BTC = $286.01'}
             onSwitch={onSwitch}
+            onFromMax={() => fromBalance && setFromValue(fromBalance.toSignificant(6))}
           />
         </Box>
 
-        <Divider style={{ marginTop: 48, marginBottom: 24 }} extension={60} />
+        <Divider style={{ marginTop: 32, marginBottom: 24 }} extension={60} />
         <Box display="flex" gap={24} mb={32}>
           <Input
             label="Incentive"
             rightLabel={`Available: ${
-              fromBalance ? fromBalance.toSignificant(6, { groupSeparator: ',' }) + ' ' + fromCurrency?.symbol : '-'
+              exchangeTokenAmount
+                ? exchangeTokenAmount.toSignificant(6, { groupSeparator: ',' }) + ' ' + fromCurrency?.symbol
+                : '-'
             }`}
             value={incentive}
             placeholder={'Input Amount'}

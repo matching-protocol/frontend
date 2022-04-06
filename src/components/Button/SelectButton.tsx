@@ -9,12 +9,13 @@ interface Props {
   children?: React.ReactNode
   primary?: boolean
   disabled?: boolean
+  hideArrow?: boolean
 
   style?: React.CSSProperties
 }
 
 export default function SelectButton(props: Props) {
-  const { onClick, disabled, style, width, height, children } = props
+  const { onClick, disabled, style, width, height, children, hideArrow } = props
   const theme = useTheme()
 
   return (
@@ -35,7 +36,7 @@ export default function SelectButton(props: Props) {
       }}
     >
       {children}
-      <ExpandMoreIcon />
+      {!hideArrow && <ExpandMoreIcon />}
     </ButtonBase>
   )
 }

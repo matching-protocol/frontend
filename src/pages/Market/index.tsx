@@ -25,6 +25,7 @@ import { Currency } from 'constants/token'
 import { Chain } from 'models/chain'
 import { useTopTokenSymbolList } from 'state/token/hooks'
 import NoData from 'components/NoData'
+import JSBI from 'jsbi'
 
 enum Mode {
   TABLE,
@@ -111,7 +112,7 @@ export default function Market() {
         <CurrencyInfo
           key={0}
           chainId={item.chain_id}
-          amount={item.amount}
+          amount={JSBI.add(JSBI.BigInt(item.amount), JSBI.BigInt(item.incentive)).toString()}
           address={item.token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
           textSize={mode === Mode.TABLE ? 16 : 13}
@@ -121,6 +122,7 @@ export default function Market() {
         <CurrencyInfo
           key={0}
           chainId={item.to_chain_id}
+          amount={item.amount}
           address={item.receive_token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
           textSize={mode === Mode.TABLE ? 16 : 13}

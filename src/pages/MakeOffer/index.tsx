@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
 import OfferIcon from 'assets/images/offer.png'
 import { ChainList, ChainListMap } from 'constants/chain'
-import Input from 'components/Input'
+import ClickInput from 'components/Input/ClickInput'
 import Divider from 'components/Divider'
 import WarningCard, { Subject } from '../WarningCard'
 import BiSwap from 'components/Swap/BiSwap'
@@ -275,7 +275,7 @@ export default function MakeOffer() {
 
         <Divider style={{ marginTop: 32, marginBottom: 24 }} extension={60} />
         <Box display="flex" gap={24} mb={32}>
-          <Input
+          <ClickInput
             label="Incentive"
             rightLabel={`Available: ${
               exchangeTokenAmount
@@ -283,10 +283,11 @@ export default function MakeOffer() {
                 : '-'
             }`}
             value={incentive}
+            disabled={!exchangeTokenAmount}
             placeholder={'Input Amount'}
             maxWidth="339px"
             subStr="You need to decide how much you want to incentivize market maker to fill the offer"
-            onChange={e => setIncentive(e.target.value)}
+            onValue={val => setIncentive(val)}
           />
           <Box>
             <Box display="flex" gap={16} alignItems="start">

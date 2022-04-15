@@ -39,6 +39,7 @@ export default function Option({
     <>
       <OutlineButton
         key={id}
+        primary
         width="320px"
         onClick={onClick}
         color={active ? 'transparent' : undefined}

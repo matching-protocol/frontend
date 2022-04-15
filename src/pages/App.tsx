@@ -12,8 +12,10 @@ import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
 import Market from './Market'
 import MakeOffer from './MakeOffer'
+import SameMakeOffer from './SameMakeOffer'
 import TakeOffer from './TakeOffer'
 import Account from './Account'
+import accountHistory from './Account/History'
 import InitProvider from './InitProvider'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -72,8 +74,10 @@ export default function App() {
                     <Route exact strict path="/" component={Market} />
                     <Route exact strict path={routes.market} component={Market} />
                     <Route exact strict path={routes.makeOffer} component={MakeOffer} />
+                    <Route exact strict path={routes.SameMakeOffer} component={SameMakeOffer} />
                     <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
                     <Route exact strict path={routes.account} component={Account} />
+                    <Route exact strict path={routes.accountHistory} component={accountHistory} />
                     <Route exact strict path={routes.stat} component={ComingSoon} />
                     <Route exact strict path={routes.help} component={ComingSoon} />
                   </Switch>

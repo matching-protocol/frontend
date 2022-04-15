@@ -2,7 +2,7 @@ import { tryParseAmount } from 'utils/parseAmount'
 import { Currency } from 'constants/token/currency'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { CurrencyAmount } from 'constants/token'
+import { CurrencyAmount, Fraction } from 'constants/token'
 
 export function useMinIncentive(currency?: Currency, value?: string) {
   return useMemo(() => {
@@ -60,4 +60,30 @@ export function useReceiveValue(currency: Currency | undefined, value: string, i
     if (incentiveAmount.greaterThan(valueAmount)) return undefined
     return valueAmount.subtract(incentiveAmount)
   }, [currency, incentive, value])
+}
+
+export function useIncentiveList(
+  amount: CurrencyAmount | undefined
+): {
+  min: Fraction | undefined
+  suggested: Fraction | undefined
+  fast: Fraction | undefined
+} {
+  return useMemo(() => {
+    if (!amount || !amount.greaterThan('0'))
+      return {
+        min: undefined,
+        suggested: undefined,
+        fast: undefined
+      }
+    const min = amount.multiply(JSBI.BigInt(20)).divide(JSBI.BigInt(1000))
+    const suggested = amount.multiply(JSBI.BigInt(30)).divide(JSBI.BigInt(1000))
+    const fast = amount.multiply(JSBI.BigInt(50)).divide(JSBI.BigInt(1000))
+
+    return {
+      min,
+      suggested,
+      fast
+    }
+  }, [amount])
 }

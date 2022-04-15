@@ -158,13 +158,6 @@ export default function Market() {
       <Box maxWidth="980px" width="100%" pt={60}>
         <Box width="100%" display="flex" justifyContent="space-between" mb={40}>
           <LogoText logo={MarketIcon} text="Market" size="32px" fontSize={36} fontWeight={700} />
-          <Box display="flex" gap={24}>
-            <FilterButton onClick={() => setFilterToggle(!filterToggle)} selected={filterToggle} />
-            <Box display="flex" gap={8}>
-              <CardButton onClick={() => setMode(Mode.CARD)} selected={mode === Mode.CARD} />
-              <TableButton onClick={() => setMode(Mode.TABLE)} selected={mode === Mode.TABLE} />
-            </Box>
-          </Box>
         </Box>
         {filterToggle && (
           <Card width="100%" style={{ marginBottom: 36 }}>
@@ -214,28 +207,39 @@ export default function Market() {
         <Card width="100%">
           <Box width="100%" padding="30px 28px 40px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <InputSearch
-                value={searchOrderId}
-                width={244}
-                onChange={e => setSearchOrderId(e.target.value)}
-                backgroundColor={'#FFFFFF'}
-              />
-              <Box display="flex" gap={20} alignItems="center">
-                <Typography fontSize={16} fontWeight={700}>
-                  Sort by
-                </Typography>
-                <Select
-                  value={searchOrderBy.toString()}
-                  onChange={e => e.target.value && setSearchOrderBy(Number(e.target.value))}
-                  height={60}
-                  width="fit-content"
-                >
-                  {SortByList.map(({ name, value }) => (
-                    <MenuItem value={value.toString()} key={value}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <Box display={'flex'} gap="10px">
+                <InputSearch
+                  value={searchOrderId}
+                  width={244}
+                  onChange={e => setSearchOrderId(e.target.value)}
+                  backgroundColor={'#FFFFFF'}
+                />
+                <FilterButton onClick={() => setFilterToggle(!filterToggle)} selected={filterToggle} />
+              </Box>
+              <Box>
+                <Box display="flex" gap={24}>
+                  <Box display="flex" gap={8}>
+                    <CardButton onClick={() => setMode(Mode.CARD)} selected={mode === Mode.CARD} />
+                    <TableButton onClick={() => setMode(Mode.TABLE)} selected={mode === Mode.TABLE} />
+                  </Box>
+                </Box>
+                <Box display="flex" gap={20} alignItems="center" sx={{ display: 'none' }}>
+                  <Typography fontSize={16} fontWeight={700}>
+                    Sort by
+                  </Typography>
+                  <Select
+                    value={searchOrderBy.toString()}
+                    onChange={e => e.target.value && setSearchOrderBy(Number(e.target.value))}
+                    height={60}
+                    width="fit-content"
+                  >
+                    {SortByList.map(({ name, value }) => (
+                      <MenuItem value={value.toString()} key={value}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
               </Box>
             </Box>
             {mode === Mode.TABLE && (

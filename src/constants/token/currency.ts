@@ -15,20 +15,22 @@ export class Currency {
   public readonly logo?: string
   public readonly address: string
   public readonly chainId?: number
+  public readonly platformId?: number
 
   /**
    * The only instance of the base class `Currency`.
    */
   public static readonly ETHER: Currency = new Currency(18, 'HT', 'Ether')
 
-  public static getETHCurrency(chainId: ChainId) {
+  public static getETHCurrency(chainId: ChainId, platformId?: number) {
     const chain = SUPPORTED_NETWORKS[chainId]
     if (!chain) return undefined
     return new Currency(
       chain.nativeCurrency.decimals,
       chain.nativeCurrency.symbol,
       chain.nativeCurrency.name,
-      chain.nativeCurrency.logo
+      chain.nativeCurrency.logo,
+      platformId
     )
   }
 
@@ -38,7 +40,14 @@ export class Currency {
    * @param symbol symbol of the currency
    * @param name of the currency
    */
-  protected constructor(decimals: number, symbol?: string, name?: string, logo?: string, chainId?: number) {
+  protected constructor(
+    decimals: number,
+    symbol?: string,
+    name?: string,
+    logo?: string,
+    chainId?: number,
+    platformId?: number
+  ) {
     validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8)
 
     this.decimals = decimals
@@ -47,6 +56,7 @@ export class Currency {
     this.logo = logo
     this.chainId = chainId
     this.address = ''
+    this.platformId = platformId
   }
 }
 

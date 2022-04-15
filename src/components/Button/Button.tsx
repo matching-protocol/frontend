@@ -29,7 +29,7 @@ export default function Button(props: Props) {
         fontSize: fontSize || 16,
         fontWeight: 500,
         transition: '.3s',
-        borderRadius: borderRadius || 6,
+        borderRadius: borderRadius || '16px',
         backgroundColor: backgroundColor || theme.palette.primary.main,
         color: color || theme.palette.primary.contrastText,
         '&:hover': {

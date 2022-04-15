@@ -16,6 +16,7 @@ export default function InputLabel({
       sx={{
         color: theme => theme.palette.primary.main,
         marginBottom: '8px',
+        fontFamily: 'HelveticaNeueCyr',
         display: 'flex',
         alignItems: 'center',
         opacity: 0.5,

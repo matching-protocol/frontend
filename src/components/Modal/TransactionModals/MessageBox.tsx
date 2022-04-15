@@ -16,9 +16,20 @@ interface Props {
   header?: string
   action?: () => void
   actionText?: string
+  closeText?: string
+  customOnDismiss?: () => void
 }
 
-export default function MessageBox({ type, children, width = '480px', header, action, actionText }: Props) {
+export default function MessageBox({
+  type,
+  children,
+  width = '480px',
+  header,
+  action,
+  actionText,
+  closeText,
+  customOnDismiss
+}: Props) {
   const { hideModal } = useModal()
 
   const icon =
@@ -35,7 +46,7 @@ export default function MessageBox({ type, children, width = '480px', header, ac
     )
 
   return (
-    <Modal width={width}>
+    <Modal width={width} customOnDismiss={customOnDismiss}>
       <Box display={'grid'} alignItems={'center'} padding={'40px'} justifyItems="center" gap="20px">
         <Box>{icon}</Box>
         {header && <Typography variant="h6">{header}</Typography>}
@@ -44,7 +55,7 @@ export default function MessageBox({ type, children, width = '480px', header, ac
         </Box>
 
         <Box display="flex" justifyContent="space-around" width="100%" marginTop="10px">
-          <Button onClick={hideModal}>Close</Button>
+          <Button onClick={customOnDismiss || hideModal}>{closeText || 'Close'}</Button>
           {type === 'failure' && actionText && <Button onClick={action}>{actionText}</Button>}
         </Box>
       </Box>

@@ -100,7 +100,12 @@ export default function Dashboard() {
           subTextSize={13}
           textOpacity={1}
         />,
-        <WithdrawButton onWithdraw={onWithdraw} key={1} currency={item.currency} currencyAmount={item.currencyAmount} />
+        <AccountWithdrawButton
+          onWithdraw={onWithdraw}
+          key={1}
+          currency={item.currency}
+          currencyAmount={item.currencyAmount}
+        />
       ]),
     [onWithdraw, walletInfoList]
   )
@@ -198,14 +203,16 @@ export default function Dashboard() {
   )
 }
 
-function WithdrawButton({
+export function AccountWithdrawButton({
   currencyAmount,
   currency,
-  onWithdraw
+  onWithdraw,
+  height
 }: {
   currencyAmount: TokenAmount | undefined | CurrencyAmount
   currency: Currency | undefined
   onWithdraw: (tokenAddress: string) => Promise<void>
+  height?: string
 }) {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -217,7 +224,7 @@ function WithdrawButton({
     return (
       <Button
         onClick={() => currency.chainId && triggerSwitchChain(library, currency.chainId, account)}
-        height="36px"
+        height={height || '36px'}
         width="auto"
         style={{ padding: '0 10px' }}
         fontSize={13}
@@ -229,7 +236,7 @@ function WithdrawButton({
 
   if (isCompletedTx === false) {
     return (
-      <Button disabled width="112px" height="36px" fontSize={13}>
+      <Button disabled width="112px" height={height || '36px'} fontSize={13}>
         Withdrawing
         <Dots />
       </Button>
@@ -238,7 +245,7 @@ function WithdrawButton({
 
   if (isCompletedTx === true) {
     return (
-      <Button disabled width="112px" height="36px" fontSize={13}>
+      <Button disabled width="112px" height={height || '36px'} fontSize={13}>
         Withdrew
       </Button>
     )
@@ -251,7 +258,7 @@ function WithdrawButton({
         onWithdraw(currency.address)
       }}
       width="112px"
-      height="36px"
+      height={height || '36px'}
       fontSize={13}
     >
       Withdraw

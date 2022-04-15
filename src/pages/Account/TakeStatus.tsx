@@ -26,7 +26,7 @@ export default function TakeStatus({ order }: { order: OrderInfo }) {
     case OrderStatus.Order_Taken:
       if (getDeltaTime(order.Deadline)) {
         return (
-          <OutlineButton key={1} width="124px" height="44px" fontSize={13} borderRadius="57px" primary>
+          <OutlineButton key={1} width="130px" height="44px" fontSize={13} borderRadius="57px" primary>
             <Box onClick={toTake}>
               <Typography fontSize={13}>Execute Fund</Typography>
               <Typography fontSize={11} sx={{ opacity: 0.5 }}>

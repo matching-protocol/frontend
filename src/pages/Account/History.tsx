@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, useTheme } from '@mui/material'
 import Card from 'components/Card'
 import Table from 'components/Table'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
@@ -16,6 +16,7 @@ import Spinner from 'components/Spinner'
 import { getEtherscanLink } from 'utils'
 import TakeStatus from './TakeStatus'
 import NoData from 'components/NoData'
+import { useHistory } from 'react-router-dom'
 
 enum Tab {
   MAKE_OFFER,
@@ -27,6 +28,8 @@ const HistoryMakeOfferHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentiv
 const HistoryTakeOfferHeader = ['Order ID', 'Route', 'Currency', 'Offer Incentive', 'Status']
 
 export default function History() {
+  const theme = useTheme()
+  const history = useHistory()
   const [tab, setTab] = useState(Tab.MAKE_OFFER)
   const { page: makePage, list: orderMakeList, loading: makeLoading } = useAccountOrderList(
     AccountOrderStatus.OrderAny,
@@ -133,47 +136,81 @@ export default function History() {
   )
 
   return (
-    <Card width={980} padding="30px 28px">
-      <Typography fontSize={16} fontWeight={500} mb={28}>
-        Histroy
-      </Typography>
-      <Box display="grid" gap={40}>
-        <RoundTabs titles={HistoryTabs} current={tab} onChange={setTab} />
-        {tab === Tab.MAKE_OFFER && (
-          <>
-            <Table fontSize="12px" header={HistoryMakeOfferHeader} rows={historyMakeOfferDataRows} variant="outlined" />
-            {makeLoading && (
-              <Box display="flex" pt={20} pb={20} justifyContent="center">
-                <Spinner size="40px" />
-              </Box>
-            )}
-            {!makeLoading && !makePage.totalPages && <NoData />}
-            <Pagination
-              count={makePage.totalPages}
-              page={makePage.page}
-              boundaryCount={0}
-              onChange={(_, value) => makePage.setPage(value)}
-            />
-          </>
-        )}
-        {tab === Tab.TAKE_OFFER && (
-          <>
-            <Table fontSize="12px" header={HistoryTakeOfferHeader} rows={historyTakeOfferDataRows} variant="outlined" />
-            {takeLoading && (
-              <Box display="flex" pt={20} pb={20} justifyContent="center">
-                <Spinner size="40px" />
-              </Box>
-            )}
-            {!takeLoading && !takePage.totalPages && <NoData />}
-            <Pagination
-              count={takePage.totalPages}
-              page={takePage.page}
-              boundaryCount={0}
-              onChange={(_, value) => takePage.setPage(value)}
-            />
-          </>
-        )}
+    <Box pb={90}>
+      <Box
+        display={'flex'}
+        justifyContent="space-between"
+        alignItems={'center'}
+        sx={{
+          maxWidth: 980,
+          padding: '60px 0 40px'
+        }}
+      >
+        <Typography
+          onClick={() => history.goBack()}
+          sx={{ cursor: 'pointer' }}
+          fontWeight={500}
+          fontSize={24}
+          color={theme.palette.primary.light}
+        >
+          {'< Go back'}
+        </Typography>
+        <Typography mr={'15px'} fontWeight={700} fontSize={36} color={theme.palette.primary.main}>
+          History
+        </Typography>
       </Box>
-    </Card>
+      <Card width={980} padding="30px 28px">
+        <Typography fontSize={16} fontWeight={500} mb={28}>
+          Histroy
+        </Typography>
+        <Box display="grid" gap={40}>
+          <RoundTabs titles={HistoryTabs} current={tab} onChange={setTab} />
+          {tab === Tab.MAKE_OFFER && (
+            <>
+              <Table
+                fontSize="12px"
+                header={HistoryMakeOfferHeader}
+                rows={historyMakeOfferDataRows}
+                variant="outlined"
+              />
+              {makeLoading && (
+                <Box display="flex" pt={20} pb={20} justifyContent="center">
+                  <Spinner size="40px" />
+                </Box>
+              )}
+              {!makeLoading && !makePage.totalPages && <NoData />}
+              <Pagination
+                count={makePage.totalPages}
+                page={makePage.page}
+                boundaryCount={0}
+                onChange={(_, value) => makePage.setPage(value)}
+              />
+            </>
+          )}
+          {tab === Tab.TAKE_OFFER && (
+            <>
+              <Table
+                fontSize="12px"
+                header={HistoryTakeOfferHeader}
+                rows={historyTakeOfferDataRows}
+                variant="outlined"
+              />
+              {takeLoading && (
+                <Box display="flex" pt={20} pb={20} justifyContent="center">
+                  <Spinner size="40px" />
+                </Box>
+              )}
+              {!takeLoading && !takePage.totalPages && <NoData />}
+              <Pagination
+                count={takePage.totalPages}
+                page={takePage.page}
+                boundaryCount={0}
+                onChange={(_, value) => takePage.setPage(value)}
+              />
+            </>
+          )}
+        </Box>
+      </Card>
+    </Box>
   )
 }

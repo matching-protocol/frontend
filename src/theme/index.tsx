@@ -74,7 +74,7 @@ declare module '@mui/material/styles/createTheme' {
 export const theme = {
   palette: {
     primary: {
-      light: '#16161650',
+      light: 'rgba(22, 22, 22, 0.5)',
       main: '#161616',
       dark: '#000000',
       contrastText: '#FFFFFF'
@@ -125,7 +125,7 @@ export const theme = {
   },
   bgColor: {
     bg1: '#000000',
-    bg2: '#191919',
+    bg2: '#F7F7F8',
     bg3: '#252525',
     bg4: '#303030',
     bg5: '#A1A1A1'

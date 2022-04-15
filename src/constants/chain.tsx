@@ -43,7 +43,7 @@ export const ChainList = [
     icon: <BSC />,
     logo: BSCUrl,
     symbol: 'BSCTEST',
-    name: 'Binance TEST Chain',
+    name: 'Binance Testnet',
     id: ChainId.BSCTEST,
     hex: '0x61'
   }

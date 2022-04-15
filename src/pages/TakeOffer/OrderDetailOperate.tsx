@@ -69,7 +69,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
 
     if (chainId !== order.to_chain_id) {
       return {
-        msg: `Switch to ${ChainListMap[order.to_chain_id].symbol}`,
+        msg: `Switch to ${ChainListMap[order.to_chain_id].name}`,
         event: () => order.to_chain_id && triggerSwitchChain(library, order.to_chain_id, account)
       }
     }
@@ -224,7 +224,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
 
     if (chainId !== order.to_chain_id) {
       return {
-        msg: 'Switch',
+        msg: 'Switch to ' + ChainListMap[order.to_chain_id].name,
         event: () => order.to_chain_id && triggerSwitchChain(library, order.to_chain_id, account)
       }
     }
@@ -287,7 +287,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
     }
 
     return {
-      msg: again || !order.taker ? 'Try Again' : 'Execute',
+      msg: again || !order.taker ? 'Try Again' : 'Send',
       event: () => onTake(order.global_order_id)
     }
   }, [

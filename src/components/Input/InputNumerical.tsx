@@ -2,7 +2,6 @@ import { InputHTMLAttributes, useCallback } from 'react'
 import { Box } from '@mui/material'
 import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
-import SecondaryButton from 'components/Button/SecondaryButton'
 import InputLabel from './InputLabel'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
@@ -22,7 +21,7 @@ export default function NumericalInput({
   InputHTMLAttributes<HTMLInputElement> & {
     onMax?: () => void
     balance?: string
-    unit?: string
+    unit?: string | JSX.Element
     endAdornment?: JSX.Element
     onDeposit?: () => void
     subStr?: string
@@ -77,21 +76,19 @@ export default function NumericalInput({
         maxLength={79}
         spellCheck="false"
         endAdornment={
-          onMax && (
+          endAdornment ? (
             <Box gap="20px" display="flex" alignItems="center" paddingLeft="10px" paddingBottom="2px">
-              {endAdornment ? endAdornment : unit && <span>{unit ?? 'ETH'}</span>}
-              <SecondaryButton
-                disabled={props.disabled === true ? true : false}
-                primary
-                onClick={onMax}
-                style={{
-                  width: '60px',
-                  height: '32px'
-                }}
-              >
-                MAX
-              </SecondaryButton>
+              {endAdornment}
             </Box>
+          ) : (
+            onMax && (
+              <Box gap="20px" display="flex" alignItems="center" paddingLeft="10px" paddingBottom="2px">
+                {unit && <span>{unit ?? 'ETH'}</span>}
+                <Box sx={{ cursor: 'pointer' }} onClick={onMax}>
+                  MAX
+                </Box>
+              </Box>
+            )
           )
         }
         subStr={subStr}

@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
 import { ExpandMore, Menu, Close } from '@mui/icons-material'
 import { NavLink } from 'react-router-dom'
-import { Box, MenuItem, AppBar, styled, Theme } from '@mui/material'
+import { Box, MenuItem, AppBar, styled, Theme, Typography, useTheme } from '@mui/material'
 import Modal from 'components/Modal'
-import BrandLogo from 'assets/svg/matching_protocol.svg'
+import BrandLogo from 'assets/svg/match_logo.svg'
 import { ExternalLink } from 'theme/components'
 import { ShowOnMobile } from 'theme/index'
 import Image from 'components/Image'
@@ -23,8 +23,8 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const MainLogo = styled(NavLink)({
   '& img': {
-    width: 136,
-    height: 34.7
+    // width: 136,
+    height: 30
   },
   '&:hover': {
     cursor: 'pointer'
@@ -104,6 +104,7 @@ export default function MobileHeader() {
     ),
     []
   )
+  const theme = useTheme()
 
   return (
     <>
@@ -114,6 +115,15 @@ export default function MobileHeader() {
             <MainLogo id={'logo'} to={'/'}>
               <Image src={BrandLogo} alt={'logo'} />
             </MainLogo>
+            <Typography
+              sx={{
+                marginLeft: 10
+              }}
+              color={theme.palette.primary.main}
+              variant="h6"
+            >
+              Match DEX
+            </Typography>
           </Box>
           {isOpen ? (
             <TextButton onClick={handleDismiss}>{<Close />}</TextButton>

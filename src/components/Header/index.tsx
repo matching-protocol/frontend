@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import theme, { HideOnMobile } from 'theme/index'
 import Image from 'components/Image'
-import BrandLogo from 'assets/svg/matching_protocol.svg'
+import BrandLogo from 'assets/svg/match_logo.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 import Button from 'components/Button/Button'
@@ -87,8 +87,8 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const MainLogo = styled(NavLink)({
   '& img': {
-    width: 180.8,
-    height: 34.7
+    // width: 180.8,
+    height: 30
   },
   '&:hover': {
     cursor: 'pointer'
@@ -223,9 +223,18 @@ export default function Header() {
       <StyledAppBar>
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
-            <MainLogo id={'chainswap'} to={'/'}>
+            <MainLogo id={'logo'} to={'/'}>
               <Image src={BrandLogo} alt={'brand-logo'} />
             </MainLogo>
+            <Typography
+              sx={{
+                marginLeft: 10
+              }}
+              color={theme.palette.primary.main}
+              variant="h6"
+            >
+              Match DEX
+            </Typography>
             {/* <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (

@@ -10,7 +10,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Drawer
+  Drawer,
+  Typography
 } from '@mui/material'
 import theme, { HideOnMobile } from 'theme/index'
 import Image from 'components/Image'
@@ -204,8 +205,11 @@ export default function Header() {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ position: 'fixed', bottom: '20px' }}>
+        <Box sx={{ position: 'fixed', bottom: '30px' }}>
           <Web3Status />
+          <Typography mt={-5} maxWidth={182} variant={'body1'}>
+            Powered by MEP standard swap protocol (SSP)
+          </Typography>
         </Box>
         <Box sx={{ opacity: 0 }}>1</Box>
       </Box>

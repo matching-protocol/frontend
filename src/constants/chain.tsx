@@ -6,10 +6,7 @@ import BSCUrl from 'assets/svg/binance.svg'
 
 export enum ChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GÖRLI = 5,
-  KOVAN = 42,
+  SEPOLIA = 11155111,
   BSCTEST = 97
   // BSC = 56
 }
@@ -26,18 +23,10 @@ export const ChainList = [
   {
     icon: <ETH />,
     logo: EthUrl,
-    symbol: 'Rinkeby',
-    name: 'Rinkeby Testnet',
-    id: ChainId.RINKEBY,
-    hex: '0x4'
-  },
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Kovan',
-    name: 'Kovan Testnet',
-    id: ChainId.KOVAN,
-    hex: '0x2a'
+    symbol: 'Sepolia',
+    name: 'Sepolia Testnet',
+    id: ChainId.SEPOLIA,
+    hex: '0xaa36a7'
   },
   {
     icon: <BSC />,
@@ -90,41 +79,17 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://mainnet.infura.io/v3'],
     blockExplorerUrls: ['https://etherscan.com']
   },
-  [ChainId.ROPSTEN]: {
-    chainId: '0x3',
-    chainName: 'Ropsten',
+  [ChainId.SEPOLIA]: {
+    chainId: '0xaa36a7',
+    chainName: 'Sepolia',
     nativeCurrency: {
-      name: 'Ropsten',
+      name: 'Sepolia Testnet',
       symbol: 'ETH',
       decimals: 18,
       logo: EthUrl
     },
-    rpcUrls: ['https://ropsten.infura.io/v3/'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io/']
-  },
-  [ChainId.RINKEBY]: {
-    chainId: '0x4',
-    chainName: 'Rinkeby',
-    nativeCurrency: {
-      name: 'Rinkeby',
-      symbol: 'ETH',
-      decimals: 18,
-      logo: EthUrl
-    },
-    rpcUrls: ['https://rinkeby.infura.io/v3/'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/']
-  },
-  [ChainId.KOVAN]: {
-    chainId: '0x2a',
-    chainName: 'Kovan',
-    nativeCurrency: {
-      name: 'Kovan',
-      symbol: 'ETH',
-      decimals: 18,
-      logo: EthUrl
-    },
-    rpcUrls: ['https://kovan.infura.io/v3/'],
-    blockExplorerUrls: ['https://kovan.etherscan.io/']
+    rpcUrls: ['https://sepolia.infura.io/v3/169a2f10743f4afdaa0a17e148552867'],
+    blockExplorerUrls: ['https://sepolia.etherscan.io/']
   },
   [ChainId.BSCTEST]: {
     chainId: '0x61',

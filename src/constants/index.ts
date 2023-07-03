@@ -7,12 +7,8 @@ import { ChainId } from './chain'
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const BAST_TOKEN: { [chainId in ChainId]: Token } = {
+export const BAST_TOKEN: { [chainId in ChainId]?: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token'),
-  [ChainId.ROPSTEN]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token'),
-  [ChainId.RINKEBY]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token'),
-  [ChainId.GÖRLI]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token'),
-  [ChainId.KOVAN]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token'),
   [ChainId.BSCTEST]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'token', 'token')
 }
 
@@ -116,9 +112,6 @@ export const BLOCKED_ADDRESSES: string[] = [
 
 export const MATCHING_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '',
-  [ChainId.RINKEBY]: '0xaA1a1d99f1a88d26DE0942cCda0490ec98A8fF47',
-  [ChainId.KOVAN]: '0x085e40deF42B27e804C019311C74B1A4675BAefa',
-  [ChainId.GÖRLI]: '',
-  [ChainId.BSCTEST]: '0x0FAEa509f41317fd71D5603d0622db0b89Ee2b25'
+  [ChainId.SEPOLIA]: '0xF6C39Bbb9F716c3cbe81f1B5b03794E7513695E5',
+  [ChainId.BSCTEST]: '0xF6C39Bbb9F716c3cbe81f1B5b03794E7513695E5'
 }

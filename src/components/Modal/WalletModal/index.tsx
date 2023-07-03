@@ -3,7 +3,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, Button } from '@mui/material'
 import MetamaskIcon from 'assets/walletIcon/metamask.png'
 import { fortmatic, injected, portis } from 'connectors'
 import { OVERLAY_READY } from 'connectors/Fortmatic'
@@ -18,6 +18,7 @@ import Option from './Option'
 import PendingView from './PendingView'
 import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -190,11 +191,42 @@ export default function WalletModal({
           <Typography variant="h6">
             {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
           </Typography>
-          <Box padding={isUpToMD ? '16px' : '2rem 6rem 52px'}>
+          <Box padding={isUpToMD ? '16px' : '2rem 4rem 52px'}>
             {error instanceof UnsupportedChainIdError
-              ? 'Please connect to the appropriate Ethereum network.'
+              ? `Please connect to the BNB Chain Testnet.`
               : 'Error connecting. Try refreshing the page.'}
           </Box>
+          {window.ethereum && window.ethereum.isMetaMask && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                const params = SUPPORTED_NETWORKS[97]
+                window?.ethereum?.request &&
+                  window.ethereum
+                    ?.request({
+                      method: 'wallet_switchEthereumChain',
+                      params: [{ chainId: params?.chainId }, '']
+                    })
+                    .catch(err => {
+                      if (err?.code === 4001) return
+                      const obj: any = {}
+                      obj.chainId = params?.chainId
+                      obj.chainName = params?.chainName
+                      obj.nativeCurrency = params?.nativeCurrency
+                      obj.rpcUrls = params?.rpcUrls
+                      obj.blockExplorerUrls = params?.blockExplorerUrls
+
+                      window?.ethereum?.request &&
+                        window?.ethereum?.request({
+                          method: 'wallet_addEthereumChain',
+                          params: [{ chainId: params?.chainId }, '']
+                        })
+                    })
+              }}
+            >
+              Connect to BNB Chain Testnet
+            </Button>
+          )}
         </>
       )
     }

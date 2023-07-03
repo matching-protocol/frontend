@@ -6,6 +6,7 @@ interface Window {
   ethereum?: {
     isMetaMask?: true
     on?: (...args: any[]) => void
+    request?: (...args: any[]) => Promise<any>
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
   }

@@ -72,20 +72,8 @@ const chains: ChainObject = {
     link: 'https://etherscan.io',
     builder: explorers.etherscan
   },
-  [ChainId.ROPSTEN]: {
-    link: 'https://ropsten.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.RINKEBY]: {
-    link: 'https://rinkeby.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.KOVAN]: {
-    link: 'https://kovan.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.GÖRLI]: {
-    link: 'https://gorli.etherscan.io',
+  [ChainId.SEPOLIA]: {
+    link: 'https://sepolia.etherscan.io',
     builder: explorers.etherscan
   },
   [ChainId.BSCTEST]: {

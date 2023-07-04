@@ -101,7 +101,7 @@ export function useOrderList(
         )
         if (curRequestNumber === orderListRequestNumber()) {
           const data = res.data
-          setList(data.orders)
+          setList(data.data.orders)
           setIsLoading(false)
           setTotalPages(calcPageTotal(data.total, pageSize))
         }

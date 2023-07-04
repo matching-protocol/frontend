@@ -64,7 +64,7 @@ export function useAccountOrderList(status: AccountOrderStatus, role: AccountOrd
         setList([])
         const res: any = await getAccountOrderList(account, status, role, page, pageSize)
         const data = res.data
-        setList(data.orders)
+        setList(data.data.orders)
         setTotalPages(calcPageTotal(data.total, pageSize))
       } catch (error) {
         setList([])

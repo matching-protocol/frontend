@@ -12,7 +12,7 @@ export default function InitProvider({ children }: { children: React.ReactNode }
     ;(async () => {
       try {
         const res: any = await getGlobalTokenList()
-        const _token = res.data.tokens.map((item: any) => {
+        const _token = res.data.data.tokens.map((item: any) => {
           item.supportChainIds = item.chains.map((i: { chainId: number }) => i.chainId)
           return item
         })
@@ -26,6 +26,11 @@ export default function InitProvider({ children }: { children: React.ReactNode }
       } catch (error) {
         console.warn('Updater token ~ error', error)
         setTimeout(() => setReLoad(reLoad + 1), 3000)
+        const el = document.querySelector('.loader-container')
+        if (el) {
+          el.remove()
+        }
+        setTimeout(() => setNext(true), 100)
       }
     })()
   }, [dispatch, reLoad])

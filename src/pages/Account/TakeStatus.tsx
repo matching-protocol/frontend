@@ -15,15 +15,15 @@ export default function TakeStatus({ order }: { order: OrderInfo }) {
   ])
 
   switch (order.status) {
-    case OrderStatus.Order_ForTaking:
+    case OrderStatus.Status_wait:
       return (
         <OutlineButton height="32px" fontSize={13} onClick={toTake} primary>
           Take Offer
         </OutlineButton>
       )
-    case OrderStatus.Order_Received:
+    case OrderStatus.Status_received:
       return <StatusTag key={1} type="complete" />
-    case OrderStatus.Order_Taken:
+    case OrderStatus.Status_taking:
       if (getDeltaTime(order.Deadline)) {
         return (
           <OutlineButton key={1} width="130px" height="44px" fontSize={13} borderRadius="57px" primary>

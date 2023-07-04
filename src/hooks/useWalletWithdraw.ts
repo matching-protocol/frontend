@@ -5,6 +5,7 @@ import { calculateGasMargin } from 'utils'
 import { useMatchingContract } from './useContract'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useSignMessage } from './useWeb3Instance'
 
 export function useWalletWithdrawCallback() {
   const { account, chainId } = useActiveWeb3React()
@@ -37,22 +38,25 @@ export function useWalletWithdrawCallback() {
     },
     [account, addTransaction, contract]
   )
+  const signMessage = useSignMessage()
 
   const getWithdrawSign = useCallback(
     async (tokenAddress: string) => {
       if (!account || !chainId) return undefined
       try {
-        const res: any = await getAccountWithdrawAllSign(account, chainId, tokenAddress)
-        const resData = res.data.data
+        const message = 'Withdraw token signature.'
+        const signature = await signMessage(message)
+        const res: any = await getAccountWithdrawAllSign(account, chainId, tokenAddress, message, signature)
+        const resData = res.data.data.data
         return [
           [resData.ChainId, resData.Taker, resData.Token, resData.Nonce, resData.TotalAmount, resData.Status],
-          res.data.signature
+          res.data.data.signature
         ]
       } catch (error) {
-        return undefined
+        throw error
       }
     },
-    [account, chainId]
+    [account, chainId, signMessage]
   )
 
   return {

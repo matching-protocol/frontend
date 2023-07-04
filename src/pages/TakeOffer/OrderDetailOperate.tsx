@@ -17,6 +17,7 @@ import { ChainListMap } from 'constants/chain'
 import { Dots } from 'theme/components'
 import { useTagCompletedTx } from 'state/transactions/hooks'
 import { useLocalCurrency } from 'state/token/hooks'
+import JSBI from 'jsbi'
 
 export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => void }) {
   const { account, library, chainId } = useActiveWeb3React()
@@ -46,13 +47,15 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
         setRequest(true)
         const data = await getTakeSign(orderId)
         if (!data) {
-          showModal(<MessageBox type="error">get sign error</MessageBox>)
+          setRequest(false)
+          showModal(<MessageBox type="error">Get sign error</MessageBox>)
           return
         }
         next()
       } catch (error) {
         console.error(error)
-        showModal(<MessageBox type="error">get sign error</MessageBox>)
+        setRequest(false)
+        showModal(<MessageBox type="error">Get sign error</MessageBox>)
       }
       setRequest(false)
     },
@@ -81,7 +84,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
       }
     }
 
-    if (OrderStatus.Order_Taken === order.status && account === order.taker) {
+    if (OrderStatus.Status_taking === order.status && account === order.taker) {
       return {
         msg: 'Continue',
         event: () => next()
@@ -111,7 +114,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
     event: (() => void) | undefined
   } = useMemo(() => {
     switch (order.status) {
-      case OrderStatus.Order_ForTaking:
+      case OrderStatus.Status_wait:
         // if (account === order.sender) {
         //   return {
         //     msg: 'Cancel',
@@ -120,7 +123,7 @@ export function OrderTakeSign({ order, next }: { order: OrderInfo; next: () => v
         // } else {
         return payStatus
       // }
-      case OrderStatus.Order_Taken:
+      case OrderStatus.Status_taking:
         if (account === order.taker) {
           return payStatus
         } else {
@@ -171,9 +174,10 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
 
   const payBalance = useMemo(() => {
     if (!payCurrency || !order?.amount) return undefined
-    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, order.amount)
-    else return CurrencyAmount.getEther(payCurrency, order.amount)
-  }, [order.amount, payCurrency])
+    const _amount = JSBI.subtract(JSBI.BigInt(order.amount), JSBI.BigInt(order.incentive))
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, _amount)
+    else return CurrencyAmount.getEther(payCurrency, _amount)
+  }, [order.amount, order.incentive, payCurrency])
 
   const truePayCurrency = useMemo(() => {
     if (payCurrency instanceof Token) return payCurrency
@@ -187,9 +191,15 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
   const onTake = useCallback(
     async (orderId: string | number) => {
       showModal(<TransactionPendingModal />)
-      const data = await getTakeSign(orderId)
-      if (!data) {
-        showModal(<MessageBox type="error">get sign error</MessageBox>)
+      let data: any[] | undefined = undefined
+      try {
+        data = await getTakeSign(orderId)
+        if (!data) {
+          showModal(<MessageBox type="error">Get sign error</MessageBox>)
+          return
+        }
+      } catch (error) {
+        showModal(<MessageBox type="error">Get sign error</MessageBox>)
         return
       }
       next()
@@ -309,7 +319,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
 
   const action = useMemo(() => {
     switch (order.status) {
-      case OrderStatus.Order_ForTaking:
+      case OrderStatus.Status_wait:
         // if (account === order.sender) {
         //   return {
         //     msg: 'Cancel',
@@ -318,7 +328,7 @@ export function OrderDetailOperate({ order, again, next }: { order: OrderInfo; a
         // } else {
         return payStatus
       // }
-      case OrderStatus.Order_Taken:
+      case OrderStatus.Status_taking:
         if (account === order.taker) {
           return payStatus
         } else {

@@ -33,7 +33,7 @@ export default function TransactionSubmittedModal({
             href={getEtherscanLink(chainId, hash, 'transaction')}
             style={{ fontSize: 12 }}
           >
-            View on Etherscan
+            View on explorer
           </ExternalLink>
         )}
       </Box>

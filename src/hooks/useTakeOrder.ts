@@ -5,15 +5,17 @@ import { calculateGasMargin } from 'utils'
 import { useMatchingContract } from './useContract'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useSignMessage } from 'hooks/useWeb3Instance'
 
 export function useTakeOrderCallback() {
   const { account } = useActiveWeb3React()
   const contract = useMatchingContract()
   const addTransaction = useTransactionAdder()
+  const signMessage = useSignMessage()
 
   const takeCallback = useCallback(
     (args: any[], key: string) => {
-      console.log('🚀 ~ file: useTakeOrder.ts ~ line 16 ~ useTakeOrderCallback ~ args', args)
+      console.log('🚀 ~ file: useTakeOrder.ts:18 ~ useTakeOrderCallback ~ args:', args)
       if (!contract || !account) throw new Error('none contract or account')
 
       // args = [
@@ -57,9 +59,14 @@ export function useTakeOrderCallback() {
   const getTakeSign = useCallback(
     async (orderId: number | string) => {
       if (!account) return undefined
+      const message = 'Take order signature.'
       try {
-        const res: any = await takeOrder(orderId, account)
-        const resData = res.data.data
+        const signature = await signMessage(message)
+        const res: any = await takeOrder(orderId, account, message, signature)
+        const resData = res.data?.data?.data
+        if (!resData) {
+          throw new Error('Sign error')
+        }
         return [
           [
             [resData.ChainId, resData.OrderIdOnChain],
@@ -75,13 +82,13 @@ export function useTakeOrderCallback() {
             resData.Incentive,
             resData.Status
           ],
-          res.data.signature
+          res.data?.data.signature
         ]
       } catch (error) {
-        return undefined
+        throw error
       }
     },
-    [account]
+    [account, signMessage]
   )
 
   return {

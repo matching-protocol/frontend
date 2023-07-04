@@ -2,13 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { getOrders } from 'utils/fetch/order'
 
 export enum OrderStatus {
-  Order_Unstarted,
-  Order_ForTaking,
-  Order_Taken,
-  Order_Received,
-  Order_Withdrawed,
-  Order_Outdated,
-  Order_Any
+  Status_wait,
+  Status_taking,
+  Status_received,
+  Status_withdrew,
+  Status_ended
 }
 
 export enum OrderListOrderType {
@@ -26,11 +24,11 @@ export interface OrderInfo {
   amount: string
   chain_id: number
   created_on: number
-  decimal: number
+  // decimal: number
   global_order_id: number
-  id: number
+  // id: number
   incentive: string
-  matching_address: string
+  // matching_address: string
   modified_on: number
   order_id_on_chain: number
   receive_token_address: string

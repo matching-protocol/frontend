@@ -24,8 +24,11 @@ export function useOrderById(orderId: string | number, reRequest?: any) {
       try {
         setIsLoading(true)
         const res: any = await getOrderById(orderId)
-        const data = res.data
-        setResult(data.order)
+        if (!res.data.data.orders?.[0]) {
+          setResult(undefined)
+          return
+        }
+        setResult(res.data.data.orders[0])
       } catch (error) {
         setResult(undefined)
         console.error('fetch useOrderById', error)
@@ -106,7 +109,7 @@ export function useAccountWalletInformation(chainId: ChainId) {
         setList([])
         const res: any = await getAccountWalletInformation(account, chainId)
         const data = res.data
-        const _list = data.tokens.map((item: { TokenAddr: string; Amount: BigintIsh }) => {
+        const _list = data.data.map((item: { TokenAddr: string; Amount: BigintIsh }) => {
           const _token = getLocalToken(chainId, item.TokenAddr)
           if (!_token)
             return {

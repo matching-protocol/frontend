@@ -53,7 +53,7 @@ export default function Dashboard() {
       try {
         const data = await getWithdrawSign(tokenAddress)
         if (!data) {
-          showModal(<MessageBox type="error">get sign error</MessageBox>)
+          showModal(<MessageBox type="error">Get sign error</MessageBox>)
           return
         }
         withdrawCallback(data, tokenAddress)
@@ -70,7 +70,7 @@ export default function Dashboard() {
           })
       } catch (error) {
         console.error(error)
-        showModal(<MessageBox type="error">get sign error</MessageBox>)
+        showModal(<MessageBox type="error">Get sign error</MessageBox>)
       }
     },
     [getWithdrawSign, hideModal, showModal, withdrawCallback]

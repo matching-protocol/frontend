@@ -89,7 +89,7 @@ export default function Market() {
     }
   }, [filterToggle, searchCurrency?.symbol, searchFromChain?.id, searchOrderBy, searchOrderId, searchToChain?.id])
 
-  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Order_ForTaking, searchParams)
+  const { list: orderList, page: orderListPage, loading } = useOrderList(OrderStatus.Status_wait, searchParams)
   const searchCurrencyList = useTopTokenSymbolList()
 
   const dataRows = useMemo(() => {
@@ -112,7 +112,7 @@ export default function Market() {
         <CurrencyInfo
           key={0}
           chainId={item.chain_id}
-          amount={JSBI.add(JSBI.BigInt(item.amount), JSBI.BigInt(item.incentive)).toString()}
+          amount={item.amount}
           address={item.token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
           textSize={mode === Mode.TABLE ? 16 : 13}
@@ -122,7 +122,7 @@ export default function Market() {
         <CurrencyInfo
           key={0}
           chainId={item.to_chain_id}
-          amount={item.amount}
+          amount={JSBI.subtract(JSBI.BigInt(item.amount), JSBI.BigInt(item.incentive)).toString()}
           address={item.receive_token_address}
           currencySize={mode === Mode.TABLE ? '32px' : '24px'}
           textSize={mode === Mode.TABLE ? 16 : 13}

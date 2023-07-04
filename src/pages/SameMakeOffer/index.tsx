@@ -109,11 +109,25 @@ export default function Index() {
     fromCurrency,
     incentiveAmount
   ])
+
+  const payToken0Amount = useMemo(() => {
+    if (!exchangeCurrencyAmount) return undefined
+    return incentiveCurrencyAmount ? exchangeCurrencyAmount.add(incentiveCurrencyAmount) : exchangeCurrencyAmount
+  }, [exchangeCurrencyAmount, incentiveCurrencyAmount])
+
   const { min: incentiveMin } = useIncentiveList(exchangeCurrencyAmount)
 
   const createOrderCallback = useCreateOrderCallback()
   const onCreateOrderCallback = useCallback(() => {
-    if (!fromCurrency || !toChain || !toChain.id || !account || !exchangeCurrencyAmount || !incentiveCurrencyAmount)
+    if (
+      !fromCurrency ||
+      !toChain ||
+      !toChain.id ||
+      !account ||
+      !exchangeCurrencyAmount ||
+      !payToken0Amount ||
+      !incentiveCurrencyAmount
+    )
       return
     if (!(fromCurrency instanceof Token)) {
       return
@@ -122,7 +136,7 @@ export default function Index() {
     createOrderCallback(
       fromCurrency.address,
       account,
-      exchangeCurrencyAmount.raw.toString(),
+      payToken0Amount.raw.toString(),
       incentiveCurrencyAmount.raw.toString(),
       toChain.id
     )
@@ -155,6 +169,7 @@ export default function Index() {
     toChain,
     account,
     exchangeCurrencyAmount,
+    payToken0Amount,
     incentiveCurrencyAmount,
     showModal,
     createOrderCallback,
@@ -163,7 +178,7 @@ export default function Index() {
   ])
 
   const [approvalState, approvalCallback] = useApproveCallback(
-    exchangeCurrencyAmount,
+    payToken0Amount,
     chainId ? MATCHING_ADDRESS[chainId] : undefined
   )
 
@@ -187,7 +202,7 @@ export default function Index() {
       )
     }
 
-    if (!swapAmount || !exchangeCurrencyAmount) {
+    if (!swapAmount || !payToken0Amount) {
       return <Button disabled>{ERROR.ENTER_AMOUNT}</Button>
     }
 
@@ -200,7 +215,7 @@ export default function Index() {
       )
     }
 
-    if (fromCurrencyBalance.lessThan(exchangeCurrencyAmount)) {
+    if (fromCurrencyBalance.lessThan(payToken0Amount)) {
       return <Button disabled>{ERROR.BALANCE_INSUFFICIENT}</Button>
     }
 
@@ -216,7 +231,7 @@ export default function Index() {
       return <Button disabled>{ERROR.LESS_INCENTIVE}</Button>
     }
 
-    if (exchangeCurrencyAmount.add(incentiveCurrencyAmount).greaterThan(fromCurrencyBalance)) {
+    if (payToken0Amount.greaterThan(fromCurrencyBalance)) {
       return <Button disabled>{ERROR.BALANCE_INSUFFICIENT}</Button>
     }
 
@@ -246,22 +261,22 @@ export default function Index() {
 
     return <Button onClick={onCreateOrderCallback}>Confirm</Button>
   }, [
-    account,
-    onCreateOrderCallback,
-    approvalCallback,
-    approvalState,
-    chainId,
-    exchangeCurrencyAmount,
+    topCurrency,
     fromChain?.id,
+    toChain?.id,
+    account,
+    library,
+    chainId,
+    swapAmount,
+    payToken0Amount,
     fromCurrencyBalance,
+    step,
     incentiveCurrencyAmount,
     incentiveMin,
-    library,
-    step,
-    swapAmount,
-    toChain?.id,
+    approvalState,
+    onCreateOrderCallback,
     toggleWalletModal,
-    topCurrency
+    approvalCallback
   ])
 
   return (

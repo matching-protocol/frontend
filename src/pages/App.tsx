@@ -11,7 +11,7 @@ import { ModalProvider } from 'context/ModalContext'
 // import Footer from 'components/Footer'
 import { routes } from 'constants/routes'
 import Market from './Market'
-import MakeOffer from './MakeOffer'
+// import MakeOffer from './MakeOffer'
 import SameMakeOffer from './SameMakeOffer'
 import TakeOffer from './TakeOffer'
 import Account from './Account'
@@ -73,7 +73,7 @@ export default function App() {
                   <Switch>
                     <Route exact strict path="/" component={Market} />
                     <Route exact strict path={routes.market} component={Market} />
-                    <Route exact strict path={routes.makeOffer} component={MakeOffer} />
+                    {/* <Route exact strict path={routes.makeOffer} component={MakeOffer} /> */}
                     <Route exact strict path={routes.SameMakeOffer} component={SameMakeOffer} />
                     <Route exact strict path={routes.takeOffer + '/:orderId'} component={TakeOffer} />
                     <Route exact strict path={routes.account} component={Account} />

@@ -21,7 +21,7 @@ export const getOrders = (
     'api/v1/orders',
     Object.assign(
       {
-        status,
+        // status,
         page,
         page_size: pagesize
       },
@@ -31,20 +31,20 @@ export const getOrders = (
 }
 
 export const getOrderById = (orderId: string | number) => {
-  return Axios.get('api/v1/order', {
+  return Axios.get('api/v1/orders', {
     id: orderId
   })
 }
 
-export const takeOrder = (orderId: number | string, account: string) => {
-  return Axios.post(
-    'api/v1/takeorder',
-    {},
-    {
-      id: orderId,
-      taker: account
+export const takeOrder = (orderId: number | string, account: string, message: string, signature: string) => {
+  return Axios.post('api/v1/takeorder', {
+    id: orderId,
+    sign: {
+      account,
+      message,
+      signature
     }
-  )
+  })
 }
 
 export enum AccountOrderStatus {
@@ -80,16 +80,22 @@ export const getAccountWalletInformation = (account: string, chainId: number) =>
   })
 }
 
-export const getAccountWithdrawAllSign = (account: string, chainId: number, tokenAddress: string) => {
-  return Axios.post(
-    'api/v1/withdrawall',
-    {},
-    {
-      taker: account,
-      chainid: chainId,
-      token: tokenAddress
+export const getAccountWithdrawAllSign = (
+  account: string,
+  chainId: number,
+  tokenAddress: string,
+  message: string,
+  signature: string
+) => {
+  return Axios.post('api/v1/withdrawall', {
+    chainid: chainId,
+    token: tokenAddress,
+    sign: {
+      account,
+      message,
+      signature
     }
-  )
+  })
 }
 
 export const getAccountWithdrawList = (account: string, chainId: number, page: number, pagesize = 10) => {

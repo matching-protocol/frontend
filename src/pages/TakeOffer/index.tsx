@@ -22,6 +22,7 @@ import OutlineButton from 'components/Button/OutlineButton'
 import { CircleSvg, ShowChain } from 'pages/SameMakeOffer/Three'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ExternalLink } from 'theme/components'
+import JSBI from 'jsbi'
 
 export enum Step {
   Confirm,
@@ -42,9 +43,10 @@ export default function TakeOffer() {
 
   const payCurrencyAmount = useMemo(() => {
     if (!payCurrency || !orderInfo?.amount) return undefined
-    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, orderInfo.amount)
-    else return CurrencyAmount.getEther(payCurrency, orderInfo.amount)
-  }, [orderInfo?.amount, payCurrency])
+    const _amount = JSBI.subtract(JSBI.BigInt(orderInfo.amount), JSBI.BigInt(orderInfo.incentive))
+    if (payCurrency instanceof Token) return new TokenAmount(payCurrency, _amount)
+    else return CurrencyAmount.getEther(payCurrency, _amount)
+  }, [orderInfo?.amount, orderInfo?.incentive, payCurrency])
 
   // const truePayCurrency = useMemo(() => {
   //   if (payCurrency instanceof Token) return payCurrency
@@ -61,7 +63,7 @@ export default function TakeOffer() {
 
   const completed = useMemo(() => {
     if (!orderInfo) return undefined
-    return OrderStatus.Order_Received === orderInfo.status
+    return OrderStatus.Status_received === orderInfo.status
   }, [orderInfo])
 
   const getErrorSubText = useMemo(() => {

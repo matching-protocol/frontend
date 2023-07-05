@@ -1,8 +1,8 @@
 import axios, { AxiosResponse, AxiosPromise } from 'axios'
 
 const axiosInstance = axios.create({
-  // baseURL: 'http://47.241.125.101/',
-  baseURL: 'https://0swap-api.z-crypto.ml/',
+  baseURL: 'http://47.241.125.101/',
+  // baseURL: 'https://0swap-api.z-crypto.ml/',
   timeout: 20000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
